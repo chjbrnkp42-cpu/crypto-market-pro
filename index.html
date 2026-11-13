@@ -1,4 +1,4 @@
-<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro 1.1</title><style>
+<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro 1.2</title><style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#edf2ff;background:#0b1020;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;z-index:3;background:#0b1020ed;border-bottom:1px solid #27314a;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.2px}.small{font-size:12px;color:#a7b3cc}.container{max-width:780px;margin:auto;padding:15px 14px 90px}.panel{background:#141c30;border:1px solid #293550;border-radius:16px;padding:15px;margin-bottom:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 13px}button,select,input{font:inherit}button{cursor:pointer;color:#eef3ff;background:#1d2942;border:1px solid #344465;border-radius:11px;padding:10px 12px}button.active{background:#23659c;border-color:#428ecb}button:disabled{opacity:.5}.flex{display:flex;align-items:center;justify-content:space-between;gap:9px}.price{font-weight:800;font-size:32px;letter-spacing:-.7px}.green{color:#4dd3a6}.red{color:#ff737e}.muted{color:#a7b3cc}.pill{border-radius:999px;background:#24304c;padding:5px 9px;font-size:11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:#10192c;border-radius:12px;padding:12px}.tile b{font-size:19px;display:block;margin-top:5px}.chart{width:100%;height:auto;display:block}.levels{width:100%;border-collapse:collapse;font-size:13px}.levels td,.levels th{padding:9px 5px;text-align:right;border-bottom:1px solid #27314a}.levels th:first-child,.levels td:first-child{text-align:left}.notice{border-left:3px solid #f1bd61;padding:9px 11px;background:#322b24;border-radius:6px;font-size:12px}.bar{height:6px;background:#2a3650;border-radius:6px;margin-top:8px}.bar>div{height:6px;background:#54a6dd;border-radius:6px}.section{font-size:17px;font-weight:750;margin:0 0 12px}.linkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.linkgrid a{border:1px solid #344465;border-radius:10px;padding:11px;text-decoration:none;color:#d3e7ff;font-size:13px}.switch{display:flex;gap:6px;align-items:center}select,input{background:#0f1729;border:1px solid #344465;border-radius:8px;padding:9px;color:white;max-width:100%}.footer{text-align:center;font-size:11px;color:#8996b2;line-height:1.5}.chip{font-size:12px;border:1px solid #344465;border-radius:20px;padding:6px 10px}.loading{animation:pulse 1.2s infinite alternate}@keyframes pulse{from{opacity:.4}to{opacity:1}}@media(min-width:680px){.container{padding-top:24px}.price{font-size:39px}}
 
 /* Optionale Altcoin-Auswahl: Bitcoin bleibt der Dashboard-Fokus. */
@@ -93,7 +93,16 @@ h2.section.detail-heading .detail-toggle{
 .panel.detail-closed h2.section.detail-heading{margin-bottom:0}
 .panel.detail-closed .detail-toggle{min-height:42px;min-width:165px}
 @media(max-width:380px){.dashboard-quality{grid-template-columns:1fr}.dashboard-grid{grid-template-columns:1fr 1fr}.dashboard-metric .value{font-size:16px}}
-</style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">1.1</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><div class="coin-helper" id="coinHelper" aria-live="polite">BTC ausgewählt. Die Marktübersicht und die Gesamtanalyse bleiben immer Bitcoin-bezogen; die Auswahl wechselt ausschliesslich den Einzelchart und seine technischen Indikatoren.</div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
+
+.whale-radar{margin:16px 0;padding:14px;border:1px solid #365b80;border-radius:14px;background:#0c1b30}
+.whale-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.whale-heading h3{font-size:17px;margin:0}.whale-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.whale-metric{min-width:0;padding:12px;border-radius:11px;border:1px solid #2a4667;background:#101e34;display:flex;flex-direction:column;gap:6px}
+.whale-metric span,.whale-metric small{font-size:12px;color:#adbed5;overflow-wrap:anywhere}.whale-metric strong{font-size:18px;overflow-wrap:anywhere}
+.whale-toggle{width:100%;margin:8px 0 12px;min-height:44px;text-align:center}.whale-tx{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 0;border-bottom:1px solid #2a4667;font-size:12px}
+.whale-sources{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.whale-sources a,.whale-tx a{color:#72c7fb;font-size:12px}
+@media(max-width:360px){.whale-grid{grid-template-columns:1fr}}
+</style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">1.2</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><div class="coin-helper" id="coinHelper" aria-live="polite">BTC ausgewählt. Die Marktübersicht und die Gesamtanalyse bleiben immer Bitcoin-bezogen; die Auswahl wechselt ausschliesslich den Einzelchart und seine technischen Indikatoren.</div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
 <section class="panel" id="prodesk">
 <h2 class="section">Marktzentrale · Bitcoin &amp; Frühwarnungen</h2>
 <p class="small">Interne Datenquelle für die BTC-Marktzentrale aus <b>neu abgerufenen</b> Binance-Spotdaten. Derivate werden <b>separat</b> über Binance USDⓈ-M Futures geladen. Jede Aktualisierung erfolgt auf Knopfdruck; <b>keine Hintergrundalarme und keine automatischen Trades</b>.</p>
@@ -156,7 +165,7 @@ h2.section.detail-heading .detail-toggle{
 <div id="warningAlerts" class="tile small">Noch nicht berechnet.</div>
 <div class="notice" style="margin-top:12px">Quellen: Binance Spot BTCUSDT, historische abgeschlossene OHLCV-Kerzen (UTC) und aktueller Spot-Ticker. Intervall- und Abrufzeit werden angezeigt. Signalregeln sind heuristisch und nicht backgetestet. Bei fehlenden/ungültigen Daten keine Freigabe eines Gesamtsignals. Bei einer Unterbrechung der Datenverbindung bleibt der Monitor ausdrücklich unverfügbar.</div>
 </section>
-<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Version 1.1 · Fibonacci-Zonen · Qualitätsgeprüfter Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
+<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Version 1.2 · Fibonacci-Zonen · Qualitätsgeprüfter Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
 const symbols=['BTC','ETH','XRP','SOL','DOGE'];let active='BTC',rows=[],lastPrice=null,report='',alarms=(()=>{try{const saved=JSON.parse(localStorage.getItem('cmpro_alarms')||'[]');return Array.isArray(saved)?saved.filter(a=>a&&symbols.includes(a.coin)&&['above','below'].includes(a.type)&&Number.isFinite(Number(a.price))&&Number(a.price)>0):[]}catch(e){return []}})(),busy=false,requestCounter=0,loadedKey=null,loadedSource=null,loadedAt=null;
 const $=id=>document.getElementById(id);const fmt=(v,dec)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:dec??(v>=100?2:4),maximumFractionDigits:dec??(v>=100?2:4)});const status=(s,ok)=>{$('state').textContent=s;$('state').style.color=ok?'#4dd3a6':'#ffb66d'};
 function buildtabs(){
@@ -1127,5 +1136,61 @@ document.getElementById('runFibAtlas').onclick=runFibAtlas;
  setInterval(()=>{if(document.visibilityState==='visible')refresh()},90000);
 })();
 
+
+
+/* Whale & Institutionen Radar: transparent sample-only, free public Bitcoin data. */
+(() => {
+ const $=id=>document.getElementById(id);
+ const fmt=n=>Number(n).toLocaleString('de-CH',{maximumFractionDigits:2});
+ const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const endpoint='https://mempool.space/api';
+ let busy=false,last=0;
+ const install=()=>{
+   const dash=$('compactDashboard');if(!dash||$('whaleRadar'))return false;
+   const el=document.createElement('section');el.id='whaleRadar';el.className='whale-radar';
+   el.innerHTML=`<div class="whale-heading"><h3>🐋 Whales &amp; Institutionen</h3><span class="pill" id="whaleState">Noch nicht geladen</span></div>
+   <p class="dashboard-note">Bitcoin-On-Chain-Beobachtung mit öffentlicher Datenquelle. ETF-Flüsse und Wallet-Zuordnungen werden ohne verifizierte Quelle nicht geschätzt.</p>
+   <div class="whale-grid">
+     <div class="whale-metric"><span>Grösster beobachteter BTC-Ausgang</span><strong id="whaleLargest">—</strong><small>Nur jüngste untersuchte Transaktionen, keine Marktgesamtzahl</small></div>
+     <div class="whale-metric"><span>Grosse Ausgänge ab 50 BTC</span><strong id="whaleCount">—</strong><small>Ausgangswerte, keine Netto-Käufe oder Verkäufe</small></div>
+     <div class="whale-metric"><span>BTC-ETF-Nettofluss</span><strong>Nicht verfügbar</strong><small>Keine verifizierte kostenlose Live-API angebunden</small></div>
+     <div class="whale-metric"><span>Börsen-Zu-/Abflüsse</span><strong>Nicht verfügbar</strong><small>Keine verifizierten Exchange-Wallet-Labels</small></div>
+   </div>
+   <button type="button" id="whaleRefresh" class="whale-toggle">Blockchain-Daten aktualisieren ↻</button><button type="button" class="whale-toggle" id="whaleToggle" aria-expanded="false" aria-controls="whaleDetails">Whale-Tiefenanalyse öffnen +</button>
+   <div id="whaleDetails" hidden><p class="dashboard-note" id="whaleExplanation">Grosse BTC-Ausgänge können Wechselgeld, Sammeltransaktionen, Eigenüberträge oder echte Zahlungen sein. Ohne verifizierte Zuordnung keine Interpretation als institutionelle Käufe.</p>
+   <div id="whaleTransactions" class="whale-txs">Nach dem Laden erscheinen hier nachprüfbare Transaktionen.</div>
+   <div class="whale-sources"><a href="https://mempool.space/" target="_blank" rel="noopener noreferrer">Bitcoin-Explorer · mempool.space ↗</a><a href="https://farside.co.uk/btc/" target="_blank" rel="noopener noreferrer">ETF-Tagesflüsse · Farside ↗</a><a href="https://intel.arkm.com/" target="_blank" rel="noopener noreferrer">Wallet-Recherche · Arkham ↗</a></div>
+   <p class="dashboard-note">Die ETF-Quelle ist eine externe Tabelle, keine automatisch übernommene Live-Zahl. Arkham-Wallet-Zuordnungen sind nicht automatisch mit unseren Blockchain-Stichproben verknüpft. Keine API-Schlüssel, kein kostenpflichtiges Abo, keine Hintergrundüberwachung.</p></div>
+   <p class="dashboard-note" id="whaleStamp">Noch keine Blockchain-Abfrage.</p>`;
+   dash.querySelector('.dashboard-top')?.parentNode.insertBefore(el,dash.querySelector('#dashSourceTimes')||dash.querySelector('#dashRun'));
+   $('whaleToggle').addEventListener('click',()=>{const d=$('whaleDetails');d.hidden=!d.hidden;$('whaleToggle').setAttribute('aria-expanded',String(!d.hidden));$('whaleToggle').textContent=d.hidden?'Whale-Tiefenanalyse öffnen +':'Whale-Tiefenanalyse schliessen −'});
+   $('whaleRefresh')?.addEventListener('click',()=>refresh(true));
+   return true;
+ };
+ async function json(url){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9000);try{const res=await fetch(url,{signal:controller.signal,cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);return await res.json()}finally{clearTimeout(timer)}}
+ async function refresh(force=false){if(!install()||busy||(!force&&Date.now()-last<300000))return;busy=true;$('whaleState').textContent='Blockchain wird geprüft …';
+  try{
+   const recent=await json(endpoint+'/mempool/recent');if(!Array.isArray(recent)||!recent.length)throw Error('Keine Transaktionen erhalten');
+   const txids=[...new Set(recent.map(x=>x.txid).filter(x=>/^[a-f0-9]{64}$/i.test(x)))].slice(0,8);
+   if(!txids.length)throw Error('Keine gültigen Transaktions-IDs');
+   const settled=await Promise.allSettled(txids.map(id=>json(endpoint+'/tx/'+id)));
+   const txs=settled.filter(x=>x.status==='fulfilled').map(x=>x.value);
+   if(!txs.length)throw Error('Transaktionsdetails nicht verfügbar');
+   const observations=[];for(const tx of txs){if(!Array.isArray(tx.vout))continue;const outputs=tx.vout.map(o=>Number(o.value)/1e8).filter(Number.isFinite);const max=Math.max(0,...outputs);observations.push({id:tx.txid,max,large:outputs.filter(v=>v>=50).length});}
+   if(!observations.length)throw Error('Keine Ausgangswerte verfügbar');
+   const max=Math.max(...observations.map(t=>t.max));const count=observations.reduce((a,t)=>a+t.large,0);
+   $('whaleLargest').textContent=fmt(max)+' BTC';$('whaleCount').textContent=String(count);
+   $('whaleTransactions').innerHTML=observations.sort((a,b)=>b.max-a.max).slice(0,6).map(t=>`<div class="whale-tx"><span>Max. Ausgang: <b>${fmt(t.max)} BTC</b></span><a href="https://mempool.space/tx/${esc(t.id)}" target="_blank" rel="noopener noreferrer">Transaktion prüfen ↗</a></div>`).join('');
+   $('whaleState').textContent=txs.length===txids.length?'Stichprobe geladen':'Teilweise geladen';
+   $('whaleStamp').textContent=`Abruf ${new Date().toLocaleString('de-CH',{timeZone:'Europe/Zurich'})} Schweiz · ${observations.length} von ${txids.length} jüngsten Mempool-Transaktionen geprüft · kein repräsentativer Marktüberblick.`;
+   last=Date.now();
+  }catch(e){$('whaleState').textContent='Daten nicht verfügbar';$('whaleStamp').textContent='Blockchain-Abfrage fehlgeschlagen ('+String(e.message||e).slice(0,90)+'). Keine Schätzwerte oder alten Daten als live ausgeben.';$('whaleLargest').textContent='—';$('whaleCount').textContent='—';}
+  finally{busy=false}
+ }
+ if(install())refresh();else setTimeout(()=>{install();refresh()},50);
+ $('reload')?.addEventListener('click',()=>refresh(true));
+ $('dashRun')?.addEventListener('click',()=>refresh(true));
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
+})();
 
 </script></body></html>
