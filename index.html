@@ -52,6 +52,20 @@ h2.section.detail-heading .detail-toggle{
   h2.section.detail-heading .detail-toggle{min-width:190px}
 }
 
+/* Kompakte Spot-Kursuebersicht im ersten Dashboard: BTC / ETH / XRP / SOL / DOGE */
+.coin-overview-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:15px 0 9px}
+.coin-overview-title{font-size:15px;font-weight:750;margin:0}
+.coin-overview-meta{font-size:11px;color:#a9b8d0;line-height:1.5}
+.coin-overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:12px}
+.coin-overview-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;background:#0e1b31;border:1px solid #273d5c;border-radius:12px;min-width:0;padding:12px;min-height:100px}
+.coin-overview-card:first-child{grid-column:1/-1;border-color:#428ecb}
+.coin-overview-card:focus-visible{outline:2px solid #72c7fb;outline-offset:2px}
+.coin-overview-symbol{font-size:13px;font-weight:800}
+.coin-overview-price{font-size:17px;font-weight:800;line-height:1.25;overflow-wrap:anywhere;width:100%}
+.coin-overview-move{font-size:12px;font-weight:650}
+.coin-overview-card .small{font-size:10px}
+@media(min-width:620px){.coin-overview-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.coin-overview-card:first-child{grid-column:auto}.coin-overview-price{font-size:15px}}
+
 /* Dashboard Plus: compact derivatives charts and readability */
 .deriv-mini-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0}
 .deriv-mini-card{padding:11px;border:1px solid #2e4364;border-radius:11px;background:#0e1b31;min-width:0}
@@ -608,6 +622,9 @@ $('runProDesk').onclick=runProDesk;
   panel.innerHTML=`
     <div class="dashboard-top"><h2 class="dashboard-heading">Marktübersicht</h2><span class="pill" id="dashState">Daten werden geprüft</span></div>
     <div class="dashboard-note">Kompakte Auswertung aus bereits geladenen App-Daten · Spot und Futures getrennt · Zeitstempel beachten.</div>
+    <div class="coin-overview-head"><h3 class="coin-overview-title">Spotkurse · BTC und ausgewählte Altcoins</h3><div class="coin-overview-meta" id="coinOverviewStatus" aria-live="polite">Lade aktuelle Kurse …</div></div>
+    <div class="coin-overview-grid" id="coinOverviewGrid" aria-label="Kursübersicht BTC ETH XRP SOL DOGE"></div>
+    <div class="dashboard-note" style="margin-bottom:10px">Kurskacheln antippen, um den Einzelchart zu öffnen. Die Hauptanalyse bleibt auf BTC. Binance: Veränderung 24h; bei Kraken-Ausweichkursen wird kein 24h-Wert behauptet.</div>
     <div class="dashboard-grid">
       <div class="dashboard-metric"><div class="label">BTC-Spotkurs</div><div class="value" id="dashPrice">—</div></div>
       <div class="dashboard-metric"><div class="label">24-Stunden-Veränderung</div><div class="value" id="dashChange">—</div></div>
@@ -929,5 +946,78 @@ async function runFibAtlas(){
  finally{if(token===fibAtlasToken)btn.disabled=false}
 }
 document.getElementById('runFibAtlas').onclick=runFibAtlas;
+
+// V1.0: Einzelkurse in der obersten Marktuebersicht, getrennt von der BTC-Gesamtanalyse.
+(() => {
+ const grid=document.getElementById('coinOverviewGrid');
+ const status=document.getElementById('coinOverviewStatus');
+ if(!grid||!status)return;
+ const coins=['BTC','ETH','XRP','SOL','DOGE'];
+ const krakenPairs={BTC:'XBTUSD',ETH:'ETHUSD',XRP:'XRPUSD',SOL:'SOLUSD',DOGE:'XDGUSD'};
+ const cards=new Map();
+ let inFlight=false,updateToken=0;
+ const clock=()=>new Date().toLocaleString('de-CH',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Europe/Zurich'});
+ const formatted=(number)=>Number(number).toLocaleString('de-CH',{minimumFractionDigits:2,maximumFractionDigits:number<1?6:number<10?4:2});
+ for(const coin of coins){
+  const button=document.createElement('button');button.type='button';button.className='coin-overview-card';button.setAttribute('aria-label',coin+' Kurs anzeigen und Einzelchart öffnen');
+  const name=document.createElement('span');name.className='coin-overview-symbol';name.textContent=coin+(coin==='BTC'?' · Fokus':'');
+  const price=document.createElement('span');price.className='coin-overview-price';price.textContent='—';
+  const move=document.createElement('span');move.className='coin-overview-move';move.textContent='Wird geladen';
+  const source=document.createElement('span');source.className='small';source.textContent='Noch kein Kursabruf';
+  button.append(name,price,move,source);
+  button.onclick=()=>{
+    const tab=document.querySelector('[data-coin="'+coin+'"]');
+    if(tab)tab.click();
+    const spot=document.getElementById('chart')?.closest('section.panel');
+    if(spot)spot.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  cards.set(coin,{price,move,source});grid.appendChild(button);
+ }
+ async function one(coin){
+   try{
+     const t=await fetchJSON('/api/v3/ticker/24hr?symbol='+coin+'USDT');
+     const price=Number(t.lastPrice),change=Number(t.priceChangePercent);
+     if(!Number.isFinite(price)||price<=0||!Number.isFinite(change)||Math.abs(change)>10000)throw Error('Binance Kurswerte ungueltig');
+     return {price,change,currency:'USDT',source:'Binance Spot'};
+   }catch(binanceError){
+     const t=await fetchTimed('https://api.kraken.com/0/public/Ticker?pair='+krakenPairs[coin],6500);
+     if(t.error?.length)throw Error('Kraken: '+t.error.join('; '));
+     const item=Object.values(t.result||{})[0];
+     const price=Number(item?.c?.[0]);
+     if(!Number.isFinite(price)||price<=0)throw Error('Kraken-Kurs fehlt');
+     // Kraken liefert hier keinen vergleichbaren rollierenden 24h-%-Wert.
+     return {price,change:null,currency:'USD',source:'Kraken Spot'};
+   }
+ }
+ async function refresh(){
+   if(inFlight||document.visibilityState==='hidden')return;
+   inFlight=true;const token=++updateToken;
+   status.textContent='Kurse werden geladen …';
+   for(const card of cards.values()){card.price.textContent='—';card.move.textContent='Wird geladen';card.move.style.color='';card.source.textContent='Aktualisierung läuft';}
+   const results=await Promise.allSettled(coins.map(one));
+   if(token!==updateToken){inFlight=false;return}
+   const stamp=clock();let valid=0;
+   results.forEach((r,i)=>{
+     const coin=coins[i],card=cards.get(coin);
+     if(r.status!=='fulfilled'){
+       card.price.textContent='Nicht verfügbar';card.move.textContent='Kein bestätigter Kurs';card.move.style.color='#ff8c94';card.source.textContent='Abruffehler · '+stamp;
+       return;
+     }
+     const v=r.value;valid++;
+     card.price.textContent=formatted(v.price)+' '+v.currency;
+     if(v.change===null){card.move.textContent='24h nicht vergleichbar';card.move.style.color='#a9b8d0'}
+     else{card.move.textContent=(v.change>=0?'+':'')+v.change.toFixed(2).replace('.',',')+' % · 24h';card.move.style.color=v.change>=0?'#4dd3a6':'#ff737e'}
+     card.source.textContent=v.source+' · '+stamp+' MEZ/MESZ';
+   });
+   status.textContent=valid+'/5 Kurse geladen · '+stamp+' · Schweiz';
+   inFlight=false;
+ }
+ refresh();
+ document.getElementById('dashRun')?.addEventListener('click',()=>refresh());
+ document.getElementById('reload')?.addEventListener('click',()=>refresh());
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
+ setInterval(()=>{if(document.visibilityState==='visible')refresh()},90000);
+})();
+
 
 </script></body></html>
