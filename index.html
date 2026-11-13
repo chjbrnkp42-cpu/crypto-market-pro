@@ -507,7 +507,7 @@ async function proFutures(){
    }};
 }
 async function runProDesk(){
- const token=++proToken,button=$('runProDesk');button.disabled=true;window.cmDerivativeSeries=null;renderDerivativeIntelligence();
+ const token=++proToken,button=$('runProDesk');button.disabled=true;window.cmBtcDashboardSnapshot=null;window.cmDerivativeSeries=null;renderDerivativeIntelligence();
  $('proStatus').textContent='Lade frische Spot-, Chart- und Futuresdaten …';
  $('proKpis').innerHTML='<div class="tile small">Abruf läuft. Bisherige Momentaufnahme wird nicht als neu angezeigt.</div>';
  $('proAlerts').textContent='Prüfung läuft …';$('proComparison').textContent='Warte auf frische Daten.';
@@ -532,6 +532,24 @@ async function runProDesk(){
        const ch=Number(today?.priceChangePercent),volume=Number(today?.quoteVolume),end=Number(today?.closeTime);
        const tickerOK=Number.isFinite(ch)&&Number.isFinite(volume)&&volume>=0&&Number.isFinite(end)&&end>now-10*60*1000&&end<now+60000;
        const a=result.states,below=result.nearBelow[0],above=result.nearAbove[0];
+       // BTC dashboard must NOT depend on the coin selected in the individual chart.
+       const btcDaily=rowsByTf['1d'];
+       const btcCloses=btcDaily.map(x=>x.c);
+       const btcE20=ema(btcCloses,20),btcE50=ema(btcCloses,50),btcRSI=rsi(btcCloses);
+       let btcRisk=null;
+       if([price,btcE20,btcE50,btcRSI].every(Number.isFinite)){
+         let n=50;
+         n+=price<btcE20?15:-15;
+         n+=btcE20<btcE50?15:-15;
+         if(btcRSI<30)n+=10;else if(btcRSI<45)n+=8;
+         else if(btcRSI>70)n+=10;else if(btcRSI>55)n-=8;
+         n+=price<btcE50?10:-10;
+         btcRisk=Math.min(100,Math.max(0,n));
+       }
+       window.cmBtcDashboardSnapshot={
+         price,change:tickerOK?ch:null,risk:btcRisk,
+         timestamp:now,source:'Binance BTC/USDT · Tagesanalyse'
+       };
        $('proKpis').innerHTML=[
           proTile('BTC Spot · BTCUSDT',proNum(price)+' USDT','Binance Spot · Abruf '+proStamp(now)),
           proTile('24h Veränderung',tickerOK?proNum(ch)+' %':'Nicht verfügbar',tickerOK?'Binance Spot · Ende '+proStamp(end):'24h-Ticker nicht geprüft'),
@@ -621,7 +639,7 @@ $('runProDesk').onclick=runProDesk;
   panel.className='panel dashboard-panel';panel.id='compactDashboard';
   panel.innerHTML=`
     <div class="dashboard-top"><h2 class="dashboard-heading">Marktübersicht</h2><span class="pill" id="dashState">Daten werden geprüft</span></div>
-    <div class="dashboard-note">Kompakte Auswertung aus bereits geladenen App-Daten · Spot und Futures getrennt · Zeitstempel beachten.</div>
+    <div class="dashboard-note">Bitcoin-Hauptanalyse unabhängig vom gewählten Einzelchart · Spot und Futures getrennt · Zeitstempel beachten.</div>
     <div class="coin-overview-head"><h3 class="coin-overview-title">Spotkurse · BTC und ausgewählte Altcoins</h3><div class="coin-overview-meta" id="coinOverviewStatus" aria-live="polite">Lade aktuelle Kurse …</div></div>
     <div class="coin-overview-grid" id="coinOverviewGrid" aria-label="Kursübersicht BTC ETH XRP SOL DOGE"></div>
     <div class="dashboard-note" style="margin-bottom:10px">Kurskacheln antippen, um den Einzelchart zu öffnen. Die Hauptanalyse bleibt auf BTC. Binance: Veränderung 24h; bei Kraken-Ausweichkursen wird kein 24h-Wert behauptet.</div>
@@ -685,26 +703,37 @@ $('runProDesk').onclick=runProDesk;
   };
   const getProValue=(phrase)=>{
     const tiles=[...document.querySelectorAll('#proKpis .tile')];
-    const t=tiles.find(x=>x.textContent.toLowerCase().includes(phrase));
+    const t=tiles.find(x=>x.textContent.toLowerCase().includes(String(phrase).toLowerCase()));
     return t?.querySelector('b')?.textContent?.trim()||'';
   };
   const render=()=>{
     const onBTC=typeof active!=='undefined'&&active==='BTC';
-    const spotPrice=getProValue('BTC Spot')||(onBTC?textOf('price'):'');
-    const change=getProValue('24h Veränderung')||(onBTC?textOf('change'):'');
-    const risk=onBTC?textOf('riskval'):'';
+    const btcPro=window.cmBtcDashboardSnapshot||null;
+    const btcTicker=window.cmBtcTickerSnapshot||null;
+    const latestTicker=btcTicker&&Number.isFinite(btcTicker.price)?btcTicker:null;
+    const btcSpot=latestTicker&&(!btcPro||latestTicker.timestamp>btcPro.timestamp)?latestTicker:btcPro;
+    // Fallback to independently refreshed BTC quote; the active altcoin never enters these metrics.
+    const spotPrice=btcSpot&&Number.isFinite(btcSpot.price)
+      ?fmt(btcSpot.price,2)+' '+(btcSpot.currency||'USDT')
+      :(onBTC?textOf('price'):'');
+    const change=btcSpot&&Number.isFinite(btcSpot.change)
+      ?(btcSpot.change>=0?'+':'')+fmt(btcSpot.change,2)+' %'
+      :(onBTC?textOf('change'):'');
+    const risk=btcPro&&Number.isFinite(btcPro.risk)
+      ?btcPro.risk+' / 100'
+      :(onBTC?textOf('riskval'):'');
     const proStatus=textOf('proStatus'),oi=futuresInfo();
     const trend=getProValue('kurs-/mittel-/langfrist')||getProValue('trend');
     const lower=getProValue('tiefere fibonacci'),higher=getProValue('höhere fibonacci');
     set('dashPrice',valid(spotPrice)?spotPrice:'—');
     set('dashChange',change.replace(/^24h\s*:?\s*/i,'')||'—');
     set('dashTrend',trend||'Noch nicht geprüft');
-    set('dashRisk',valid(risk)?risk:'—');
+    set('dashRisk',valid(risk)?risk:'BTC-Tagesanalyse laden');
     set('dashLow',lower||'Noch nicht geprüft');
     set('dashHigh',higher||'Noch nicht geprüft');
     const sourceTimes=document.getElementById('dashSourceTimes');
     if(sourceTimes){
-      const spotStamp=onBTC?(textOf('updated')||'Noch nicht geladen'):'Aktiver Chart ist kein BTC; BTC-Kurs der Marktzentrale verwenden';
+      const spotStamp=btcSpot?.timestamp?new Date(btcSpot.timestamp).toLocaleString('de-CH',{timeZone:'Europe/Zurich'}):onBTC?(textOf('updated')||'Noch nicht geladen'):'BTC-Kurs noch nicht geladen';
       const atlasStamp=window.cmAtlasCompletedAt?new Date(window.cmAtlasCompletedAt).toLocaleString('de-CH',{timeZone:'Europe/Zurich'}):'Noch nicht berechnet';
       const deskStamp=proStatus.match(/Stand\s+([^·]+)/)?.[1]?.trim()||'Noch nicht geprüft';
       sourceTimes.textContent='Abrufzeiten – Spot: '+spotStamp+' · Marktzentrale: '+deskStamp+' · Fibonacci-Atlas: '+atlasStamp+'. Kursabweichungen zwischen Modulen entstehen durch getrennte Liveabfragen.';
@@ -734,7 +763,7 @@ $('runProDesk').onclick=runProDesk;
     const stamp=proStatus.match(/Stand\s+[^·]+/)?.[0];
     set('dashLast',(stamp?stamp+' · ':'')+'Die Übersicht verwendet nur bereits geladene Daten. Kein Hintergrundmonitoring und keine automatischen Trades.');
   };
-  const watch=['price','change','updated','riskval','proStatus','proKpis','proDerivatives','corrstatus','strengthStatus','warningStatus','fibAtlasStatus'];
+  const watch=['price','change','updated','riskval','proStatus','proKpis','proDerivatives','coinOverviewGrid','coinOverviewStatus','corrstatus','strengthStatus','warningStatus','fibAtlasStatus'];
   let queued=false;
   const observer=new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render()})});
   for(const id of watch){const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})}
@@ -993,6 +1022,7 @@ document.getElementById('runFibAtlas').onclick=runFibAtlas;
    if(inFlight||document.visibilityState==='hidden')return;
    inFlight=true;const token=++updateToken;
    status.textContent='Kurse werden geladen …';
+   window.cmBtcTickerSnapshot=null;
    for(const card of cards.values()){card.price.textContent='—';card.move.textContent='Wird geladen';card.move.style.color='';card.source.textContent='Aktualisierung läuft';}
    const results=await Promise.allSettled(coins.map(one));
    if(token!==updateToken){inFlight=false;return}
@@ -1004,6 +1034,9 @@ document.getElementById('runFibAtlas').onclick=runFibAtlas;
        return;
      }
      const v=r.value;valid++;
+     if(coin==='BTC')window.cmBtcTickerSnapshot={
+       price:v.price,change:v.change,currency:v.currency,timestamp:Date.now(),source:v.source
+     };
      card.price.textContent=formatted(v.price)+' '+v.currency;
      if(v.change===null){card.move.textContent='24h nicht vergleichbar';card.move.style.color='#a9b8d0'}
      else{card.move.textContent=(v.change>=0?'+':'')+v.change.toFixed(2).replace('.',',')+' % · 24h';card.move.style.color=v.change>=0?'#4dd3a6':'#ff737e'}
