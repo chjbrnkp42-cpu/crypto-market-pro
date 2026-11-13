@@ -1,0 +1,1263 @@
+<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101114"><title>Crypto Market Pro 1.4</title><style>
+:root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#edf2ff;background:#0b1020;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;z-index:3;background:#0b1020ed;border-bottom:1px solid #27314a;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.2px}.small{font-size:12px;color:#a7b3cc}.container{max-width:780px;margin:auto;padding:15px 14px 90px}.panel{background:#141c30;border:1px solid #293550;border-radius:16px;padding:15px;margin-bottom:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 13px}button,select,input{font:inherit}button{cursor:pointer;color:#eef3ff;background:#1d2942;border:1px solid #344465;border-radius:11px;padding:10px 12px}button.active{background:#23659c;border-color:#428ecb}button:disabled{opacity:.5}.flex{display:flex;align-items:center;justify-content:space-between;gap:9px}.price{font-weight:800;font-size:32px;letter-spacing:-.7px}.green{color:#4dd3a6}.red{color:#ff737e}.muted{color:#a7b3cc}.pill{border-radius:999px;background:#24304c;padding:5px 9px;font-size:11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:#10192c;border-radius:12px;padding:12px}.tile b{font-size:19px;display:block;margin-top:5px}.chart{width:100%;height:auto;display:block}.levels{width:100%;border-collapse:collapse;font-size:13px}.levels td,.levels th{padding:9px 5px;text-align:right;border-bottom:1px solid #27314a}.levels th:first-child,.levels td:first-child{text-align:left}.notice{border-left:3px solid #f1bd61;padding:9px 11px;background:#322b24;border-radius:6px;font-size:12px}.bar{height:6px;background:#2a3650;border-radius:6px;margin-top:8px}.bar>div{height:6px;background:#54a6dd;border-radius:6px}.section{font-size:17px;font-weight:750;margin:0 0 12px}.linkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.linkgrid a{border:1px solid #344465;border-radius:10px;padding:11px;text-decoration:none;color:#d3e7ff;font-size:13px}.switch{display:flex;gap:6px;align-items:center}select,input{background:#0f1729;border:1px solid #344465;border-radius:8px;padding:9px;color:white;max-width:100%}.footer{text-align:center;font-size:11px;color:#8996b2;line-height:1.5}.chip{font-size:12px;border:1px solid #344465;border-radius:20px;padding:6px 10px}.loading{animation:pulse 1.2s infinite alternate}@keyframes pulse{from{opacity:.4}to{opacity:1}}@media(min-width:680px){.container{padding-top:24px}.price{font-size:39px}}
+
+/* Optionale Altcoin-Auswahl: Bitcoin bleibt der Dashboard-Fokus. */
+.coin-helper{font-size:12px;color:#b4c5de;line-height:1.5;margin:-3px 0 12px;padding:9px 11px;background:#10192c;border-left:3px solid #4e93c8;border-radius:7px}
+/* Sammelupdate: kompaktes Dashboard und klappbare Detailbereiche */
+.dashboard-panel{background:linear-gradient(160deg,#182b48,#111b31 65%);border-color:#41658f}
+.dashboard-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.dashboard-heading{font-weight:800;font-size:20px;margin:0}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.dashboard-metric{background:#0e1b31;border:1px solid #273d5c;border-radius:12px;padding:12px;min-width:0}
+.dashboard-metric .value{font-size:20px;font-weight:800;line-height:1.25;overflow-wrap:anywhere;margin-top:7px}
+.dashboard-metric .label{font-size:12px;color:#a9b8d0}
+.dashboard-note{font-size:12px;color:#b4c5de;line-height:1.55}
+.dashboard-mainbutton{width:100%;margin:10px 0;background:#23659c;border-color:#428ecb;font-weight:750;font-size:15px}
+.dashboard-overview{padding:12px;background:#0e1b31;border-radius:11px;border-left:3px solid #73baf2;line-height:1.55;font-size:13px}
+.dashboard-quality{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}
+.dashboard-quality .dq{font-size:12px;background:#101b2e;padding:9px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:5px}
+.dashboard-quality .dq span{overflow-wrap:anywhere}
+.dashboard-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.dashboard-links button{font-size:12px;padding:8px 10px}
+.panel.detail-closed > :not(h2){display:none!important}
+h2.section.detail-heading{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:10px;flex-wrap:nowrap;margin-bottom:0}
+h2.section.detail-heading .detail-toggle{display:inline-flex;align-self:flex-start;font-size:12px;font-weight:600;padding:6px 9px;white-space:nowrap}
+.panel.detail-closed{padding-bottom:15px}
+.panel.detail-open h2.section.detail-heading{margin-bottom:12px}
+@media(max-width:360px){.dashboard-grid{grid-template-columns:1fr}.dashboard-metric .value{font-size:19px}}
+
+/* Finale iPhone-UI-Politur: konsistente Modultitel, Buttons und Abstaende */
+.panel.detail-closed,.panel.detail-open{padding:16px;margin-bottom:14px}
+.panel.detail-closed{padding-bottom:16px}
+h2.section.detail-heading{
+  display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:flex-start;flex-wrap:nowrap;
+  gap:12px;line-height:1.35;font-size:17px;
+  margin:0;min-width:0;overflow-wrap:anywhere;
+}
+h2.section.detail-heading .detail-toggle{
+  display:inline-flex;align-items:center;justify-content:center;
+  align-self:flex-start;min-height:44px;min-width:190px;max-width:100%;
+  padding:10px 14px;margin:0;
+  border-radius:11px;font-size:13px;font-weight:650;line-height:1.2;
+  white-space:normal;text-align:center;letter-spacing:0;
+}
+.panel.detail-open h2.section.detail-heading{margin-bottom:16px}
+.dashboard-links{gap:9px;margin:12px 0}
+.dashboard-links button{min-height:44px;padding:10px 12px;font-size:13px;line-height:1.25}
+.dashboard-mainbutton{min-height:48px;padding:12px 14px;font-size:15px}
+@media(max-width:420px){
+  .panel.detail-closed,.panel.detail-open{padding:15px;margin-bottom:13px}
+  h2.section.detail-heading{gap:11px;font-size:17px}
+  h2.section.detail-heading .detail-toggle{min-width:190px}
+}
+
+/* Kompakte Spot-Kursuebersicht im ersten Dashboard: BTC / ETH / XRP / SOL / DOGE */
+.coin-overview-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:15px 0 9px}
+.coin-overview-title{font-size:15px;font-weight:750;margin:0}
+.coin-overview-meta{font-size:11px;color:#a9b8d0;line-height:1.5}
+.coin-overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:12px}
+.coin-overview-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;background:#0e1b31;border:1px solid #273d5c;border-radius:12px;min-width:0;padding:12px;min-height:100px}
+.coin-overview-card:first-child{grid-column:1/-1;border-color:#428ecb}
+.coin-overview-card:focus-visible{outline:2px solid #72c7fb;outline-offset:2px}
+.coin-overview-symbol{font-size:13px;font-weight:800}
+.coin-overview-price{font-size:17px;font-weight:800;line-height:1.25;overflow-wrap:anywhere;width:100%}
+.coin-overview-move{font-size:12px;font-weight:650}
+.coin-overview-card .small{font-size:10px}
+@media(min-width:620px){.coin-overview-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.coin-overview-card:first-child{grid-column:auto}.coin-overview-price{font-size:15px}}
+
+/* Marktzentrale: Berechnungsmodul bleibt im DOM und aktualisiert das Dashboard,
+   redundante sichtbare Karte wird ausgeblendet. */
+#prodesk{display:none!important}
+
+/* Dashboard Plus: compact derivatives charts and readability */
+.deriv-mini-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0}
+.deriv-mini-card{padding:11px;border:1px solid #2e4364;border-radius:11px;background:#0e1b31;min-width:0}
+.deriv-mini-title{font-size:13px;font-weight:750;margin-bottom:5px}
+.deriv-mini-card svg{width:100%;height:auto;display:block;overflow:visible}
+.deriv-mini-legend{font-size:11px;color:#b4c5de;line-height:1.55}
+.deriv-signal{border-left:3px solid #73baf2;padding:10px 12px;background:#0e1b31;border-radius:9px;font-size:13px;line-height:1.55}
+.deriv-signal b{display:block;margin-bottom:5px}
+@media(min-width:680px){.deriv-mini-grid{grid-template-columns:1fr 1fr}}
+/* Audit: compact but complete desktop/mobile research interface. */
+.tech-subsection{border-top:1px solid #30415e;margin-top:17px;padding-top:15px}
+.tech-subsection h3{font-size:14px;font-weight:750;line-height:1.4;margin:0 0 12px;color:#d3e7ff}
+.sub-details{margin:10px 0 12px;border:1px solid #30415e;border-radius:11px;overflow:hidden;background:#10192c}
+.sub-details > summary{list-style:revert;cursor:pointer;padding:12px;font-size:13px;font-weight:700;line-height:1.4;touch-action:manipulation}
+.sub-details > summary:focus-visible{outline:2px solid #72c7fb;outline-offset:-3px}
+.sub-details > .deriv-mini-grid,.sub-details > .tile{margin:0 10px 10px}
+.dashboard-panel .dashboard-overview{margin-top:12px}
+.dashboard-panel .dashboard-mainbutton{min-height:46px}
+.dashboard-panel .dashboard-note{overflow-wrap:break-word}
+.dashboard-links button{min-height:42px}
+.panel.detail-closed h2.section.detail-heading{margin-bottom:0}
+.panel.detail-closed .detail-toggle{min-height:42px;min-width:165px}
+@media(max-width:380px){.dashboard-quality{grid-template-columns:1fr}.dashboard-grid{grid-template-columns:1fr 1fr}.dashboard-metric .value{font-size:16px}}
+
+.whale-radar{margin:16px 0;padding:14px;border:1px solid #365b80;border-radius:14px;background:#0c1b30}
+.whale-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.whale-heading h3{font-size:17px;margin:0}.whale-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.whale-metric{min-width:0;padding:12px;border-radius:11px;border:1px solid #2a4667;background:#101e34;display:flex;flex-direction:column;gap:6px}
+.whale-metric span,.whale-metric small{font-size:12px;color:#adbed5;overflow-wrap:anywhere}.whale-metric strong{font-size:18px;overflow-wrap:anywhere}
+.whale-toggle{width:100%;margin:8px 0 12px;min-height:44px;text-align:center}.whale-tx{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 0;border-bottom:1px solid #2a4667;font-size:12px}
+.whale-sources{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.whale-sources a,.whale-tx a{color:#72c7fb;font-size:12px}
+@media(max-width:360px){.whale-grid{grid-template-columns:1fr}}
+
+/* v1.4: neutral graphite / exchange-inspired, no blue dashboard theme */
+:root{color-scheme:dark;color:#f3f4f6;background:#101114}
+body{background:#101114;color:#f3f4f6}
+header{background:#101114f5;border-bottom:1px solid #303136;box-shadow:0 6px 18px #0004}
+.brand{color:#f5f5f6;letter-spacing:-.2px}
+.brand span{color:#f0b94d!important}
+.small,.muted,.dashboard-note,.dashboard-metric .label,.coin-helper,.footer{color:#a9abb2}
+.container{max-width:880px}
+.panel{background:#1b1d21;border:1px solid #34363c;box-shadow:0 2px 8px #0002}
+button{color:#f4f4f5;background:#292b30;border:1px solid #45474e;transition:background .15s,border-color .15s}
+button:hover{background:#35373d}
+button.active{background:#f0b94d;color:#171717;border-color:#f0b94d;font-weight:800}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid #f0b94d;outline-offset:2px}
+select,input{background:#24262b;color:#f5f5f6;border-color:#45474e}
+.pill,.chip{background:#303137;color:#e7e7ea;border-color:#484950}
+.tile,.dashboard-metric{background:#23252a;border:1px solid #3a3c43}
+.tile b,.dashboard-metric .value{color:#f6f6f7}
+.dashboard-panel{background:#1b1d21;border-color:#3b3c40}
+.coin-helper{background:#202125;color:#bfc0c6;border-left-color:#e3ac43}
+.bar{background:#34353b}.bar>div{background:#e6b453}
+.levels td,.levels th{border-bottom-color:#383a40}
+.linkgrid a{border-color:#45474e;color:#e8e8ec;background:#25262a}
+.notice{background:#30291d;border-left-color:#e9b85c}
+.whale-radar{background:#202125;border-color:#48423a}
+.whale-metric{background:#292a2e;border-color:#45464b}
+.whale-metric span,.whale-metric small{color:#b6b7be}
+.whale-sources a,.whale-tx a{color:#f0bd64}
+.whale-tx{border-bottom-color:#414247}
+#reload{background:#292b30;border-color:#4a4b51}
+#reload:hover{background:#3a3b40}
+/* compact mobile hierarchy, chart first without sacrificing controls */
+@media(max-width:430px){header{padding:12px 14px}.container{padding:12px 10px 80px}.panel{padding:13px;border-radius:14px}.brand{font-size:16px}.price{font-size:31px}.dashboard-grid,.whale-grid{gap:8px}.dashboard-metric,.whale-metric{padding:10px}.dashboard-metric .value{font-size:18px}.whale-metric strong{font-size:17px}button{min-height:40px}}
+</style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">1.4</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><div class="coin-helper" id="coinHelper" aria-live="polite">BTC ausgewählt. Die Marktübersicht und die Gesamtanalyse bleiben immer Bitcoin-bezogen; die Auswahl wechselt ausschliesslich den Einzelchart und seine technischen Indikatoren.</div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
+<section class="panel" id="prodesk">
+<h2 class="section">Marktzentrale · Bitcoin &amp; Frühwarnungen</h2>
+<p class="small">Interne Datenquelle für die BTC-Marktzentrale aus <b>neu abgerufenen</b> Binance-Spotdaten. Derivate werden <b>separat</b> über Binance USDⓈ-M Futures geladen. Jede Aktualisierung erfolgt auf Knopfdruck; <b>keine Hintergrundalarme und keine automatischen Trades</b>.</p>
+<button id="runProDesk">Marktzentrale jetzt aktualisieren</button>
+<div id="proStatus" class="small" style="margin:12px 0;color:#72c7fb">Noch kein geprüfter Abruf der Marktzentrale.</div>
+<div id="proKpis" class="grid"><div class="tile small">BTC-Kurs, Tagesveränderung, Volumen, Fibonacci-Zonen und Datenzeiten nach Datenabruf.</div></div>
+<h3 class="section" style="margin-top:20px">Alarmzentrale · nur bei aktiver Abfrage</h3>
+<div id="proAlerts" class="tile small">Noch keine frischen Analysedaten.</div>
+<div id="proComparison" class="small" style="margin-top:8px">Veränderung zur letzten manuell gespeicherten Momentaufnahme erst nach zweitem Abruf möglich.</div>
+<h3 class="section" style="margin-top:20px">Futures- und Derivate-Radar</h3>
+<p class="small">Öffentliche Binance-USDⓈ-M-Futures-Quellen (Futures, <b>nicht</b> Spot). Bei regionalen API-Sperren oder fehlenden historischen Daten: «Nicht verfügbar». Long/Short basiert gegebenenfalls auf <b>Accounts</b>, nicht auf Positionen. Eine Liquidations-Heatmap wäre nur modelliert; hier werden <b>keine Liquidationscluster</b> angegeben.</p>
+<div id="proDerivatives" class="grid"><div class="tile small">Noch keine Futures-Daten geladen.</div></div>
+<div class="notice" style="margin-top:14px">Die Auswertung ist ein nicht backgetesteter Beobachtungsmonitor, kein Kauf-/Verkaufssignal. Die Angaben sind nur so frisch wie ihr sichtbarer Zeitstempel. Der Browser überwacht Märkte nicht bei geschlossener App. Keine API-Schlüssel erforderlich.</div>
+</section>
+<section class="panel"><h2 class="section">Technische Marktanalyse</h2><div class="small" id="indicatorstamp" style="margin:0 0 10px;color:#72c7fb">Indikatoren: noch nicht geladen</div><div class="grid"><div class="tile"><div class="small">RSI (14)</div><b id="rsi">—</b><div class="small" id="rsitext">—</div></div><div class="tile"><div class="small">EMA 20 / EMA 50</div><b id="ema">—</b><div class="small" id="ematext">—</div></div><div class="tile"><div class="small">Swing-Tief / -Hoch</div><b id="swing" style="font-size:14px">—</b><div class="small">Bestätigte Swing-Punkte, falls vorhanden</div></div><div class="tile"><div class="small">Technischer Zustand</div><b id="regime" style="font-size:16px">—</b><div class="small">Keine Handelsanweisung</div></div></div></section><section class="panel"><h2 class="section">Marktkompass · technische Risikobewertung</h2><div class="grid"><div class="tile"><div class="small">Technischer Abwärtsdruck-Index</div><b id="riskval">—</b><div class="small" id="risklabel">Warte auf Kurse</div></div><div class="tile"><div class="small">Nächstes Fibonacci-Level</div><b id="nearest" style="font-size:15px">—</b><div class="small" id="nearestdist">—</div></div><div class="tile"><div class="small">Nächste tiefere Referenzzone</div><b id="support" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div><div class="tile"><div class="small">Nächste höhere Referenzzone</div><b id="resistance" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div></div><p class="small" id="risksummary" style="line-height:1.6">Die Bewertung benötigt aktuelle Kursdaten.</p><div class="notice">Der Index misst technischen Abwärtsdruck, NICHT die Wahrscheinlichkeit eines Kursrückgangs. Er ist ein einfaches, nicht backgetestetes Technikmodell (RSI, EMA, Kursposition). Er ist weder eine Eintrittswahrscheinlichkeit noch ein Kauf-/Verkaufssignal. Fibonacci-Zonen und Extensions sind rechnerische Referenzen, keine bestätigten Unterstützungen oder Kursprognosen.</div></section><section class="panel"><h2 class="section">Marktampel &amp; Szenarien</h2><div class="flex" style="align-items:center;gap:10px"><span class="pill" id="traffic" style="font-size:17px;padding:12px">⚪ Keine Bewertung</span><span class="small" id="confidence">Daten werden geladen</span></div><div class="grid" style="margin-top:12px"><div class="tile"><div class="small">Bullisches Szenario</div><div id="bullcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div><div class="tile"><div class="small">Bärisches Szenario</div><div id="bearcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div></div><p id="neutralcase" class="small" style="line-height:1.6;margin-top:12px">—</p><div class="notice">Szenarien beruhen auf Spotkursen und historischen OHLCV-Kerzen, nicht auf Zukunftsprognosen. Signale nur nach Kerzenschluss prüfen. Die Volumenbeurteilung verwendet abgeschlossene Kerzen.</div></section><section class="panel" id="multitf"><h2 class="section">Einzelcoin · Trendvergleich 4h / 1D / 1W</h2><p class="small">Zusätzliche Datenabfrage auf Knopfdruck. Jeder Zeitraum verwendet nur abgeschlossene Kerzen, EMA 20/50 und RSI 14. Fibonacci-Referenzmarken werden unabhängig je Zeitfenster aus bestätigten Pivots (sonst Fensterextremen) berechnet.</p><button id="checktf">Alle drei Zeitfenster prüfen</button><div id="tfstatus" class="small" style="margin:10px 0">Noch nicht abgefragt</div><div id="tfresults" class="grid"><div class="tile small">Keine Cross-Timeframe-Daten</div></div><p class="small">Trendvergleich ist keine Handelsanweisung. Wenn einzelne Datenquellen ausfallen, wird das separat angezeigt.</p></section><section class="panel" id="fibAtlasPanel">
+<h2 class="section">Fibonacci-Atlas · gewichtete Kurszonen</h2>
+<p class="small">BTCUSDT · Binance Spot. Verbindet bestätigte Swings über 4h, Tag und Woche; zusätzlich langfristige Wochenfenster bis ca. 19 Jahre, soweit Daten vorhanden. Je nach Datenlage können historische Zonen fehlen. Jede Marke ist eine <b>rechnerische Referenz</b>, keine bestätigte Unterstützung oder Prognose.</p>
+<button id="runFibAtlas">Fibonacci-Atlas berechnen</button>
+<div id="fibAtlasStatus" class="small" style="margin:11px 0;color:#72c7fb">Noch nicht berechnet. Der Gesamtanalyse-Knopf startet den Atlas ebenfalls.</div>
+<div class="grid" style="margin:10px 0">
+ <div class="tile"><div class="small">Nächste tiefere Referenz</div><b id="fibAtlasBelow">—</b></div>
+ <div class="tile"><div class="small">Nächste höhere Referenz</div><b id="fibAtlasAbove">—</b></div>
+</div>
+<div class="small" style="margin:10px 0">Zonenbildung: maximal ±0,5 % um die Zonenmitte; die Bewertung beruht auf Zeitebene, bestätigten Pivots und unabhängigen Swing-Paaren. <b>Kein backgetesteter Prognose-Score.</b></div>
+<div id="fibAtlasGroups" class="grid"><div class="tile small">4h, 1 Tag und 1 Woche werden beim Start neu geladen.</div></div>
+<div class="notice" style="margin-top:12px">Die Zonen entstehen aus unterschiedlichen historischen Swing-Paaren, inklusive 1,272- und 1,618-Extensions. Swing-Paare können widersprüchliche Niveaus liefern. Duplikate werden nur für die Anzeige zusammengefasst; Zeitebene und Berechnung bleiben sichtbar. Es gibt weder garantierte Kursziele noch automatische Push-Alarme.</div>
+</section><section class="panel"><h2 class="section">Einzelchart · Fibonacci-Retracement &amp; Extensions</h2><div class="notice">Bestätigte lokale Pivot-Punkte (je drei abgeschlossene Kerzen links und rechts) werden paarweise auf mindestens 3 % Kursbewegung geprüft. Wenn kein geeignetes Paar vorliegt, verwendet die App transparent gekennzeichnete Fensterextreme. Extensions bei 1,272 und 1,618 werden jenseits beider Swing-Grenzen berechnet; das sind keine Prognoseziele. Kein Indikator garantiert eine Trendwende.</div><table class="levels"><thead><tr><th>Level</th><th>Kurs (USDT)</th><th>Distanz</th></tr></thead><tbody id="fibbody"><tr><td colspan="3">Lade Daten …</td></tr></tbody></table><div class="small" id="fibdirection" style="margin-top:10px"></div></section><section class="panel"><h2 class="section">Preisalarme (solange die App offen ist)</h2><div class="flex" style="flex-wrap:wrap"><select id="alarmtype"><option value="above">Kurs steigt über</option><option value="below">Kurs fällt unter</option></select><input type="number" id="alarmprice" min="0" step="any" placeholder="Kurs in USD/USDT" inputmode="decimal"><button id="addalarm">+ Alarm</button></div><div id="alarms" class="small" style="margin-top:12px">Noch keine Alarme.</div><p class="small">Für Benachrichtigungen während die Seite geöffnet ist, erlaube Browser-Mitteilungen, sofern unterstützt. Auf dem iPhone sind Hintergrundalarme in dieser Version nicht zuverlässig möglich. Bei geöffneter App werden der aktive Einzelchart ungefähr alle 60 Sekunden und die Kurskacheln ungefähr alle 90 Sekunden aktualisiert; die Prüfung ist nicht garantiert.</p></section><section class="panel"><h2 class="section">Weltmarkt-Radar</h2><p class="small">Marktübersicht als kostenlos eingebettetes TradingView-Widget (externer Anbieter). Kurse können je nach Börse verzögert sein und zeigen andere Datenquellen als unsere Binance-Spotkurse. Die Werte fliessen noch nicht in die technische Risikoampel ein; Korrelationen werden nicht behauptet.</p><div class="notice" style="margin:12px 0">Die Marktübersicht wird separat von TradingView geladen und ist kein eigenständiger API-Datenfeed unserer App. Falls das Widget im iPhone-Webmodus nicht erscheint, nutze die Links darunter. Keine automatischen Korrelationen oder Echtzeitgarantie.</div>
+<div class="tradingview-widget-container" style="width:100%;min-height:440px;overflow:hidden;border-radius:12px"><div class="tradingview-widget-container__widget" style="width:100%;min-height:440px"></div>
+<div class="small" style="padding:5px 0"><a href="https://www.tradingview.com/markets/" target="_blank" rel="noopener" style="color:#a7b3cc">Marktdaten von TradingView</a></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+{"colorTheme": "dark", "dateRange": "1M", "locale": "de_DE", "isTransparent": true, "showFloatingTooltip": false, "showSymbolLogo": false, "showChart": false, "width": "100%", "height": "440", "tabs": [{"title": "Aktien & Dollar", "symbols": [{"s": "FOREXCOM:NSXUSD", "d": "Nasdaq 100 (CFD)"}, {"s": "FOREXCOM:SPXUSD", "d": "S&P 500 (CFD)"}, {"s": "TVC:DXY", "d": "US-Dollar-Index"}, {"s": "FX:USDCHF", "d": "USD/CHF"}]}, {"title": "Rohstoffe", "symbols": [{"s": "OANDA:XAUUSD", "d": "Gold Spot"}, {"s": "OANDA:XAGUSD", "d": "Silber Spot"}, {"s": "TVC:USOIL", "d": "WTI Rohöl"}, {"s": "TVC:UKOIL", "d": "Brent Rohöl"}]}]} 
+</script></div><div class="linkgrid"><a href="https://www.tradingview.com/symbols/NASDAQ-NDX/" target="_blank" rel="noopener">Nasdaq 100 ↗</a><a href="https://www.tradingview.com/symbols/SPX/" target="_blank" rel="noopener">S&P 500 ↗</a><a href="https://www.tradingview.com/symbols/XAUUSD/" target="_blank" rel="noopener">Gold ↗</a><a href="https://www.tradingview.com/symbols/TVC-USOIL/" target="_blank" rel="noopener">WTI Öl ↗</a><a href="https://www.tradingview.com/symbols/TVC-DXY/" target="_blank" rel="noopener">US-Dollar DXY ↗</a><a href="https://fred.stlouisfed.org/series/DGS10" target="_blank" rel="noopener">US-Zins 10J ↗</a><a href="https://www.coinglass.com/" target="_blank" rel="noopener">CoinGlass ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">Fed-Termine ↗</a></div></section><section class="panel" id="correlations"><h2 class="section">Altcoin-Labor · Korrelationen und relative Stärke</h2>
+<p class="small">Echte Pearson-Korrelationen auf <b>täglichen logarithmischen Renditen</b>, nur zeitlich paarweise abgeglichene Tageskerzen. +1 = gleichläufig, −1 = gegenläufig. Kein Prognoseinstrument.</p>
+<div class="flex" style="flex-wrap:wrap;gap:8px"><button id="runCorr">BTC / Altcoins: 30 &amp; 90 Tage berechnen</button></div>
+<div id="corrstatus" class="small" style="margin:12px 0">Noch keine Korrelationsberechnung.</div>
+<div id="corrresults" class="grid"><div class="tile small">BTC im Vergleich zu ETH, XRP, SOL und DOGE – Daten nach Knopfdruck.</div></div>
+<div class="panel" style="margin-top:16px;background:#10192c;border-radius:12px" id="relativeStrength">
+<h3 style="margin:0 0 8px">Altcoin-Radar · relative Stärke &amp; Volatilität</h3>
+<p class="small">30 Kalendertage, identische abgeschlossene Binance-UTC-Tageskerzen. Relative Stärke = 30-Tage-Rendite des Altcoins minus BTC-Rendite in <b>Prozentpunkten</b>. Volatilität = Standardabweichung täglicher Log-Renditen × √365, annualisiert. Beta misst die durchschnittliche Renditereaktion auf BTC, keine Prognose. Keine Bewertung ohne ausreichende gemeinsame Handelstage.</p>
+<button id="runStrength">Altcoin-Radar berechnen</button>
+<div id="strengthStatus" class="small" style="margin:10px 0">Noch nicht berechnet.</div>
+<div id="strengthResults" class="grid"><div class="tile small">ETH, XRP, SOL und DOGE im Vergleich zu Bitcoin – berechnete Werte statt Schätzungen.</div></div>
+<div class="notice" style="margin-top:10px">Rangfolge nach vergangener relativer 30-Tage-Performance, keine Kaufempfehlung. Hohe Volatilität und hohe Korrelation können trotz verschiedener Coins ein erhöhtes Portfoliorisiko bedeuten. Quellen: Binance Spot BTCUSDT und jeweilige USDT-Paare.</div>
+</div>
+<h3 style="margin:22px 0 7px">Nasdaq, S&amp;P 500, Gold, Silber, Öl oder Dollar</h3>
+<p class="small">Kostenlose Echtzeit-Widgets liefern keine frei nutzbaren historischen Kursreihen. Du kannst stattdessen eine <b>CSV-Datei mit Schlusskursen</b> des jeweiligen Marktes laden. Die Datei bleibt auf deinem iPhone; keine Übertragung an GitHub oder ChatGPT.</p>
+<div class="flex" style="flex-wrap:wrap;gap:8px"><select id="macroAsset" aria-label="Markt auswählen"><option value="Nasdaq 100">Nasdaq 100</option><option value="S&amp;P 500">S&amp;P 500</option><option value="Gold">Gold</option><option value="Silber">Silber</option><option value="Brent">Brent</option><option value="WTI">WTI</option><option value="DXY">DXY</option><option value="USD/CHF">USD/CHF</option><option value="SMI">SMI</option><option value="DAX">DAX</option></select><input type="file" id="macroCSV" accept=".csv,text/csv,text/plain" aria-label="Tageskurse als CSV auswählen"></div>
+<div class="small" style="margin:8px 0">CSV-Beispiel: <code>date,close</code> gefolgt von <code>2026-11-10,1234.50</code>. Mindestens 31 bzw. 91 synchronisierte Renditetage erforderlich. Zahlen mit Dezimalpunkt; UTC-Datum der Handelssitzung; keine Intraday-Werte. Keine Daten werden erfunden.</div>
+<div id="macroResult" class="tile small">Noch keine Datei importiert. Bei fehlender oder unpassender Datenbasis bleibt die Korrelation nicht verfügbar.</div>
+<div class="notice" style="margin-top:12px">Korrelationen sind nur sinnvoll, wenn Tagesdefinition, Handelskalender, Währung, Handelsprodukt und Datenstand vergleichbar sind. BTC wird über BTCUSDT angenähert (USDT ist nicht immer exakt USD). Aktienmärkte haben Wochenenden/Feiertage; es werden nur tatsächlich gemeinsame Renditedaten verwendet. Die Korrelationen beeinflussen die Marktampel nicht.</div></section>
+<section class="panel" id="earlyWarning">
+<h2 class="section">Frühwarnmonitor · BTC &amp; Fibonacci-Hierarchie</h2>
+<p class="small">Auf Knopfdruck analysiert die App <b>4h / 1 Tag / 1 Woche</b> parallel anhand abgeschlossener Binance-Spotkerzen. Der aktuelle Kurs wird separat geladen. Es werden rechnerische Unterstützungs- und Widerstandsreferenzen aus bestätigten Swings und grösseren Fenstern gesucht; eine Referenz ist noch keine bestätigte Unterstützung. <b>Keine automatischen Push-Alarme.</b></p>
+<button id="runWarning">Bitcoin-Frühwarnanalyse starten</button>
+<div id="warningStatus" class="small" style="margin:12px 0">Noch keine aktuelle Mehrzeitebenen-Prüfung.</div>
+<div id="warningKpis" class="grid"><div class="tile small">Starte die Analyse für aktuelle BTC-Daten, Zeitstempel und Alarmbedingungen.</div></div>
+<details class="sub-details"><summary>Alternative Fibonacci-Referenzen des Frühwarnmodells</summary>
+<div id="warningZones" class="tile small">Noch nicht berechnet.</div></details>
+<h3 style="margin:16px 0 8px">Frühwarnsignale</h3>
+<div id="warningAlerts" class="tile small">Noch nicht berechnet.</div>
+<div class="notice" style="margin-top:12px">Quellen: Binance Spot BTCUSDT, historische abgeschlossene OHLCV-Kerzen (UTC) und aktueller Spot-Ticker. Intervall- und Abrufzeit werden angezeigt. Signalregeln sind heuristisch und nicht backgetestet. Bei fehlenden/ungültigen Daten keine Freigabe eines Gesamtsignals. Bei einer Unterbrechung der Datenverbindung bleibt der Monitor ausdrücklich unverfügbar.</div>
+</section>
+<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Version 1.2 · Fibonacci-Zonen · Qualitätsgeprüfter Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
+const symbols=['BTC','ETH','XRP','SOL','DOGE'];let active='BTC',rows=[],lastPrice=null,report='',alarms=(()=>{try{const saved=JSON.parse(localStorage.getItem('cmpro_alarms')||'[]');return Array.isArray(saved)?saved.filter(a=>a&&symbols.includes(a.coin)&&['above','below'].includes(a.type)&&Number.isFinite(Number(a.price))&&Number(a.price)>0):[]}catch(e){return []}})(),busy=false,requestCounter=0,loadedKey=null,loadedSource=null,loadedAt=null;
+const $=id=>document.getElementById(id);const fmt=(v,dec)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:dec??(v>=100?2:4),maximumFractionDigits:dec??(v>=100?2:4)});const status=(s,ok)=>{$('state').textContent=s;$('state').style.color=ok?'#4dd3a6':'#ffb66d'};
+function buildtabs(){
+ $('coins').innerHTML=symbols.map(s=>`<button type="button" data-coin="${s}" class="${active===s?'active':''}" aria-pressed="${active===s}">${s}</button>`).join('');
+ $('coinHelper').textContent=active==='BTC'?'BTC ausgewählt. Marktübersicht und Gesamtanalyse beziehen sich ausschliesslich auf Bitcoin.':`${active} ausgewählt: Hier werden nur der Einzelchart, RSI, EMA und Fibonacci für ${active} aktualisiert. Marktübersicht, Derivate-Kompass und Gesamtanalyse bleiben auf BTC bezogen.`;
+ document.querySelectorAll('[data-coin]').forEach(b=>b.onclick=()=>{
+  if(active===b.dataset.coin)return;
+  active=b.dataset.coin;
+  $('tfresults').innerHTML='<div class="tile small">Für diesen Coin noch nicht abgefragt</div>';
+  $('tfstatus').textContent='Bitte Zeitfenster neu prüfen';
+  buildtabs();load();
+ });
+}buildtabs();
+async function fetchTimed(url,ms=6500){const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),ms);try{const r=await fetch(url,{cache:'no-store',signal:ctl.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(timer)}}
+// Shared short-lived market cache; coalesces identical in-flight requests.
+// OHLC data are completed candles; cache expiry is checked on each new request.
+const marketCache=new Map();
+function fetchMarketShared(path,ttl=20000){
+ const now=Date.now(),existing=marketCache.get(path);
+ if(existing?.data!==undefined&&existing.expires>now)return Promise.resolve(existing.data);
+ if(existing?.pending)return existing.pending;
+ const pending=fetchJSON(path).then(data=>{
+   marketCache.set(path,{data,expires:Date.now()+ttl});return data;
+ },err=>{marketCache.delete(path);throw err});
+ marketCache.set(path,{pending});
+ return pending;
+}
+async function fetchJSON(path){let lastErr;for(const host of ['https://data-api.binance.vision','https://api.binance.com']){try{return await fetchTimed(host+path,5500)}catch(e){lastErr=e}}throw lastErr||Error('Marktdaten nicht erreichbar')}
+function ema(arr,p){if(arr.length<p)return null;let v=arr.slice(0,p).reduce((a,b)=>a+b,0)/p;for(let i=p;i<arr.length;i++)v=arr[i]*(2/(p+1))+v*(1-2/(p+1));return v}function rsi(arr,p=14){if(arr.length<=p)return null;let gain=0,loss=0;for(let i=1;i<=p;i++){const d=arr[i]-arr[i-1];gain+=Math.max(d,0);loss+=Math.max(-d,0)}gain/=p;loss/=p;for(let i=p+1;i<arr.length;i++){const d=arr[i]-arr[i-1];gain=(gain*(p-1)+Math.max(d,0))/p;loss=(loss*(p-1)+Math.max(-d,0))/p}return loss===0?(gain===0?50:100):100-100/(1+gain/loss)}
+function draw(data,lo,hi,levels){const w=680,h=310,L=9,R=77,T=12,B=30;let min=Math.min(...data.map(x=>x.l),...levels),max=Math.max(...data.map(x=>x.h),...levels);const extra=(max-min)*.05||1;min-=extra;max+=extra;const y=p=>T+(max-p)/(max-min)*(h-T-B),x=i=>L+(i+.5)*(w-L-R)/data.length,bw=Math.max(1,(w-L-R)/data.length*.65);let out='';for(let j=0;j<=4;j++){let p=min+(max-min)*j/4,Y=y(p);out+=`<line x1="${L}" y1="${Y}" x2="${w-R}" y2="${Y}" stroke="#293750" stroke-dasharray="4,5"/><text x="${w-5}" y="${Y+4}" font-size="12" fill="#9ca9c5" text-anchor="end">${fmt(p,p<10?3:0)}</text>`}for(let i=0;i<data.length;i++){let d=data[i],col=d.c>=d.o?'#39c7a5':'#ff6e81',X=x(i),Y=y(Math.max(d.o,d.c)),bot=y(Math.min(d.o,d.c));out+=`<line x1="${X}" y1="${y(d.h)}" x2="${X}" y2="${y(d.l)}" stroke="${col}" stroke-width="1"/><rect x="${X-bw/2}" y="${Y}" width="${bw}" height="${Math.max(1,bot-Y)}" fill="${col}"/>`}for(const [i,p] of levels.entries()){let Y=y(p);out+=`<line x1="${L}" y1="${Y}" x2="${w-R}" y2="${Y}" stroke="#56a4ea" opacity="${i===3?0.8:.32}" stroke-dasharray="3,4"/>`}out+=`<text x="10" y="303" font-size="12" fill="#9ca9c5">${new Date(data[0].t).toLocaleDateString('de-CH')}</text><text x="${w-R}" y="303" font-size="12" fill="#9ca9c5" text-anchor="end">${new Date(data.at(-1).t).toLocaleDateString('de-CH')}</text>`;$('chart').innerHTML=out}
+function confirmedSwing(selection){
+  const piv=[]; const n=3;
+  for(let i=n;i<selection.length-n;i++){
+    const c=selection[i],before=selection.slice(i-n,i),after=selection.slice(i+1,i+n+1);
+    if([...before,...after].every(x=>c.h>x.h))piv.push({type:'H',index:i,t:c.t,h:c.h,l:c.l});
+    if([...before,...after].every(x=>c.l<x.l))piv.push({type:'L',index:i,t:c.t,h:c.h,l:c.l});
+  }
+  // Latest confirmed, alternating pair with at least 3% travel, no look-ahead.
+  for(let i=piv.length-1;i>=1;i--){for(let j=i-1;j>=0;j--){
+    const a=piv[j],b=piv[i];if(a.type===b.type)continue;
+    const low=a.type==='L'?a:b,high=a.type==='H'?a:b;
+    if((high.h-low.l)/low.l<.03)continue;
+    return {low,high,confirmed:true};
+  }}
+  return {low:selection.reduce((a,b)=>b.l<a.l?b:a),high:selection.reduce((a,b)=>b.h>a.h?b:a),confirmed:false};
+}
+function volumeTrend(data){
+  const a=data.slice(-20,-5),b=data.slice(-5);
+  if(a.length<10||b.length<5||![...a,...b].every(x=>Number.isFinite(x.v)&&x.v>=0))return null;
+  const prev=a.reduce((t,x)=>t+x.v,0)/a.length,now=b.reduce((t,x)=>t+x.v,0)/b.length;
+  return prev>0?now/prev:null;
+}
+function analyse(){if(!rows.length||loadedKey!==`${active}:${$('interval').value}`)return;const w=Math.min(+$('window').value,rows.length), selection=rows.slice(-w),swing=confirmedSwing(selection), low=swing.low,high=swing.high,rise=low.t<high.t,lo=low.l,hi=high.h,d=hi-lo,close=rows.map(r=>r.c),rs=rsi(close),e20=ema(close,20),e50=ema(close,50),vtrend=volumeTrend(rows);const ratios=[0,.236,.382,.5,.618,.786,1];const baseLevels=ratios.map(v=>rise?hi-v*d:lo+v*d);const extLevels=[lo-.618*d,lo-.272*d,hi+.272*d,hi+.618*d].filter(v=>v>0);const levels=[...baseLevels,...extLevels];$('fibbody').innerHTML=[...ratios.map((v,i)=>({label:v===0?'0':v===1?'1':v.toFixed(3),price:baseLevels[i]})),...extLevels.map(v=>({label:v<lo?(Math.abs(v-(lo-.272*d))<.001?'1,272 Abwärts-Ext.':'1,618 Abwärts-Ext.'):(Math.abs(v-(hi+.272*d))<.001?'1,272 Aufwärts-Ext.':'1,618 Aufwärts-Ext.'),price:v}))].sort((a,b)=>b.price-a.price).map(x=>`<tr><td>${x.label}</td><td>${fmt(x.price)}</td><td class="${lastPrice>=x.price?'green':'red'}">${((x.price/lastPrice-1)*100).toFixed(2).replace('.',',')} %</td></tr>`).join('');$('fibdirection').textContent=`${rise?'Aufwärtsswing (Rücklaufzonen ab Hoch)':'Abwärtsswing (Erholungszonen ab Tief)'} · Tief ${fmt(lo)} (${new Date(low.t).toLocaleDateString('de-CH')}) · Hoch ${fmt(hi)} (${new Date(high.t).toLocaleDateString('de-CH')}). ${swing.confirmed?'Bestätigte 3/3-Pivots; Mindestbewegung 3 %.':'ERSATZMODELL: Fensterextreme, keine bestätigten Pivots.'} Extensions über beide Swing-Grenzen hinaus (rechnerische Szenariozonen, keine bestätigten Unterstützungen).`;$('rsi').textContent=rs==null?'—':fmt(rs,1);$('rsitext').textContent=rs>70?'Überkauft (kein sicheres Verkaufssignal)':rs<30?'Überverkauft (kein sicheres Kaufsignal)':'Neutraler RSI-Bereich';$('ema').textContent=e20&&e50?`${fmt(e20,0)} / ${fmt(e50,0)}`:'—';$('ematext').textContent=e20>e50?'EMA 20 über EMA 50':'EMA 20 unter EMA 50';$('swing').textContent=`${fmt(lo,0)} / ${fmt(hi,0)}`;$('regime').textContent=lastPrice>e20&&e20>e50?'Aufwärtsstruktur':lastPrice<e20&&e20<e50?'Abwärtsstruktur':'Gemischte Signale';
+const sorted=[...levels].sort((a,b)=>a-b); const lower=sorted.filter(x=>x<lastPrice),higher=sorted.filter(x=>x>lastPrice);
+const nearestVal=[...sorted].sort((a,b)=>Math.abs(a-lastPrice)-Math.abs(b-lastPrice))[0];
+$('nearest').textContent=fmt(nearestVal,2); $('nearestdist').textContent=((nearestVal/lastPrice-1)*100).toFixed(2).replace('.',',')+' % zum Kurs';
+$('support').textContent=lower.length?fmt(lower[lower.length-1],2):'Keine innerhalb Modell';
+$('resistance').textContent=higher.length?fmt(higher[0],2):'Keine innerhalb Modell';
+let risk=50;const notes=[];
+if(lastPrice<e20){risk+=15;notes.push('Kurs unter EMA 20')}else{risk-=15;notes.push('Kurs über EMA 20')}
+if(e20<e50){risk+=15;notes.push('EMA 20 unter EMA 50')}else{risk-=15;notes.push('EMA 20 über EMA 50')}
+if(rs<30){risk+=10;notes.push('RSI unter 30: Momentum schwach, Erholung möglich')}
+else if(rs<45){risk+=8;notes.push('RSI zeigt schwaches Momentum')}
+else if(rs>70){risk+=10;notes.push('RSI über 70: Rückschlagrisiko erhöht')}
+else if(rs>55){risk-=8;notes.push('RSI zeigt eher positives Momentum')}
+if(lastPrice<e50){risk+=10;notes.push('Kurs unter EMA 50')}else{risk-=10;notes.push('Kurs über EMA 50')}
+risk=Math.max(0,Math.min(100,risk));$('riskval').textContent=risk+' / 100';$('risklabel').textContent=risk>=70?'Starker technischer Abwärtsdruck':risk>=40?'Gemischter technischer Druck':'Geringerer technischer Abwärtsdruck';$('risksummary').textContent=notes.join(' · ')+'. Dieser Index misst technischen Abwärtsdruck, keine prozentuale Prognose. Keine Nachrichten, Liquidationen oder Makrodaten.';
+const closeLast=rows.at(-1).c;
+const strictBull=lastPrice>e20&&e20>e50&&rs>=50;
+const strictBear=lastPrice<e20&&e20<e50&&rs<45;
+const traffic=strictBull?'🟢 Bullisch':strictBear?'🔴 Bärisch':'🟡 Neutral / Übergang';
+$('traffic').textContent=traffic;
+$('confidence').textContent=(swing.confirmed?'Bestätigte Pivots':'Fensterextreme (Ersatz)')+' · '+(vtrend===null?'Volumen unbekannt':`Volumen (5 abgeschlossene Kerzen vs. vorher): ${(vtrend*100-100).toFixed(0)} %`);
+const below=lower.length?lower.at(-1):null,above=higher.length?higher[0]:null;
+const unit=$('source').textContent.includes('Kraken')?'USD':'USDT';
+$('bullcase').textContent=above!==null?`Erstes Signal: bestätigter Schlusskurs über ${fmt(above,2)} ${unit}. Danach nächstes oberes Fib-Level ${higher[1]!==undefined?fmt(higher[1],2):'ausserhalb des Fensters'}. Fällt der Kurs erneut darunter, ist das Signal infrage gestellt.`:'Kurs über allen modellierten Fibonacci-Referenzmarken; kein weiteres bestätigtes Kursziel ableitbar.';
+$('bearcase').textContent=below!==null?`Erstes Signal: bestätigter Schlusskurs unter ${fmt(below,2)} ${unit}. Danach nächstes unteres Fib-Level ${lower.at(-2)!==undefined?fmt(lower.at(-2),2):'ausserhalb des Fensters'}. Rückkehr über die Bruchzone schwächt das Signal.`:'Kurs unter allen berechneten Fibonacci-Referenzmarken; keine weitere modellierte Zone. Kein unbegrenztes Kursziel ableitbar.';
+$('neutralcase').textContent=`Neutrales Szenario: Seitwärtsbewegung zwischen ${below!==null?fmt(below,2):'unterer Fenstergrenze'} und ${above!==null?fmt(above,2):'oberer Fenstergrenze'} ${unit}. Bewertung auf ${$('interval').value}; aktuell: ${traffic}. Letzter abgeschlossener Kerzenschluss ${fmt(closeLast,2)} ${unit}.`;
+draw(rows.slice(-65),lo,hi,levels);report=`${active} – ${$('interval').value}\nZeit: ${new Date().toLocaleString('de-CH')}\nSpotkurs: ${fmt(lastPrice)} ${unit}\nRSI(14): ${fmt(rs,1)}\nEMA20: ${fmt(e20)}; EMA50: ${fmt(e50)}\nSwing-Tief: ${fmt(lo)}; Swing-Hoch: ${fmt(hi)} (${swing.confirmed?'bestätigte Pivots':'Fensterextreme'})\nMarktampel: ${traffic}; Risikoindex ${risk}/100\nVolumenverhältnis: ${vtrend===null?'nicht verfügbar':fmt(vtrend,2)}\nFibonacci: ${ratios.map((v,i)=>`${v}: ${fmt(baseLevels[i])}`).join(' | ')} | Extensions: ${extLevels.map(v=>fmt(v)).join(' | ')}\nQuelle: ${$('source').textContent}. Keine Derivate- oder Makrodaten.`}
+function technicalTFSummary(candles){
+ const close=candles.map(x=>x.c),e20=ema(close,20),e50=ema(close,50),r=rsi(close);
+ if(candles.length<55||e20===null||e50===null||r===null)throw Error('Zu wenige vollständige Kerzen');
+ const last=close.at(-1),p=confirmedSwing(candles.slice(-Math.min(90,candles.length))),lo=p.low.l,hi=p.high.h,d=hi-lo;
+ const all=[lo-.618*d,lo-.272*d,lo,hi,hi+.272*d,hi+.618*d].filter(x=>x>0).sort((a,b)=>a-b);
+ const lower=all.filter(x=>x<last),upper=all.filter(x=>x>last);
+ return {last,e20,e50,r,lo,hi,confirmed:p.confirmed,trend:last>e20&&e20>e50?'🟢 Bullisch':last<e20&&e20<e50?'🔴 Bärisch':'🟡 Gemischt',below:lower.at(-1),above:upper[0],date:new Date(candles.at(-1).t).toLocaleDateString('de-CH')+' (Kerzenbeginn UTC)'};
+}
+async function loadTimeframes(){
+ const btn=$('checktf');btn.disabled=true;$('tfresults').innerHTML='<div class="tile small">Prüfe unabhängig 4h, 1D und 1W …</div>';$('tfstatus').textContent='Lade 4h-, Tages- und Wochenkerzen …';
+ const symbol=active;
+ const results=await Promise.all(['4h','1d','1w'].map(async tf=>{
+  let data,err=[];try{data=await fetchBinance(symbol,tf)}catch(e){err.push('Binance: '+e.message)}
+  if(!data)try{data=await fetchKraken(symbol,tf)}catch(e){err.push('Kraken: '+e.message)}
+  if(!data)return {tf,error:err.join('; ')};
+  try{return {tf,source:data.source,summary:technicalTFSummary(data.rows)}}catch(e){return {tf,error:e.message}}
+ }));
+ if(active!==symbol){$('tfstatus').textContent='Coin gewechselt; bitte erneut laden.';btn.disabled=false;return}
+ $('tfresults').innerHTML=results.map(x=>x.error?`<div class="tile"><b>${x.tf}</b><span class="small">Daten nicht verfügbar: ${x.error.replace(/</g,'&lt;')}</span></div>`:`<div class="tile"><div class="small">${x.tf} · ${x.source.replace(/</g,'&lt;')}</div><b style="font-size:17px">${x.summary.trend}</b><div class="small">Schluss ${fmt(x.summary.last,2)} · ${x.summary.date}<br>RSI ${fmt(x.summary.r,1)}<br>EMA20 ${fmt(x.summary.e20,0)} · EMA50 ${fmt(x.summary.e50,0)}<br>Obere Referenz ${x.summary.above?fmt(x.summary.above,2):'–'}<br>Untere Referenz ${x.summary.below?fmt(x.summary.below,2):'–'}<br>${x.summary.confirmed?'Bestätigter Pivot':'Fensterextreme (Ersatz)'}</div></div>`).join('');
+ $('tfstatus').textContent=`Stand: ${new Date().toLocaleString('de-CH')} · ${results.filter(x=>!x.error).length}/3 Zeitfenster verfügbar. Änderungen seit der Abfrage werden nicht automatisch übernommen.`;
+ btn.disabled=false;
+}
+$('checktf').onclick=loadTimeframes;
+const safeAlarmText=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function renderAlarms(){$('alarms').innerHTML=alarms.length?alarms.map((a,i)=>`<div class="flex" style="margin:8px 0;gap:4px"><span>${safeAlarmText(a.coin)}: ${a.type==='above'?'über':'unter'} ${Number.isFinite(Number(a.price))?fmt(Number(a.price)):'ungültig'} ${a.hit?'✓ Ausgelöst':''}</span><button style="padding:5px 10px" data-del="${i}">✕</button></div>`).join(''):'Noch keine Alarme.';document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{alarms.splice(+b.dataset.del,1);save();renderAlarms()})}function save(){try{localStorage.setItem('cmpro_alarms',JSON.stringify(alarms))}catch(e){$('chartcaption').textContent='Lokales Speichern durch den Browser gesperrt; Alarm gilt nur für diese Sitzung.'}}renderAlarms();$('addalarm').onclick=()=>{const price=+$('alarmprice').value;if(!Number.isFinite(price)||price<=0){alert('Gültigen Kurs eingeben.');return}alarms.push({coin:active,currency:$('source').textContent.includes('Kraken')?'USD':'USDT',type:$('alarmtype').value,price,hit:false});save();renderAlarms();$('alarmprice').value=''};
+function checkAlarmsFor(coin,price,unit){
+ if(!Number.isFinite(price)||price<=0)return;
+ let changed=false;
+ for(const a of alarms){
+   if(a.coin!==coin||a.hit||(a.currency||'USDT')!==unit)continue;
+   const threshold=Number(a.price);
+   if(!Number.isFinite(threshold)||threshold<=0)continue;
+   if(a.type==='above'?price>=threshold:price<=threshold){
+     a.hit=true;changed=true;
+     const msg=`${a.coin} ${a.type==='above'?'über':'unter'} ${fmt(threshold,threshold<1?6:threshold<10?4:2)} ${unit}`;
+     if('Notification' in window&&Notification.permission==='granted'){
+       try{new Notification('Crypto Market Pro',{body:msg})}catch(e){alert('Preisalarm: '+msg)}
+     }else alert('Preisalarm: '+msg);
+   }
+ }
+ if(changed){save();renderAlarms()}
+}
+function checkAlarms(){checkAlarmsFor(active,lastPrice,$('source').textContent.includes('Kraken')?'USD':'USDT')}
+
+async function fetchKraken(symbol, interval){
+  const pair=({BTC:'XBTUSD',ETH:'ETHUSD',SOL:'SOLUSD',XRP:'XRPUSD',DOGE:'XDGUSD'})[symbol];
+  const minutes=({'4h':240,'1d':1440,'1w':10080})[interval];
+  const [ohlc,tick]=await Promise.all([
+    fetchTimed('https://api.kraken.com/0/public/OHLC?pair='+pair+'&interval='+minutes,6500),
+    fetchTimed('https://api.kraken.com/0/public/Ticker?pair='+pair,6500)
+  ]);
+  if(ohlc.error?.length || tick.error?.length)throw Error('Kraken: '+[...(ohlc.error||[]),...(tick.error||[])].join('; '));
+  const key=Object.keys(ohlc.result||{}).find(k=>Array.isArray(ohlc.result[k])), tk=Object.keys(tick.result||{})[0];
+  const raw=ohlc.result?.[key], t=tick.result?.[tk];
+  if(!raw||raw.length<25||!t)throw Error('Kraken meldet unvollständige Kurse');
+  // Letzte Kraken-Kerze ist häufig noch offen; bei RSI/Fibonacci entfernen.
+  const completed=raw.slice(0,-1);
+  return {rows:completed.map(k=>({t:Number(k[0])*1000,o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[6]})),
+    price:+t.c[0], change:(+t.c[0]/+t.o-1)*100, changeLabel:'Seit UTC-Tagesbeginn', source:'Kraken · '+symbol+'/USD',unit:'USD'};
+}
+async function fetchBinance(symbol,interval){
+  const sym=symbol+'USDT';
+  const [candle,ticker]=await Promise.all([fetchMarketShared('/api/v3/klines?symbol='+sym+'&interval='+interval+'&limit=420',60000),fetchMarketShared('/api/v3/ticker/24hr?symbol='+sym,12000)]);
+  if(!Array.isArray(candle)||candle.length<55||!ticker.lastPrice)throw Error('Binance: unvollständige Kurse');
+  const parsed=candle.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]}));
+  const duration=({'4h':14400000,'1d':86400000,'1w':604800000})[interval];
+  const completed=parsed.filter(k=>k.t+duration<=Date.now());
+  return {rows:completed,price:+ticker.lastPrice,change:+ticker.priceChangePercent,changeLabel:'24h',source:'Binance · '+sym,unit:'USDT'};
+}
+function blankData(reason){
+  rows=[];lastPrice=null;report='';loadedKey=null;loadedSource=null;loadedAt=null;
+  $('price').textContent='—';$('change').textContent=reason;
+  $('updated').textContent='—';
+  for(const id of ['rsi','rsitext','ema','ematext','swing','regime','riskval','risklabel','nearest','nearestdist','support','resistance','traffic','bullcase','bearcase','neutralcase','confidence'])$(id).textContent='—';
+  $('risksummary').textContent='Keine aktuellen, zugeordneten Kerzendaten.';
+  $('fibbody').innerHTML='<tr><td colspan="3">Neue Zeitreihe wird geladen …</td></tr>';
+  $('fibdirection').textContent='—';
+  $('chart').innerHTML='<text x="20" y="145" font-size="16" fill="#b3bfd5">Neue Chartdaten werden geladen …</text>';
+  $('viewstamp').textContent=`Ausgewählt: ${active} · ${$('interval').value} · Daten werden geprüft`;
+  $('indicatorstamp').textContent=`Indikatoren für ${active} · ${$('interval').value} werden geladen`;
+  $('chartcaption').textContent=reason;
+}
+async function load(){
+  const token=++requestCounter;
+  const coin=active, tf=$('interval').value;
+  blankData(`Lade ${coin} · ${tf} …`);
+  busy=true;$('reload').disabled=true;
+  status(`${coin} · ${tf} · Verbinde …`,false);
+  try{
+    let d;const errors=[];
+    try{d=await fetchBinance(coin,tf)}catch(e){errors.push('Binance: '+e.message)}
+    if(token!==requestCounter)return;
+    if(!d)try{d=await fetchKraken(coin,tf)}catch(e){errors.push('Kraken: '+e.message)}
+    if(token!==requestCounter)return;
+    if(!d)throw Error(errors.join(' | '));
+    if(!d.rows||d.rows.length<55||!Number.isFinite(d.price)||d.price<=0)throw Error('Daten unvollständig oder ungültig');
+    if(d.rows.some((r,i)=>!Number.isFinite(r.c)||!Number.isFinite(r.h)||!Number.isFinite(r.l)||(i>0&&r.t<=d.rows[i-1].t)))throw Error('Ungültige OHLC-Zeitreihe');
+    rows=d.rows;lastPrice=d.price;loadedKey=`${coin}:${tf}`;loadedSource=d.source;loadedAt=new Date();
+    $('source').textContent='Spotmarkt · '+d.source;
+    $('price').textContent=fmt(lastPrice)+' '+d.unit;
+    $('change').innerHTML=d.changeLabel+' <span class="'+(d.change>=0?'green':'red')+'">'+(d.change>=0?'+':'')+fmt(d.change,2)+' %</span>';
+    const stamp=loadedAt.toLocaleString('de-CH',{dateStyle:'short',timeStyle:'medium'});
+    $('updated').textContent=stamp;
+    $('viewstamp').textContent=`CHART: ${coin} · ${tf} · ${d.source} · letzte abgeschlossene Kerze: ${new Date(rows.at(-1).t+({'4h':14400000,'1d':86400000,'1w':604800000}[tf])).toLocaleString('de-CH')}`;
+    $('indicatorstamp').textContent=`INDIKATOREN: ${coin} · ${tf} · ${d.source} · berechnet ${stamp}`;
+    $('chartcaption').textContent=d.source+' · '+tf+' · nur abgeschlossene Chartkerzen. Aktueller Spotkurs separat.';
+    document.querySelector('.levels th:nth-child(2)').textContent='Kurs ('+d.unit+')';
+    analyse();checkAlarms();status(`${coin} · ${tf} · Daten geladen`,true);
+  }catch(e){
+    if(token!==requestCounter)return;
+    blankData(`Daten nicht verfügbar für ${coin} · ${tf}`);
+    $('fibbody').innerHTML='<tr><td colspan="3">Daten nicht verfügbar</td></tr>';
+    $('chart').innerHTML='<text x="20" y="145" font-size="16" fill="#ffb66d">Keine verifizierten Chartdaten</text>';
+    status(`${coin} · ${tf} · Datenfehler`,false);
+    $('chartcaption').textContent='Fehler: '+String(e.message||e)+' · Bitte Verbindung prüfen und erneut laden.';
+  }finally{
+    if(token===requestCounter){busy=false;$('reload').disabled=false;}
+  }
+}
+$('interval').onchange=load;$('window').onchange=analyse;$('reload').onclick=load;$('copy').onclick=async()=>{if(!report){$('copyresult').textContent='Keine verifizierten Daten vorhanden.';return}try{await navigator.clipboard.writeText(report);$('copyresult').textContent='Daten kopiert. In ChatGPT einfügen für eine vertiefte Analyse.'}catch(e){$('copyresult').textContent='Kopieren vom Browser blockiert. Bitte App über HTTPS öffnen.'}};load();setInterval(()=>{if(document.visibilityState==='visible'&&!busy)load()},60000);
+
+// Version 9: verifizierbare, datumsgleiche Korrelationen; keine externen Makrodaten behaupten.
+function dailyCloseMap(klines){const m=new Map();for(const r of klines){if(!Number.isFinite(r.c)||r.c<=0)continue;const day=new Date(r.t).toISOString().slice(0,10);m.set(day,r.c)}return m}
+function pairedDailyReturns(btc,other){const common=[...btc.keys()].filter(x=>other.has(x)).sort();const out=[];for(let i=1;i<common.length;i++){const a=common[i-1],b=common[i];const days=(Date.parse(b)-Date.parse(a))/86400000;if(days!==1)continue;const b0=btc.get(a),b1=btc.get(b),o0=other.get(a),o1=other.get(b);if([b0,b1,o0,o1].every(x=>Number.isFinite(x)&&x>0))out.push({day:b,b:Math.log(b1/b0),o:Math.log(o1/o0)})}return out}
+function correlation(arr){if(arr.length<3)return null;const n=arr.length,b=arr.reduce((t,x)=>t+x.b,0)/n,o=arr.reduce((t,x)=>t+x.o,0)/n;let xy=0,bb=0,oo=0;for(const x of arr){xy+=(x.b-b)*(x.o-o);bb+=(x.b-b)**2;oo+=(x.o-o)**2}return bb>0&&oo>0?xy/Math.sqrt(bb*oo):null}
+function corrForWindow(btc,other,windowDays){const pair=pairedDailyReturns(btc,other);const today=Date.parse([...btc.keys()].sort().at(-1)||'1970-01-01');const min=today-windowDays*86400000;const a=pair.filter(x=>Date.parse(x.day)>min);const r=correlation(a);return {r:nEnough(a,windowDays)?r:null,n:a.length,first:a[0]?.day,last:a.at(-1)?.day};}
+function nEnough(a,days){return a.length>=Math.ceil(days*0.65)}
+function corrText(result,days){return result.r===null?'Nicht verfügbar ('+result.n+' gemeinsame Tagesrenditen)':'r = '+result.r.toFixed(3).replace('.',',')+' ('+result.n+' Tage)'}
+let corrToken=0,cachedBTC=null;
+async function fetchDailyMap(symbol){const raw=await fetchMarketShared('/api/v3/klines?symbol='+symbol+'USDT&interval=1d&limit=220',120000);if(!Array.isArray(raw)||raw.length<95)throw Error('Zu wenige Tageskerzen für '+symbol);const complete=raw.filter(x=>Number(x[6])<Date.now()).map(x=>({t:+x[0],c:+x[4]}));if(complete.length<95)throw Error('Unvollständige Tagesdaten');return dailyCloseMap(complete)}
+async function computeCorrelations(){const my=++corrToken,btn=$('runCorr');btn.disabled=true;$('corrstatus').textContent='Lade BTC und Altcoins, bitte Datenabruf abschliessen lassen …';$('corrresults').innerHTML='';try{const btc=await fetchDailyMap('BTC');if(my!==corrToken)return;cachedBTC=btc;const coins=['ETH','XRP','SOL','DOGE'];const res=await Promise.all(coins.map(async sym=>{try{const other=await fetchDailyMap(sym);return {sym,a:corrForWindow(btc,other,30),b:corrForWindow(btc,other,90)}}catch(e){return {sym,error:e.message}}}));if(my!==corrToken)return;$('corrresults').innerHTML=res.map(x=>x.error?`<div class="tile"><b>${x.sym}/BTC</b><div class="small">Nicht verfügbar: ${proEsc(x.error)}</div></div>`:`<div class="tile"><b>BTC ↔ ${x.sym}</b><div class="small">30 Kalendertage: ${corrText(x.a,30)}<br>90 Kalendertage: ${corrText(x.b,90)}</div></div>`).join('');$('corrstatus').textContent='Binance Spot, tägliche abgeschlossene UTC-Kerzen; berechnet '+new Date().toLocaleString('de-CH')+'. Beobachtungszahlen statt erfundener Kurse.';}catch(e){$('corrstatus').textContent='Korrelation derzeit nicht verfügbar: '+e.message}finally{if(my===corrToken)btn.disabled=false;}}
+$('runCorr').onclick=computeCorrelations;
+
+// Version 11: All relative-strength and risk statistics use equal-dated, completed Binance UTC daily closes.
+let strengthRequest=0;
+function rsStd(values){if(values.length<2)return null;const avg=values.reduce((a,b)=>a+b,0)/values.length;return Math.sqrt(values.reduce((s,x)=>s+(x-avg)**2,0)/(values.length-1));}
+function rsRound(v,dec=2){return Number.isFinite(v)?Number(v).toLocaleString('de-CH',{minimumFractionDigits:dec,maximumFractionDigits:dec}):'n. v.';}
+function strengthStats(btc,alt,days=30){
+  const common=[...btc.keys()].filter(d=>alt.has(d)).sort();
+  if(common.length<days+1)return null;
+  const end=common.at(-1), start=new Date(Date.parse(end)-days*86400000).toISOString().slice(0,10);
+  if(!btc.has(start)||!alt.has(start))return null;
+  const dates=common.filter(d=>d>=start&&d<=end);
+  if(dates.length!==days+1)return null;
+  // Reject gaps; otherwise sqrt(365) and day-on-day volatility would be misleading.
+  for(let i=1;i<dates.length;i++)if(Date.parse(dates[i])-Date.parse(dates[i-1])!==86400000)return null;
+  const btc0=btc.get(start),btcn=btc.get(end),a0=alt.get(start),an=alt.get(end);
+  if(![btc0,btcn,a0,an].every(v=>Number.isFinite(v)&&v>0))return null;
+  const rb=btcn/btc0-1,ra=an/a0-1;
+  const x=[],y=[];let peak=a0,maxDrawdown=0;
+  for(let i=1;i<dates.length;i++){
+    const d=dates[i],prev=dates[i-1],btcR=Math.log(btc.get(d)/btc.get(prev)),altR=Math.log(alt.get(d)/alt.get(prev));
+    if(!Number.isFinite(btcR)||!Number.isFinite(altR))return null;
+    x.push(btcR);y.push(altR);
+    peak=Math.max(peak,alt.get(d));maxDrawdown=Math.min(maxDrawdown,alt.get(d)/peak-1);
+  }
+  const sx=rsStd(x),sy=rsStd(y);if(sx===null||sy===null)return null;
+  const xmean=x.reduce((a,b)=>a+b,0)/x.length, ymean=y.reduce((a,b)=>a+b,0)/y.length;
+  const covariance=x.reduce((a,v,i)=>a+(v-xmean)*(y[i]-ymean),0)/(x.length-1);
+  return {btcReturn:rb*100,assetReturn:ra*100,relative:(ra-rb)*100,annualVol:sy*Math.sqrt(365)*100,btcVol:sx*Math.sqrt(365)*100,beta:sx>0?covariance/(sx*sx):null,maxDD:maxDrawdown*100,n:days,first:start,last:end};
+}
+async function computeStrength(){
+  const token=++strengthRequest,button=$('runStrength'),statusNode=$('strengthStatus'),out=$('strengthResults');
+  button.disabled=true;statusNode.textContent='Prüfe abgeschlossene Tageskurse …';out.innerHTML='';
+  try{
+    const btc=await fetchDailyMap('BTC');if(token!==strengthRequest)return;cachedBTC=btc;
+    const alt=await Promise.all(['ETH','XRP','SOL','DOGE'].map(async sym=>{try{const map=await fetchDailyMap(sym);return {sym,stat:strengthStats(btc,map,30)}}catch(e){return {sym,error:e.message}}}));
+    if(token!==strengthRequest)return;
+    const records=alt.filter(a=>a.stat).sort((a,b)=>b.stat.relative-a.stat.relative);
+    const missing=alt.filter(a=>!a.stat);
+    out.innerHTML=records.map((a,i)=>{
+      const v=a.stat,rs=v.relative,flag=rs>=0?'green':'red';
+      return `<div class="tile"><div class="small">Rang ${i+1} · ${v.first} bis ${v.last} UTC</div><b>${a.sym} <span class="${flag}">${rs>=0?'+':''}${rsRound(rs)} pp</span></b><div class="small">Altcoin 30T: ${rsRound(v.assetReturn)} % · BTC 30T: ${rsRound(v.btcReturn)} %<br>Volatilität (ann.): ${rsRound(v.annualVol)} % · BTC: ${rsRound(v.btcVol)} %<br>Beta zu BTC: ${rsRound(v.beta)} · Max. Schlusskurs-Drawdown: ${rsRound(v.maxDD)} %<br>${v.n} tägliche Renditen · Quelle: Binance Spot</div></div>`;
+    }).join('')+missing.map(a=>`<div class="tile"><b>${a.sym}</b><div class="small">Nicht verfügbar: ${proEsc(a.error||'keine 31 lückenlosen gemeinsamen Tages-Schlusskurse')}</div></div>`).join('');
+    if(!records.length)out.innerHTML='<div class="tile small">Keine vollständigen vergleichbaren Kursreihen verfügbar.</div>';
+    statusNode.textContent='Berechnet '+new Date().toLocaleString('de-CH')+' · Quelle Binance Spot · 30 abgeschlossene UTC-Tagesrenditen · Ranking nach relativer 30-Tage-Rendite.';
+  }catch(e){statusNode.textContent='Altcoin-Radar nicht verfügbar: '+e.message;out.innerHTML='<div class="tile small">Keine Schätzung bei Datenfehlern.</div>'}
+  finally{if(token===strengthRequest)button.disabled=false;}
+}
+$('runStrength').onclick=computeStrength;
+
+function parseDailyCSV(txt){const lines=txt.replace(/^\uFEFF/,'').trim().split(/\r?\n/).filter(Boolean);if(lines.length<3)throw Error('Zu wenige CSV-Zeilen');const delim=lines[0].includes(';')?';':',';const head=lines[0].split(delim).map(x=>x.trim().toLowerCase().replaceAll('"',''));const di=head.findIndex(x=>['date','datum','day'].includes(x));const ci=head.findIndex(x=>['close','schluss','schlusskurs','price'].includes(x));if(di<0||ci<0)throw Error('CSV-Spalten date und close fehlen');const map=new Map();for(const l of lines.slice(1)){const v=l.split(delim),d=(v[di]||'').trim().replaceAll('"',''),val=Number((v[ci]||'').trim().replaceAll('"',''));if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||!Number.isFinite(Date.parse(d))||!Number.isFinite(val)||val<=0)continue;if(map.has(d))throw Error('Doppeltes Datum: '+d);map.set(d,val)}if(map.size<31)throw Error('Nur '+map.size+' gültige Schlusskurse');return map}
+$('macroCSV').onchange=async()=>{const file=$('macroCSV').files?.[0];if(!file)return;const box=$('macroResult');box.textContent='Prüfe Datei …';try{if(file.size>2e6)throw Error('Datei über 2 MB');const map=parseDailyCSV(await file.text());const btc=cachedBTC||await fetchDailyMap('BTC');cachedBTC=btc;const a=corrForWindow(btc,map,30),b=corrForWindow(btc,map,90);box.textContent=$('macroAsset').value+' vs. BTC/USDT · '+file.name+' · 30 Tage: '+corrText(a,30)+' · 90 Tage: '+corrText(b,90)+' · gemeinsame Renditedaten nach UTC-Datum, max. letzte 220 Binance-Tage. Quelle für Fremdmarkt: selbst geladene Datei (nicht unabhängig geprüft).'}catch(e){box.textContent='Keine belastbare Berechnung: '+e.message}finally{$('macroCSV').value=''}};
+
+// Version 11: Analyse nur auf aktiven, plausibel synchronisierten Spot-Zeitreihen.
+let warningToken=0;
+const warningEscape=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function referenceZones(data,tf,range){
+  const r=data.slice(-Math.min(data.length,range));
+  if(r.length<55)return [];
+  const swing=confirmedSwing(r),lo=swing.low.l,hi=swing.high.h,d=hi-lo;
+  if(!Number.isFinite(d)||d<=0||lo<=0)return [];
+  const from=swing.low.t<swing.high.t?'Aufwärtsswing':'Abwärtsswing';
+  const levels=[
+    {ratio:'0,236',v:hi-.236*d},{ratio:'0,382',v:hi-.382*d},
+    {ratio:'0,500',v:hi-.5*d},{ratio:'0,618',v:hi-.618*d},
+    {ratio:'0,786',v:hi-.786*d},{ratio:'Swing-Tief',v:lo},
+    {ratio:'Swing-Hoch',v:hi},
+    {ratio:'1,272 Abwärts-Ext.',v:lo-.272*d},
+    {ratio:'1,618 Abwärts-Ext.',v:lo-.618*d},
+    {ratio:'1,272 Aufwärts-Ext.',v:hi+.272*d},
+    {ratio:'1,618 Aufwärts-Ext.',v:hi+.618*d}
+  ];
+  return levels.filter(x=>Number.isFinite(x.v)&&x.v>0).map(x=>({...x,tf,range,confirmed:swing.confirmed,from,
+    lowTime:swing.low.t,highTime:swing.high.t}));
+}
+function warningTime(t){return new Date(t).toLocaleString('de-CH',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Zurich'})+' MEZ/MESZ';}
+function analyseWarnings(dataByTf,price){
+ const periods=['4h','1d','1w'];
+ const states=[],zones=[];
+ for(const tf of periods){
+   const rows=dataByTf[tf],closes=rows.map(x=>x.c),e20=ema(closes,20),e50=ema(closes,50),r=rsi(closes,14);
+   if(rows.length<90||!Number.isFinite(e20)||!Number.isFinite(e50)||!Number.isFinite(r))throw Error('Zu wenige vollständige Indikator-Daten bei '+tf);
+   let trend=price<e20&&e20<e50?'Bärisch':price>e20&&e20>e50?'Bullisch':'Gemischt';
+   states.push({tf,r,e20,e50,trend,lastClose:rows.at(-1).c,closedAt:rows.at(-1).t+({'4h':14400000,'1d':86400000,'1w':604800000})[tf]});
+   for(const n of [90,180,365]){
+     if(rows.length<n)continue;
+     zones.push(...referenceZones(rows,tf,n));
+   }
+ }
+ const under=zones.filter(z=>z.v<price).sort((a,b)=>b.v-a.v);
+ const over=zones.filter(z=>z.v>price).sort((a,b)=>a.v-b.v);
+ const dedup=a=>{const seen=[];return a.filter(z=>{if(seen.some(p=>Math.abs(p-z.v)/z.v<0.003))return false;seen.push(z.v);return true;});};
+ const nearBelow=dedup(under).slice(0,5),nearAbove=dedup(over).slice(0,5);
+ const a4=states[0],a1=states[1],aW=states[2];
+ const alerts=[];
+ if(states.every(x=>x.trend==='Bärisch'))alerts.push({type:'warn',text:'Alle drei Zeitfenster zeigen eine bärische EMA-/Kursstruktur.'});
+ if(a4.r<30)alerts.push({type:'warn',text:'4h-RSI unter 30: kurzfristig überverkauft, ohne bestätigte Trendwende.'});
+ if(a1.r<30)alerts.push({type:'warn',text:'Tages-RSI unter 30: stark negatives Tagesmomentum; Gegenbewegung möglich.'});
+ if(aW.r<45)alerts.push({type:'warn',text:'Wochen-RSI unter 45: nachlassendes langfristiges Momentum.'});
+ if(price<a4.e20&&price<a1.e20)alerts.push({type:'warn',text:'Spotkurs unter EMA 20 auf 4h und 1d.'});
+ if(!nearBelow.length)alerts.push({type:'warn',text:'Keine tiefere rechnerische Referenz in den verfügbaren 4h-, Tages- und Wochenfenstern. Kein weiteres Kursziel ableitbar.'});
+ if(!alerts.length)alerts.push({type:'info',text:'Keine der definierten technischen Warnbedingungen aktiv. Das ist keine Entwarnung.'});
+ return {states,nearBelow,nearAbove,alerts,zoneCount:zones.length};
+}
+async function runWarning(){
+ const token=++warningToken,btn=$('runWarning');btn.disabled=true;
+ $('warningStatus').textContent='Lade aktuelle BTC-Marktdaten und prüfe die drei Zeitfenster …';
+ $('warningKpis').innerHTML='<div class="tile small">Analyse läuft – keine bisherigen Werte als aktuell anzeigen.</div>';
+ $('warningZones').textContent='Daten werden geprüft …';$('warningAlerts').textContent='Daten werden geprüft …';
+ try{
+   const periods=['4h','1d','1w'];
+   const all=await Promise.allSettled(periods.map(tf=>fetchBinance('BTC',tf)));
+   if(token!==warningToken)return;
+   const missing=all.map((x,i)=>x.status==='fulfilled'?null:periods[i]+': '+String(x.reason?.message||x.reason)).filter(Boolean);
+   if(missing.length)throw Error('Nicht alle Zeitfenster verfügbar: '+missing.join(' | '));
+   const data=Object.fromEntries(all.map((x,i)=>[periods[i],x.value.rows]));
+   for(const tf of periods){
+     const r=data[tf],intervalMs=({'4h':14400000,'1d':86400000,'1w':604800000})[tf];
+     if(r.length<90||r.some((c,i)=>!Number.isFinite(c.c)||c.c<=0||!Number.isFinite(c.h)||!Number.isFinite(c.l)||(i&&c.t<=r[i-1].t)||c.t+intervalMs>Date.now()))throw Error('Ungültige oder unvollständige Kerzen für '+tf);
+   }
+   const prices=all.map(x=>x.value.price);
+   if(prices.some(x=>!Number.isFinite(x)||x<=0)||Math.max(...prices)/Math.min(...prices)>1.005)throw Error('Spot-Snapshots widersprechen sich; erneute Abfrage notwendig');
+   const price=prices[0],result=analyseWarnings(data,price);
+   const stamped=new Date().toLocaleString('de-CH',{timeZone:'Europe/Zurich',dateStyle:'short',timeStyle:'medium'});
+   $('warningStatus').textContent='BTCUSDT · Binance Spot · Berechnet '+stamped+' Schweiz · 3/3 Zeitfenster · Kurs '+fmt(price,2)+' USDT · keine automatische Hintergrundüberwachung.';
+   $('warningKpis').innerHTML=result.states.map(x=>`<div class="tile"><b>${x.tf} · ${x.trend}</b><div class="small">RSI ${fmt(x.r,1)} · EMA20 ${fmt(x.e20,0)} · EMA50 ${fmt(x.e50,0)}<br>Letzter Kerzenschluss ${fmt(x.lastClose,2)} USDT · ${warningTime(x.closedAt)}</div></div>`).join('');
+   const show=(arr,heading)=>`<div style="margin:6px 0 12px"><b>${heading}</b>${arr.length?arr.map(z=>`<div class="small" style="padding:7px 0;border-bottom:1px solid #27314a"><b>${fmt(z.v,2)} USDT</b> · ${z.tf} / ${z.range} Kerzen · ${z.ratio}<br>${z.confirmed?'bestätigtes Pivot-Paar':'Fensterextreme, nicht bestätigter Swing'} · ${z.from} · Abstand ${((z.v/price-1)*100).toFixed(2).replace('.',',')} %</div>`).join(''):'<div class="small">Nicht verfügbar; keine Zone erfinden.</div>'}</div>`;
+   $('warningZones').innerHTML=show(result.nearBelow,'Tiefere Referenzen')+show(result.nearAbove,'Höhere Referenzen')+'<div class="small">Zonen sind nach Kursnähe sortiert; nahe Duplikate werden zusammengefasst. Unterschiedliche Swing-Paare können widersprüchliche Zonen liefern. Nur rechnerische Referenzen, keine bestätigten Unterstützungen.</div>';
+   $('warningAlerts').innerHTML=result.alerts.map(a=>`<div style="padding:8px 0;border-bottom:1px solid #27314a">${a.type==='warn'?'⚠️':'ℹ️'} ${warningEscape(a.text)}</div>`).join('');
+ }catch(e){if(token!==warningToken)return;$('warningStatus').textContent='Frühwarnanalyse nicht verfügbar: '+String(e.message||e);$('warningKpis').innerHTML='<div class="tile small">Keine zuverlässige Mehrzeitebenen-Aussage möglich.</div>';$('warningZones').textContent='Keine validierten Zonen verfügbar.';$('warningAlerts').textContent='Keine Warnsignale berechenbar.'}
+ finally{if(token===warningToken)btn.disabled=false;}
+}
+$('runWarning').onclick=runWarning;
+
+
+// v12: Getrennte, nachprüfbare Spot-/Derivate-Momentaufnahmen auf Knopfdruck.
+let proToken=0;
+const proEsc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const proNum=(v,n=2)=>Number.isFinite(Number(v))?Number(v).toLocaleString('de-CH',{minimumFractionDigits:n,maximumFractionDigits:n}):'Nicht verfügbar';
+const proStamp=t=>t?new Date(t).toLocaleString('de-CH',{dateStyle:'short',timeStyle:'medium',timeZone:'Europe/Zurich'})+' MEZ/MESZ':'Nicht verfügbar';
+const proTile=(title,value,sub='')=>`<div class="tile"><div class="small">${proEsc(title)}</div><b style="font-size:17px;overflow-wrap:anywhere">${proEsc(value)}</b><div class="small">${proEsc(sub)}</div></div>`;
+const proLocalKey='crypto_market_pro_v12_last_snapshot';
+function proGetPrior(){try{const x=JSON.parse(localStorage.getItem(proLocalKey)||'null');return x&&Number.isFinite(x.price)&&Number.isFinite(x.timestamp)?x:null;}catch(e){return null;}}
+function proSaveSnapshot(x){try{localStorage.setItem(proLocalKey,JSON.stringify(x));return true;}catch(e){return false;}}
+function proLevelText(z){return z?proNum(z.v)+' USDT · '+z.tf+' · '+z.ratio:'Nicht verfügbar';}
+function proSafeError(e){return String(e?.message||e||'Unbekannt').slice(0,180);}
+async function proFetchJSON(url){const d=await fetchTimed(url,8500);if(d&&typeof d==='object'&&d.code&&d.code<0)throw Error(d.msg||'API-Fehler '+d.code);return d;}
+async function proFutures(){
+ const root='https://fapi.binance.com';const symbol='BTCUSDT';
+ const tasks=[
+  proFetchJSON(root+'/fapi/v1/openInterest?symbol='+symbol),
+  proFetchJSON(root+'/fapi/v1/premiumIndex?symbol='+symbol),
+  proFetchJSON(root+'/futures/data/openInterestHist?symbol='+symbol+'&period=1h&limit=30'),
+  proFetchJSON(root+'/futures/data/globalLongShortAccountRatio?symbol='+symbol+'&period=1h&limit=2'),
+  proFetchJSON(root+'/fapi/v1/fundingRate?symbol='+symbol+'&limit=30')
+ ];
+ const all=await Promise.allSettled(tasks);
+ const v=i=>all[i].status==='fulfilled'?all[i].value:null;
+ const errs=all.map((x,i)=>x.status==='rejected'?['OI','Funding','OI-Historie','Long/Short','Funding-Historie'][i]+': '+proSafeError(x.reason):null).filter(Boolean);
+ const oi=v(0),funding=v(1),history=v(2),longShort=v(3),fundingHistory=v(4);
+ const currentOI=Number(oi?.openInterest),oiTime=Number(oi?.time);
+ const validOI=Number.isFinite(currentOI)&&currentOI>0&&Number.isFinite(oiTime)&&oiTime>Date.now()-15*60000&&oiTime<Date.now()+60000;
+ let historic='Nicht verfügbar',historyLabel='Keine zeitlich geeignete 24h-Referenz';
+ if(validOI&&Array.isArray(history)){
+  const target=oiTime-86400000;
+  const candidates=history.filter(x=>Number.isFinite(Number(x.sumOpenInterest))&&Number(x.sumOpenInterest)>0&&Number.isFinite(Number(x.timestamp))&&Math.abs(Number(x.timestamp)-target)<=5400000).sort((a,b)=>Math.abs(Number(a.timestamp)-target)-Math.abs(Number(b.timestamp)-target));
+  if(candidates.length){const b=candidates[0];historic=((currentOI/Number(b.sumOpenInterest)-1)*100).toFixed(2)+' %';historyLabel='Stündliche historische OI-Probe '+proStamp(Number(b.timestamp))+' vs. Snapshot '+proStamp(oiTime)+' · ungefähre 24h-Veränderung';}
+ }
+ const fr=Number(funding?.lastFundingRate),fundTime=Number(funding?.time);
+ const frValid=Number.isFinite(fr)&&Number.isFinite(fundTime)&&fundTime>Date.now()-15*60000&&fundTime<Date.now()+60000;
+ const lastRatio=Array.isArray(longShort)?longShort.at(-1):null,ratio=Number(lastRatio?.longShortRatio),ratioTime=Number(lastRatio?.timestamp);
+ const ratioValid=Number.isFinite(ratio)&&ratio>0&&Number.isFinite(ratioTime)&&ratioTime>Date.now()-3*3600000&&ratioTime<Date.now()+60000;
+ const tiles=[
+  proTile('BTCUSDT Open Interest',validOI?proNum(currentOI,3)+' BTC':'Nicht verfügbar',validOI?'Binance USDⓈ-M · '+proStamp(oiTime):'Futures API nicht verfügbar'),
+  proTile('OI-Veränderung ~24h',historic,historyLabel),
+  proTile('Funding Rate im letzten API-Snapshot',frValid?proNum(fr*100,5)+' %':'Nicht verfügbar',frValid?'Binance Futures · API-Snapshot '+proStamp(fundTime):'Keine geprüften Funding-Daten'),
+  proTile('Long/Short Account Ratio',ratioValid?proNum(ratio,3):'Nicht verfügbar',ratioValid?'Globales Account-Verhältnis, nicht Positionsgrössen · '+proStamp(ratioTime):'Long-/Short-Quelle nicht verfügbar'),
+  proTile('Tatsächliche 24h-Liquidationen','Nicht verfügbar','Kein bestätigter gesamter Liquidationsfeed vorhanden'),
+  proTile('Liquidationscluster','Nicht verfügbar','Keine modellierten Heatmaps als Echtwerte ausgeben')
+ ];
+ return {tiles,errors:errs,any:validOI||frValid||ratioValid,
+   series:{
+     oi:Array.isArray(history)?history.filter(x=>Number.isFinite(+x.timestamp)&&+x.sumOpenInterest>0).map(x=>({time:+x.timestamp,value:+x.sumOpenInterest})).sort((a,b)=>a.time-b.time):[],
+     fundingHistory:Array.isArray(fundingHistory)?fundingHistory.filter(x=>Number.isFinite(+x.fundingTime)&&Number.isFinite(+x.fundingRate)).map(x=>({time:+x.fundingTime,value:+x.fundingRate*100})).sort((a,b)=>a.time-b.time):[],
+     currentOI:validOI?currentOI:null,oiTime:validOI?oiTime:null,funding:frValid?fr*100:null,fundingTime:frValid?fundTime:null,
+     ratio:ratioValid?ratio:null,oi24:historic!=='Nicht verfügbar'?parseFloat(historic):null,
+     errors:errs
+   }};
+}
+async function runProDesk(){
+ const token=++proToken,button=$('runProDesk');button.disabled=true;window.cmBtcDashboardSnapshot=null;window.cmDerivativeSeries=null;renderDerivativeIntelligence();
+ $('proStatus').textContent='Lade frische Spot-, Chart- und Futuresdaten …';
+ $('proKpis').innerHTML='<div class="tile small">Abruf läuft. Bisherige Momentaufnahme wird nicht als neu angezeigt.</div>';
+ $('proAlerts').textContent='Prüfung läuft …';$('proComparison').textContent='Warte auf frische Daten.';
+ $('proDerivatives').innerHTML='<div class="tile small">Derivatequelle wird geprüft …</div>';
+ try{
+   // Separate API-Fehler werden einzeln dargestellt. Futuresausfälle dürfen Spotdaten nicht verfälschen.
+   const futuresRequest=proFutures().catch(e=>({tiles:[],errors:[proSafeError(e)],any:false}));
+   const datasets=await Promise.allSettled(['4h','1d','1w'].map(tf=>fetchBinance('BTC',tf)));
+   if(token!==proToken)return;
+   const bad=datasets.map((x,i)=>x.status==='rejected'?['4h','1d','1w'][i]+': '+proSafeError(x.reason):null).filter(Boolean);
+   let spotError=null;
+   if(bad.length)spotError='Nicht alle Spot-Zeitfenster verfügbar: '+bad.join(' | ');
+   else{
+     const rowsByTf=Object.fromEntries(datasets.map((d,i)=>[['4h','1d','1w'][i],d.value.rows]));
+     const spotVals=datasets.map(d=>Number(d.value.price));
+     if(spotVals.some(v=>!Number.isFinite(v)||v<=0)||Math.max(...spotVals)/Math.min(...spotVals)>1.005)spotError='Spot-Snapshots nicht ausreichend synchron';
+     if(!spotError){
+       const result=analyseWarnings(rowsByTf,spotVals[0]);
+       const price=spotVals[0],now=Date.now();
+       const today=await fetchMarketShared('/api/v3/ticker/24hr?symbol=BTCUSDT',12000).catch(()=>null);
+       if(token!==proToken)return;
+       const ch=Number(today?.priceChangePercent),volume=Number(today?.quoteVolume),end=Number(today?.closeTime);
+       const tickerOK=Number.isFinite(ch)&&Number.isFinite(volume)&&volume>=0&&Number.isFinite(end)&&end>now-10*60*1000&&end<now+60000;
+       const a=result.states,below=result.nearBelow[0],above=result.nearAbove[0];
+       // BTC dashboard must NOT depend on the coin selected in the individual chart.
+       const btcDaily=rowsByTf['1d'];
+       const btcCloses=btcDaily.map(x=>x.c);
+       const btcE20=ema(btcCloses,20),btcE50=ema(btcCloses,50),btcRSI=rsi(btcCloses);
+       let btcRisk=null;
+       if([price,btcE20,btcE50,btcRSI].every(Number.isFinite)){
+         let n=50;
+         n+=price<btcE20?15:-15;
+         n+=btcE20<btcE50?15:-15;
+         if(btcRSI<30)n+=10;else if(btcRSI<45)n+=8;
+         else if(btcRSI>70)n+=10;else if(btcRSI>55)n-=8;
+         n+=price<btcE50?10:-10;
+         btcRisk=Math.min(100,Math.max(0,n));
+       }
+       window.cmBtcDashboardSnapshot={
+         price,change:tickerOK?ch:null,risk:btcRisk,
+         timestamp:now,source:'Binance BTC/USDT · Tagesanalyse'
+       };
+       $('proKpis').innerHTML=[
+          proTile('BTC Spot · BTCUSDT',proNum(price)+' USDT','Binance Spot · Abruf '+proStamp(now)),
+          proTile('24h Veränderung',tickerOK?proNum(ch)+' %':'Nicht verfügbar',tickerOK?'Binance Spot · Ende '+proStamp(end):'24h-Ticker nicht geprüft'),
+          proTile('24h Handelsvolumen',tickerOK?proNum(volume,0)+' USDT':'Nicht verfügbar','Quote-Volumen Binance Spot'),
+          proTile('Kurz-/Mittel-/Langfrist-Trend',a.map(x=>x.tf+' '+x.trend).join(' · '),'EMA 20 / EMA 50 und Kursposition'),
+          proTile('Nächste tiefere Fibonacci-Referenz',proLevelText(below),'Rechnerisch; keine bestätigte Unterstützung'),
+          proTile('Nächste höhere Fibonacci-Referenz',proLevelText(above),'Rechnerisch; keine Kursprognose')
+        ].join('');
+       const current={price,timestamp:now,below:below?.v??null,above:above?.v??null,trend:a.map(x=>x.trend),rsi4h:a[0].r,rsi1d:a[1].r};
+       const prior=proGetPrior(),alerts=result.alerts.map(x=>x.text);
+       let msg='Erste gespeicherte Aufnahme; Vergleich nach erneutem Abruf verfügbar.';
+       if(prior){const delta=100*(price/prior.price-1),mins=(now-prior.timestamp)/60000;
+         if(mins>0&&mins<=7*24*60){msg='Seit vorherigem manuellem Abruf ('+proStamp(prior.timestamp)+'): '+(delta>=0?'+':'')+proNum(delta)+' % · '+proNum((now-prior.timestamp)/60000,1)+' Min.';
+           if(prior.above&&prior.price<=prior.above&&price>prior.above)alerts.unshift('Spotkurs hat die zuvor gespeicherte höhere Fibonacci-Referenz '+proNum(prior.above)+' USDT überschritten (Snapshot-Vergleich, kein bestätigter Kerzenschluss).');
+           if(prior.below&&prior.price>=prior.below&&price<prior.below)alerts.unshift('Spotkurs hat die zuvor gespeicherte tiefere Fibonacci-Referenz '+proNum(prior.below)+' USDT unterschritten (Snapshot-Vergleich, kein bestätigter Kerzenschluss).');
+           if(Math.abs(delta)>=2)alerts.unshift('Preisänderung von mindestens 2 % zwischen zwei manuellen Momentaufnahmen; Intervall '+proNum(mins,1)+' Minuten.');
+           if(prior.trend.join('|')!==current.trend.join('|'))alerts.unshift('Mehrzeitebenen-Trendbewertung seit letzter Aufnahme verändert.');
+         }else msg='Vorheriger Snapshot zu alt oder ohne gültige Zeitdifferenz; kein verlässlicher Änderungsvergleich.';
+       }
+       $('proAlerts').innerHTML=alerts.length?alerts.map(x=>'<div style="border-bottom:1px solid #293550;padding:8px 0">⚠️ '+proEsc(x)+'</div>').join(''):'Keine der geprüften technischen Regeln ausgelöst; keine Entwarnung.';
+       $('proComparison').textContent=msg+(proSaveSnapshot(current)?' · Aufnahme lokal im Browser gespeichert.':' · Lokales Speichern nicht möglich.');
+       $('proStatus').textContent='Spotdaten geprüft: 4h / 1D / 1W · Stand '+proStamp(now)+' · Keine Hintergrundüberwachung.';
+     }
+   }
+   if(spotError){$('proStatus').textContent='Spot-Analyse nicht verfügbar: '+spotError;$('proKpis').innerHTML='<div class="tile small">Keine freigegebenen aktuellen Spotkennzahlen.</div>';$('proAlerts').textContent='Warnanalyse wegen Datenfehlern nicht verfügbar.';$('proComparison').textContent='Kein Snapshot gespeichert.';}
+   const derivative=await futuresRequest;
+   if(token!==proToken)return;
+   window.cmDerivativeSeries=derivative.series||null;
+   window.cmDerivativeCheckedAt=Date.now();
+   renderDerivativeIntelligence();
+   $('proDerivatives').innerHTML=(derivative.tiles.length?derivative.tiles.join(''):'<div class="tile small">Futuresdaten nicht verfügbar.</div>')+(derivative.errors.length?'<div class="tile small" style="grid-column:1/-1">Nicht verfügbare Teilquellen: '+proEsc(derivative.errors.join(' | '))+'</div>':'');
+ }catch(e){if(token!==proToken)return;$('proStatus').textContent='Analysefehler: '+proSafeError(e);$('proKpis').innerHTML='<div class="tile small">Daten nicht verfügbar.</div>';$('proAlerts').textContent='Keine bestätigten Alarme.';window.cmDerivativeSeries=null;renderDerivativeIntelligence();$('proDerivatives').innerHTML='<div class="tile small">Keine aktuellen Futuresdaten.</div>'}
+ finally{if(token===proToken)button.disabled=false;}
+}
+$('runProDesk').onclick=runProDesk;
+
+
+/* Crypto Market Pro – Sammelupdate für bestehende Version 12.
+   Diesen Block unmittelbar VOR dem letzten Script-Endtag in index.html einfügen.
+   Bestehende Funktionen und Marktquellen bleiben unverändert. */
+(() => {
+  const start = document.getElementById('runProDesk');
+  if (!start || document.getElementById('runAllAnalysis')) return;
+  const all = document.createElement('button');
+  all.id = 'runAllAnalysis';
+  all.textContent = 'Gesamtanalyse starten';
+  all.style.cssText = 'background:#23659c;border-color:#428ecb;margin:0 8px 8px 0';
+  const status = document.createElement('div');
+  status.id = 'overallStatus';
+  status.className = 'small';
+  status.style.cssText = 'color:#72c7fb;margin:8px 0 14px';
+  status.textContent = 'Spot, Futures, Fibonacci, Zeitebenen und Altcoin-Radar in einem Durchlauf.';
+  start.parentNode.insertBefore(all, start);
+  start.parentNode.insertBefore(status, start);
+
+  all.addEventListener('click', async () => {
+    all.disabled = true;
+    const dashButton=document.getElementById('dashRun'),progress=document.getElementById('dashProgress');
+    if(dashButton)dashButton.disabled=true;
+    const checks = [
+      ['Marktzentrale + Futures', () => runProDesk()],
+      ['4h / 1d / 1w', () => loadTimeframes()],
+      ['BTC-Frühwarnanalyse', () => runWarning()],
+      ['Fibonacci-Atlas (4h / 1d / 1w)', () => runFibAtlas()],
+      ['BTC / Altcoins Korrelationen', () => computeCorrelations()],
+      ['Altcoin-Radar', () => computeStrength()]
+    ];
+    const failed = [];
+    try {
+      for (let i = 0; i < checks.length; i++) {
+        const [label, job] = checks[i];
+        status.textContent = `Prüfe ${i + 1}/${checks.length}: ${label} …`;
+        if(progress)progress.textContent=status.textContent;
+        try { await job(); }
+        catch (err) { failed.push(label); console.warn(label, err); }
+      }
+      status.textContent = failed.length
+        ? `Durchlauf abgeschlossen. Technisch fehlgeschlagen: ${failed.join(', ')}. Einzelne Datenquellen bitte prüfen.`
+        : 'Alle sechs Analysen wurden aufgerufen. Ob alle Quellen antworteten, zeigt die Datenqualität oben.';
+      if(progress)progress.textContent=status.textContent;
+    } finally { all.disabled = false;if(dashButton)dashButton.disabled=false; }
+  });
+})();
+
+
+/* Bündelupdate: dynamische Übersicht, keine neuen externen Datenquellen. */
+(() => {
+  const main=document.querySelector('main.container');
+  if(!main||document.getElementById('compactDashboard'))return;
+  const panel=document.createElement('section');
+  panel.className='panel dashboard-panel';panel.id='compactDashboard';
+  panel.innerHTML=`
+    <div class="dashboard-top"><h2 class="dashboard-heading">Marktübersicht</h2><span class="pill" id="dashState">Daten werden geprüft</span></div>
+    <div class="dashboard-note">Bitcoin-Hauptanalyse unabhängig vom gewählten Einzelchart · Spot und Futures getrennt · Zeitstempel beachten.</div>
+    <div class="coin-overview-head"><h3 class="coin-overview-title">Spotkurse · BTC und ausgewählte Altcoins</h3><div class="coin-overview-meta" id="coinOverviewStatus" aria-live="polite">Lade aktuelle Kurse …</div></div>
+    <div class="coin-overview-grid" id="coinOverviewGrid" aria-label="Kursübersicht BTC ETH XRP SOL DOGE"></div>
+    <div class="dashboard-note" style="margin-bottom:10px">Coin antippen → Einzelchart oben. Die Marktanalyse darunter bleibt auf Bitcoin.</div>
+    <div class="dashboard-grid">
+      <div class="dashboard-metric"><div class="label">Technischer Trend · 4h / 1D / 1W</div><div class="value" id="dashTrend">—</div></div>
+      <div class="dashboard-metric"><div class="label">Technischer Abwärtsdruck</div><div class="value" id="dashRisk">—</div></div>
+    </div>
+    <div class="dashboard-note" id="dashSourceTimes" aria-live="polite">Spot-, Marktzentrale- und Fibonacci-Atlas-Abrufe können unterschiedliche Zeitpunkte haben.</div>
+    <button type="button" id="dashRun" class="dashboard-mainbutton">Gesamtanalyse starten</button>
+    <div id="dashProgress" class="dashboard-note" role="status" aria-live="polite">Noch keine vollständige Analyse gestartet.</div>
+    <div class="dashboard-overview" id="dashInterpretation">Starte die Gesamtanalyse, um Spotmarkt, Trends, Fibonacci, Derivate und Altcoins zusammenzuführen.</div>
+    <h3 style="font-size:15px;margin:17px 0 7px">Fibonacci-Kurszonen · nach Kursnähe</h3>
+    <div id="dashAtlasZones" class="deriv-mini-grid"><div class="deriv-mini-card deriv-mini-legend">Nach der Gesamtanalyse erscheinen die drei nächstgelegenen Zonen je Kursrichtung, mit Modellindex, Swing-Paaren und tatsächlicher Zonenbreite. Kein Prognosewert.</div></div>
+    <h3 style="font-size:15px;margin:17px 0 7px">Derivate-Kompass · Open Interest &amp; Funding</h3>
+    <div id="derivCompass" class="deriv-signal" aria-live="polite">Noch keine aktuellen Futures-Daten. Gesamtanalyse starten.</div>
+    <details class="sub-details"><summary>Open Interest und Funding: Zeitreihen anzeigen</summary><div id="derivHistory" class="deriv-mini-grid" aria-live="polite"><div class="deriv-mini-card deriv-mini-legend">Historische Daten nach Gesamtanalyse, sofern die API antwortet.</div></div></details>
+    <div class="dashboard-note">Futures bleiben gesonderte Stichproben; keine Hintergrundüberwachung und keine bestätigten Liquidationscluster.</div>
+    <h3 style="font-size:14px;margin:14px 0 5px">Datenqualität nach Modul</h3>
+    <div class="dashboard-quality" id="dashQuality" aria-live="polite"></div>
+    <div class="dashboard-links"><button type="button" data-open-detail="earlyWarning">Frühwarnsignale im Detail</button><button type="button" data-open-detail="fibAtlasPanel">Fibonacci-Atlas komplett</button><button type="button" data-open-detail="correlations">Altcoin-Analysen</button></div>
+    <div class="dashboard-note" id="dashLast">Noch keine vollständige Gesamtanalyse bestätigt. Die Übersicht aktualisiert sich bei neuen Ergebnissen, überwacht aber nicht im Hintergrund.</div>`;
+  const spot=main.querySelector('section.panel');
+  spot.after(panel);
+
+  // Technical indicators, risk rules and scenarios belong to one deep-analysis panel.
+  const candidates=[...main.querySelectorAll(':scope > section.panel')];
+  const sectionNamed=name=>candidates.find(p=>p.querySelector(':scope > h2.section')?.textContent.trim()===name);
+  const tech=sectionNamed('Technische Marktanalyse');
+  if(tech){
+    tech.querySelector(':scope > h2.section').textContent='Einzelchart · Indikatoren, Risiko & Szenarien';
+    for(const [name,label] of [
+      ['Marktkompass · technische Risikobewertung','Technischer Marktkompass'],
+      ['Marktampel & Szenarien','Marktampel und Kurs-Szenarien']
+    ]){
+      const original=sectionNamed(name);
+      if(!original)continue;
+      const area=document.createElement('div');area.className='tech-subsection';
+      const heading=document.createElement('h3');heading.textContent=label;area.appendChild(heading);
+      for(const child of [...original.children])if(child.tagName!=='H2')area.appendChild(child);
+      tech.appendChild(area);original.remove();
+    }
+  }
+  const originalPanels=[...main.querySelectorAll(':scope > section.panel')].filter(p=>p!==panel&&p!==spot);
+  const collapse=(p,closed)=>{
+    p.classList.toggle('detail-closed',closed);p.classList.toggle('detail-open',!closed);
+    const b=p.querySelector('h2.section .detail-toggle');
+    if(b){b.textContent=closed?'Details anzeigen ＋':'Details schliessen −';b.setAttribute('aria-expanded',String(!closed));}
+  };
+  originalPanels.forEach((p,i)=>{
+    const h=p.querySelector(':scope > h2.section');if(!h)return;
+    h.classList.add('detail-heading');
+    const b=document.createElement('button');b.type='button';b.className='detail-toggle';b.setAttribute('aria-label','Details ein- oder ausblenden');
+    h.appendChild(b);b.onclick=()=>collapse(p,p.classList.contains('detail-open'));
+    collapse(p,true);
+  });
+  const show=(p)=>{if(!p)return;collapse(p,false);p.scrollIntoView({behavior:'smooth',block:'start'});};
+  panel.querySelectorAll('[data-open-detail]').forEach(b=>b.onclick=()=>{
+    const target=document.getElementById(b.dataset.openDetail);
+    show(target);
+  });
+  const textOf=(id)=>document.getElementById(id)?.textContent?.trim()||'';
+  const valid=t=>!!t&&!/^(?:—|nicht geladen|nicht verfügbar|warte|keine bewertung)/i.test(t);
+  const set=(id,text)=>{const el=document.getElementById(id);if(el&&el.textContent!==text)el.textContent=text};
+  const quality=(id,good,bad)=>{const t=textOf(id);return good(t)?'Geladen':bad(t)?'Nicht verfügbar':'Nicht geprüft'};
+  const futuresInfo=()=>{
+    const el=document.getElementById('proDerivatives');
+    if(!el)return null;
+    const tiles=[...el.querySelectorAll('.tile')];
+    const find=k=>tiles.find(x=>x.textContent.toLowerCase().includes(k));
+    const tile=find('open interest');
+    const oi=tile?.querySelector('b')?.textContent?.trim()||'';
+    const change=find('oi-veränderung')?.querySelector('b')?.textContent?.trim()||'';
+    const funding=find('funding')?.querySelector('b')?.textContent?.trim()||'';
+    const ratio=find('long/short')?.querySelector('b')?.textContent?.trim()||'';
+    return {oi,change,funding,ratio,available:/\d/.test(oi)&&!/nicht verfügbar/i.test(oi)};
+  };
+  const getProValue=(phrase)=>{
+    const tiles=[...document.querySelectorAll('#proKpis .tile')];
+    const t=tiles.find(x=>x.textContent.toLowerCase().includes(String(phrase).toLowerCase()));
+    return t?.querySelector('b')?.textContent?.trim()||'';
+  };
+  const render=()=>{
+    const onBTC=typeof active!=='undefined'&&active==='BTC';
+    const btcPro=window.cmBtcDashboardSnapshot||null;
+    const btcTicker=window.cmBtcTickerSnapshot||null;
+    const latestTicker=btcTicker&&Number.isFinite(btcTicker.price)?btcTicker:null;
+    const btcSpot=latestTicker&&(!btcPro||latestTicker.timestamp>btcPro.timestamp)?latestTicker:btcPro;
+    // Fallback to independently refreshed BTC quote; the active altcoin never enters these metrics.
+    const spotPrice=btcSpot&&Number.isFinite(btcSpot.price)
+      ?fmt(btcSpot.price,2)+' '+(btcSpot.currency||'USDT')
+      :(onBTC?textOf('price'):'');
+    const risk=btcPro&&Number.isFinite(btcPro.risk) ? btcPro.risk+' / 100' : ''; // BTC only
+    const proStatus=textOf('proStatus'),oi=futuresInfo();
+    const trend=getProValue('kurs-/mittel-/langfrist')||getProValue('trend');
+
+    set('dashTrend',trend||'Noch nicht geprüft');
+    set('dashRisk',valid(risk)?risk:'BTC-Analyse starten');
+    const sourceTimes=document.getElementById('dashSourceTimes');
+    if(sourceTimes){
+      const spotStamp=btcSpot?.timestamp?new Date(btcSpot.timestamp).toLocaleString('de-CH',{timeZone:'Europe/Zurich'}):onBTC?(textOf('updated')||'Noch nicht geladen'):'BTC-Kurs noch nicht geladen';
+      const atlasStamp=window.cmAtlasCompletedAt?new Date(window.cmAtlasCompletedAt).toLocaleString('de-CH',{timeZone:'Europe/Zurich'}):'Noch nicht berechnet';
+      const deskStamp=proStatus.match(/Stand\s+([^·]+)/)?.[1]?.trim()||'Noch nicht geprüft';
+      sourceTimes.textContent='Abrufzeiten – Spot: '+spotStamp+' · Marktzentrale: '+deskStamp+' · Fibonacci-Atlas: '+atlasStamp+'. Kursabweichungen zwischen Modulen entstehen durch getrennte Liveabfragen.';
+    }
+    const spotOK=Boolean((btcSpot&&Number.isFinite(btcSpot.price)&&btcSpot.price>0)||(!btcSpot&&onBTC&&valid(spotPrice)&&/\d/.test(spotPrice)));
+    const deskOK=/spotdaten geprüft/i.test(proStatus)&&!!trend;
+    const moduleState=(statusId,resultId,completeMatch)=>{
+      const st=textOf(statusId).toLowerCase();
+      if(!completeMatch.test(st)){
+        if(/nicht verfügbar|fehler|keine zuverlässigen/i.test(st))return 'Nicht verfügbar';
+        return 'Nicht geprüft';
+      }
+      const result=document.getElementById(resultId);
+      if(!result)return 'Geladen';
+      const tiles=[...result.querySelectorAll('.tile')];
+      const bad=tiles.filter(e=>/nicht verfügbar|keine vollständigen|datenfehler|zu wenig/i.test(e.textContent));
+      if(!tiles.length)return 'Nicht verfügbar';
+      return bad.length===tiles.length?'Nicht verfügbar':bad.length?'Teilweise':'Geladen';
+    };
+    const corr=moduleState('corrstatus','corrresults',/berechnet/);
+    const strength=moduleState('strengthStatus','strengthResults',/berechnet/);
+    const warningStatus=textOf('warningStatus');
+    const early=/3\/3 zeitfenster/i.test(warningStatus)?'Geladen':/nicht verfügbar|fehler/i.test(warningStatus)?'Nicht verfügbar':'Nicht geprüft';
+    const atlasStatus=textOf('fibAtlasStatus');
+    const atlas=/rohreferenzen in/i.test(atlasStatus)?/teilquellen fehlen/i.test(atlasStatus)?'Teilweise':'Geladen':/nicht verfügbar|fehler/i.test(atlasStatus)?'Nicht verfügbar':'Nicht geprüft';
+    const series=window.cmDerivativeSeries;
+    // Liquidations and clusters are intentionally unavailable: never imply full derivatives coverage.
+    const futures=series?([Number.isFinite(series.currentOI),Number.isFinite(series.funding),Number.isFinite(series.ratio),Boolean(series.oi?.length),Boolean(series.fundingHistory?.length)].some(Boolean)?'Teilweise':'Nicht verfügbar'):/fehler|nicht verfügbar/i.test(textOf('proDerivatives'))?'Nicht verfügbar':'Nicht geprüft';
+    const statuses=[['BTC Spot',spotOK?'Geladen':'Nicht verfügbar'],['BTC · 4h/1D/1W',deskOK?'Geladen':/nicht verfügbar/i.test(proStatus)?'Nicht verfügbar':'Nicht geprüft'],['Futures',futures],['Fibonacci-Atlas',atlas],['Frühwarnung',early],['Korrelationen',corr],['Altcoin-Radar',strength]];
+    const qualityEl=document.getElementById('dashQuality');
+    if(qualityEl){const signature=statuses.map(x=>x.join(':')).join('|');if(qualityEl.dataset.status!==signature){qualityEl.dataset.status=signature;qualityEl.replaceChildren();for(const [name,status] of statuses){const div=document.createElement('div');div.className='dq';const a=document.createElement('span');a.textContent=name;const b=document.createElement('strong');b.textContent=status;b.style.color=status==='Geladen'?'#4dd3a6':status==='Nicht verfügbar'?'#ff8c94':status==='Teilweise'?'#f1bd61':'#b4c5de';div.append(a,b);qualityEl.appendChild(div)}}}
+    set('dashState',deskOK?'BTC-Analyse geladen':spotOK?'BTC-Spot geladen':'Analyse starten');
+    const bits=[];
+    if(/bärisch/i.test(trend))bits.push('Die geprüften Zeitfenster zeigen eine bärische Struktur.');
+    else if(/bullisch/i.test(trend))bits.push('Die geprüften Zeitfenster zeigen eine bullische Struktur.');
+    else bits.push('Für die gemeinsame Trendbewertung fehlen noch geprüfte Mehrzeitebenendaten.');
+    if(window.cmAtlasCompletedAt)bits.push('Die naheliegenden Fibonacci-Zonen stehen unten; sie sind Rechenmarken, keine Kursziele.');
+    if(oi?.available)bits.push('Futuresdaten liegen vor; die Einordnung steht direkt im Derivate-Kompass.');
+    else bits.push('Futures-Daten noch nicht vollständig geladen oder regional nicht verfügbar.');
+    set('dashInterpretation',bits.join(' '));
+    const stamp=proStatus.match(/Stand\s+[^·]+/)?.[0];
+    set('dashLast',(stamp?stamp+' · ':'')+'Die Übersicht verwendet nur bereits geladene Daten. Kein Hintergrundmonitoring und keine automatischen Trades.');
+  };
+  const watch=['price','change','updated','riskval','proStatus','proKpis','proDerivatives','coinOverviewGrid','coinOverviewStatus','corrstatus','strengthStatus','warningStatus','fibAtlasStatus'];
+  let queued=false;
+  const observer=new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render()})});
+  for(const id of watch){const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})}
+  const runAll=document.getElementById('runAllAnalysis');
+  const dashRun=document.getElementById('dashRun');
+  if(dashRun)dashRun.onclick=()=>{if(!runAll||runAll.disabled)return;runAll.click()};
+  if(runAll)runAll.addEventListener('click',()=>{set('dashState','Gesamtanalyse läuft');panel.scrollIntoView({behavior:'smooth',block:'start'})});
+  render();
+})();
+
+/* Dashboard Plus – robust spot/futures comparison with observed OI and funding history. */
+function renderDerivativeIntelligence(){
+ const box=document.getElementById('derivCompass'),charts=document.getElementById('derivHistory');
+ if(!box||!charts)return;
+ const d=window.cmDerivativeSeries;
+ const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const num=(v,digits=2)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+ const stamp=t=>new Date(t).toLocaleString('de-CH',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Zurich'});
+ const display=(value,unit='')=>Number.isFinite(value)?num(value,unit==='%'?4:2)+unit:'Nicht verfügbar';
+ const parseSwiss=t=>{if(!t||/nicht verfügbar/i.test(t))return null;const n=Number(t.replace(/[’'\s]/g,'').replace(',','.').replace(/[^0-9.+-]/g,''));return Number.isFinite(n)?n:null};
+ const spotTiles=[...document.querySelectorAll('#proKpis .tile')];
+ const chTile=spotTiles.find(x=>x.textContent.toLowerCase().includes('24h veränderung'));
+ const priceChange=parseSwiss(chTile?.querySelector('b')?.textContent||'');
+ if(!d){box.textContent='Keine geprüften Derivate-Zeitreihen verfügbar. Starte die Gesamtanalyse. Bei API-Ausfällen werden keine Signale berechnet.';charts.replaceChildren();return;}
+ const facts=[];
+ if(Number.isFinite(priceChange)&&Number.isFinite(d.oi24)){
+   if(priceChange<0&&d.oi24>0)facts.push('Spotkurs gefallen, Open Interest gestiegen: möglicherweise zusätzlicher Leverage im Rückgang; daraus lässt sich die Richtung neuer Positionen nicht bestimmen.');
+   else if(priceChange<0&&d.oi24<0)facts.push('Spotkurs und Open Interest gefallen: vereinbar mit Positionsabbau oder Deleveraging; Liquidationen sind damit nicht nachgewiesen.');
+   else if(priceChange>0&&d.oi24>0)facts.push('Spotkurs und Open Interest gestiegen: zunehmende Marktbeteiligung möglich, aber keine bestätigte Trendfortsetzung.');
+   else if(priceChange>0&&d.oi24<0)facts.push('Spotkurs gestiegen bei sinkendem Open Interest: Positionsabbau oder Short-Eindeckungen möglich, nicht bewiesen.');
+   else facts.push('Preis-/OI-Veränderung gemischt: keine eindeutige Marktphase.');
+ } else facts.push('Preis-/Open-Interest-24h-Vergleich nicht vollständig verfügbar; keine Marktphasen-Zuordnung.');
+ if(Number.isFinite(d.funding))facts.push(Math.abs(d.funding)<0.000005?'Funding-Snapshot nahezu null (<0,00001 %).':'Funding-Snapshot '+(d.funding>0?'positiv: Longs zahlen in der Regel Shorts':'negativ: Shorts zahlen in der Regel Longs')+' ('+num(d.funding,5)+' %).');
+ else facts.push('Aktuelle Funding-Schätzung nicht verfügbar.');
+ if(Number.isFinite(d.ratio))facts.push('Account-Ratio '+num(d.ratio,3)+': '+(d.ratio>1?'mehr Long- als Short-Accounts':'mehr Short- als Long-Accounts')+'; sagt nichts über Positionsgrössen.');
+ if(d.errors?.length)facts.push('Teilquellenfehler: '+d.errors.map(x=>String(x).slice(0,90)).join(' | '));
+ box.replaceChildren();const heading=document.createElement('b');heading.textContent='Regelbasierte Einordnung · keine Prognose';box.appendChild(heading);
+ const body=document.createElement('div');body.textContent=facts.join(' ');box.appendChild(body);
+ const chart=(title,raw,unit,minCount)=>{
+   const points=(Array.isArray(raw)?raw:[]).filter(x=>Number.isFinite(x.value)&&Number.isFinite(x.time)).slice(-60);
+   const wrap=document.createElement('div');wrap.className='deriv-mini-card';
+   const h=document.createElement('div');h.className='deriv-mini-title';h.textContent=title;wrap.appendChild(h);
+   if(points.length<minCount){const p=document.createElement('div');p.className='deriv-mini-legend';p.textContent='Nicht genügend verifizierte historische Messpunkte. Keine Ersatzwerte.';wrap.appendChild(p);return wrap;}
+   points.sort((a,b)=>a.time-b.time);
+   const vals=points.map(x=>x.value),low=Math.min(...vals),high=Math.max(...vals),spread=Math.max(high-low,Math.abs(high)*0.001,1e-9);
+   const W=360,H=160,left=78,right=8,top=14,bottom=23;
+   const plotHeight=H-top-bottom,plotWidth=W-left-right;
+   const coords=points.map((p,i)=>[(left+i*plotWidth/Math.max(points.length-1,1)).toFixed(1),(top+(high-p.value)/spread*plotHeight).toFixed(1)]);
+   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('role','img');svg.setAttribute('aria-label',title+'; Minimum '+display(low,unit)+', Maximum '+display(high,unit)+', Letzter Wert '+display(points.at(-1).value,unit));
+   const svgEl=(tag,attrs,text)=>{const el=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));if(text!==undefined)el.textContent=text;svg.appendChild(el);return el};
+   for(const [v,y] of [[high,top],[(low+high)/2,top+plotHeight/2],[low,top+plotHeight]]){
+      svgEl('line',{x1:left,y1:y,x2:W-right,y2:y,stroke:'#344465','stroke-dasharray':'3 3','stroke-width':0.8});
+      svgEl('text',{x:3,y:y+4,fill:'#b4c5de','font-size':10},display(v,unit));
+   }
+   svgEl('polyline',{points:coords.map(x=>x.join(',')).join(' '),fill:'none',stroke:'#72c7fb','stroke-width':2.6,'stroke-linejoin':'round'});
+   const last=coords.at(-1);svgEl('circle',{cx:last[0],cy:last[1],r:3.4,fill:'#f0b967'});
+   svgEl('text',{x:left,y:H-5,fill:'#b4c5de','font-size':9},stamp(points[0].time));
+   svgEl('text',{x:W-right,y:H-5,fill:'#b4c5de','font-size':9,'text-anchor':'end'},stamp(points.at(-1).time));
+   wrap.appendChild(svg);
+   const info=document.createElement('div');info.className='deriv-mini-legend';info.textContent=stamp(points[0].time)+' bis '+stamp(points.at(-1).time)+' · '+points.length+' Messpunkte · letzter Wert '+display(points.at(-1).value,unit);wrap.appendChild(info);return wrap;
+ };
+ charts.replaceChildren(chart('Open Interest · stündliche Historie',d.oi||[],' BTC',3),chart('Funding · vergangene Abrechnungen',d.fundingHistory||[],'%',3));
+}
+
+/* Fibonacci Atlas: multiple independently calculated pivots and reference windows.
+   Uses completed BTCUSDT candles. Explicitly distinguish weekly long-range data. */
+let fibAtlasToken=0;
+const fibAtlasFmt=(v)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fibAtlasEsc=(v)=>String(v).replace(/[&<>"']/g,k=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[k]));
+function fibAtlasPairZones(pair,tf,scope){
+ const low=pair.low.l, high=pair.high.h, delta=high-low;
+ if(!(Number.isFinite(delta)&&delta>0&&low>0&&delta/low>=.03))return [];
+ const vals=[['Swing-Tief',low],['Swing-Hoch',high],['0,382 Rücklauf',high-.382*delta],['0,500 Rücklauf',high-.5*delta],['0,618 Rücklauf',high-.618*delta],['0,786 Rücklauf',high-.786*delta],['1,272 Abwärts-Ext.',low-.272*delta],['1,618 Abwärts-Ext.',low-.618*delta],['1,272 Aufwärts-Ext.',high+.272*delta],['1,618 Aufwärts-Ext.',high+.618*delta]];
+ return vals.filter(([label,v])=>v>0&&Number.isFinite(v)).map(([label,v])=>({v,label,tf,scope,confirmed:pair.confirmed,low,high}));
+}
+function fibAtlasMajorPairs(rows,pivotWidth=5,minimumMove=.08){
+ const piv=[];
+ for(let i=pivotWidth;i<rows.length-pivotWidth;i++){
+  const x=rows[i],neighbors=rows.slice(i-pivotWidth,i).concat(rows.slice(i+1,i+pivotWidth+1));
+  if(neighbors.every(z=>x.h>z.h))piv.push({type:'H',i,t:x.t,h:x.h,l:x.l});
+  if(neighbors.every(z=>x.l<z.l))piv.push({type:'L',i,t:x.t,h:x.h,l:x.l});
+ }
+ const selected=[];
+ for(let i=piv.length-1;i>=1&&selected.length<4;i--){
+  const b=piv[i];
+  for(let j=i-1;j>=0;j--){
+   const a=piv[j];if(a.type===b.type)continue;
+   const low=a.type==='L'?a:b,high=a.type==='H'?a:b;
+   if((high.h-low.l)/low.l<minimumMove)continue;
+   if(selected.some(p=>p.low.t===low.t&&p.high.t===high.t))break;
+   selected.push({low,high,confirmed:true});break;
+  }
+ }
+ return selected;
+}
+// Transparent aggregation; identical swing origins within a zone count once.
+function fibAtlasClusters(raw, price){
+ const sorted=raw.filter(z=>Number.isFinite(z.v)&&z.v>0).sort((a,b)=>a.v-b.v);
+ const groups=[];
+ const root=z=>[z.tf,Math.round(z.low*100)/100,Math.round(z.high*100)/100].join('|');
+ for(const z of sorted){
+  // At most 0.5 % distance to cluster's current midpoint (no unlimited chaining).
+  let g=groups.find(g=>Math.abs(z.v-g.center)/g.center<=.005 && (Math.max(z.v,...g.members.map(m=>m.v))-Math.min(z.v,...g.members.map(m=>m.v)))/g.center<=.01);
+  if(!g){g={center:z.v,members:[]};groups.push(g)}
+  g.members.push(z);
+  g.center=g.members.reduce((s,x)=>s+x.v,0)/g.members.length;
+ }
+ return groups.map(g=>{
+  const originMap=new Map();
+  for(const z of g.members){
+   const key=root(z), old=originMap.get(key);
+   // Multiple Fibonacci ratios from the same historical pivot pair are not independent.
+   if(!old||Math.abs(z.v-g.center)<Math.abs(old.v-g.center))originMap.set(key,z);
+  }
+  const independent=[...originMap.values()];
+  const tfSet=[...new Set(independent.map(z=>z.tf))];
+  const confirmed=independent.filter(z=>z.confirmed).length;
+  const tfWeight=Math.max(...tfSet.map(t=>t==='1w'?3:t==='1d'?2:1));
+  // Ordinal evidence index, NOT percentage or probability. Maximum roughly 14.
+  const score=tfWeight*2+Math.min(3,independent.length)*2+(confirmed?2:0)+(tfSet.length>1?2:0);
+  const low=Math.min(...g.members.map(z=>z.v)),high=Math.max(...g.members.map(z=>z.v));
+  const distance=Math.abs(g.center/price-1)*100;
+  return {center:g.center,low,high,distance,score,independent:independent.length,tfSet,confirmed,rawCount:g.members.length,sample:independent[0]};
+ });
+}
+function fibAtlasSelect(clusters,price,side,max=8){
+ const arr=clusters.filter(g=>side==='below'?g.high<price:g.low>price);
+ // Favor reliable and nearby zones, but do not imply predictive confidence.
+ const rank=g=>g.score-Math.min(g.distance,25)*.45;
+ const near=arr.filter(g=>g.distance<=15).sort((a,b)=>rank(b)-rank(a));
+ const picked=[...near.slice(0,max)];
+ if(picked.length<max){for(const g of arr.sort((a,b)=>a.distance-b.distance)){
+  if(!picked.includes(g)){picked.push(g);if(picked.length>=max)break}
+ }}
+ return picked;
+}
+function fibAtlasZoneMarkup(g,price){
+ const pct=(g.center/price-1)*100;
+ const fmtRange=g.high-g.low>g.center*.00035?fibAtlasFmt(g.low)+'–'+fibAtlasFmt(g.high):fibAtlasFmt(g.center);
+ const proven=g.tfSet.join(' / ');
+ const rating=g.score>=12?'höhere Modell-Priorität':g.score>=9?'mittlere Modell-Priorität':'geringere Modell-Priorität';
+ return '<div style="padding:9px 0;border-bottom:1px solid #27314a"><b>'+fmtRange+' USDT</b> <span class="small">('+pct.toFixed(2).replace('.',',')+' %)</span><div class="small">'+rating+' · Index '+g.score+' · '+proven+' · '+g.independent+' unterschiedliche Swing-Paare · '+g.confirmed+' bestätigt · '+g.rawCount+' Rohmarken</div></div>';
+}
+async function runFibAtlas(){
+ const token=++fibAtlasToken,btn=document.getElementById('runFibAtlas');btn.disabled=true;
+ const st=document.getElementById('fibAtlasStatus'), groups=document.getElementById('fibAtlasGroups');
+ document.getElementById('fibAtlasBelow').textContent='Lädt …';document.getElementById('fibAtlasAbove').textContent='Lädt …';
+ window.cmAtlasCompletedAt=null;
+ const dashLoading=document.getElementById('dashAtlasZones');if(dashLoading)dashLoading.textContent='Atlas wird neu berechnet. Bisherige Zonen gelten nicht als aktuelle Analyse.';
+ st.textContent='Lade 4h-, Tages- und Wochenkerzen sowie langfristige Wochenhistorie …';groups.innerHTML='<div class="tile small">Historische Swings werden geprüft.</div>';
+ try{
+  const tf=['4h','1d','1w'];
+  const settled=await Promise.allSettled([...tf.map(x=>fetchBinance('BTC',x)),fetchMarketShared('/api/v3/klines?symbol=BTCUSDT&interval=1w&limit=1000',120000)]);
+  if(token!==fibAtlasToken)return;
+  const errors=[];const priceCandidates=[];let zones=[];
+  for(let i=0;i<3;i++){
+   const part=settled[i];if(part.status!=='fulfilled'){errors.push(tf[i]+': '+String(part.reason?.message||part.reason));continue}
+   const data=part.value, rows=data.rows;
+   if(rows.length<90){errors.push(tf[i]+': weniger als 90 Kerzen');continue}
+   priceCandidates.push(data.price);
+   for(const n of [90,180,365]){
+    if(rows.length<n)continue;
+    const pair=confirmedSwing(rows.slice(-n));
+    zones.push(...fibAtlasPairZones(pair,tf[i],n+' Kerzen'));
+   }
+  }
+  const long=settled[3];
+  if(long.status==='fulfilled'&&Array.isArray(long.value)){
+   const data=long.value.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]})).filter((k,i)=>Number.isFinite(k.t)&&k.h>0&&k.l>0&&k.c>0&&k.t+604800000<=Date.now());
+   if(data.length>=90){
+    for(const n of [520,730,1000]){
+     if(data.length<n)continue;
+     const segment=data.slice(-n);
+     zones.push(...fibAtlasPairZones(confirmedSwing(segment),'1w',n+' Wochen'));
+    }
+    for(const pair of fibAtlasMajorPairs(data))zones.push(...fibAtlasPairZones(pair,'1w','langfristiges Pivot-Paar'));
+   }else errors.push('Langfristige Wochenhistorie: zu wenige abgeschlossene Kerzen');
+  }else errors.push('Langfristige Wochenhistorie: nicht verfügbar');
+  const validPrice=priceCandidates.filter(v=>Number.isFinite(v)&&v>0);
+  if(!validPrice.length)throw Error('Kein bestätigter BTC-Spotticker aus den geprüften Zeitfenstern. '+errors.join(' | '));
+  if(Math.max(...validPrice)/Math.min(...validPrice)>1.005)throw Error('BTC-Spotticker der Zeitfenster widersprechen sich; neu abrufen.');
+  const price=validPrice[0];
+  zones=zones.filter(z=>z.v>0&&Number.isFinite(z.v));
+  const clusters=fibAtlasClusters(zones,price);
+  // Eine einzige Zone-Liste pro Richtung: strikt nach Kursnaehe, nicht Modellprioritaet.
+  // Modellindex und Swing-Ursprung bleiben als Zusatzinformation sichtbar.
+  const nearest=(side,limit)=>clusters.filter(g=>side==='below'?g.high<price:g.low>price).sort((a,b)=>a.distance-b.distance).slice(0,limit);
+  const allBelow=nearest('below',8),allAbove=nearest('above',8);
+  const nearBelow=allBelow.slice(0,3),nearAbove=allAbove.slice(0,3);
+  const card=(name,items)=>'<div class="tile"><b>'+name+'</b>'+(items.length?items.map(z=>fibAtlasZoneMarkup(z,price)).join(''):'<div class="small">Keine Zone aus bestaetigten Daten verfuegbar.</div>')+'</div>';
+  groups.innerHTML=card('Tiefere Zonen · nach Kursnähe',allBelow)+card('Höhere Zonen · nach Kursnähe',allAbove);
+  const fmtFirst=xs=>xs.length?fibAtlasFmt(xs[0].center)+' USDT':'Nicht verfügbar';
+  document.getElementById('fibAtlasBelow').textContent=fmtFirst(nearBelow);
+  document.getElementById('fibAtlasAbove').textContent=fmtFirst(nearAbove);
+  const dash=document.getElementById('dashAtlasZones');
+  if(dash){
+   const make=(name,items)=>'<div class="deriv-mini-card"><div class="deriv-mini-title">'+name+'</div>'+(!items.length?'<div class="small">Nicht verfügbar</div>':items.slice(0,3).map((g,i)=>{
+     const range=(g.high-g.low)>g.center*.00035?fibAtlasFmt(g.low)+'–'+fibAtlasFmt(g.high):fibAtlasFmt(g.center);
+     return '<div style="padding:7px 0;border-bottom:1px solid #27314a"><b>'+(i+1)+'. '+range+' USDT</b><div class="small">Mitte '+fibAtlasFmt(g.center)+' · Index '+g.score+' (kein Prozentwert) · '+g.tfSet.join('/')+' · '+g.independent+' unabhängige Swing-Paare · '+g.distance.toFixed(1).replace('.',',')+' % Abstand</div></div>';
+   }).join(''))+'</div>';
+   dash.innerHTML=make('Tiefere Zonen · nach Kursnähe',nearBelow)+make('Höhere Zonen · nach Kursnähe',nearAbove);
+  }
+  window.cmAtlasCompletedAt=Date.now();
+  document.getElementById('dashSourceTimes')?.replaceChildren(document.createTextNode('Fibonacci-Atlas: '+new Date(window.cmAtlasCompletedAt).toLocaleString('de-CH',{timeZone:'Europe/Zurich'})+' · BTC-Referenz '+fibAtlasFmt(price)+' USDT. Spot- und Futuresdaten werden unabhängig abgerufen.'));
+  const stamp=new Date().toLocaleString('de-CH',{timeZone:'Europe/Zurich'});
+  st.textContent='BTC '+fibAtlasFmt(price)+' USDT · berechnet '+stamp+' Schweiz · '+zones.length+' Rohreferenzen in '+clusters.length+' Zonen (±0,5 %) · Index ohne Backtest · '+(errors.length?'Teilquellen fehlen: '+errors.join(' | '):'alle Datenquellen geladen')+'.';
+ }catch(e){if(token!==fibAtlasToken)return;st.textContent='Fibonacci-Atlas nicht verfügbar: '+String(e.message||e);groups.innerHTML='<div class="tile small">Keine zuverlässigen Referenzen bei Datenfehlern.</div>';const dash=document.getElementById('dashAtlasZones');if(dash)dash.textContent='Atlas-Daten nicht verfügbar; keine Zonenbewertung.';document.getElementById('fibAtlasBelow').textContent='Nicht verfügbar';document.getElementById('fibAtlasAbove').textContent='Nicht verfügbar';}
+ finally{if(token===fibAtlasToken)btn.disabled=false}
+}
+document.getElementById('runFibAtlas').onclick=runFibAtlas;
+
+// V1.0: Einzelkurse in der obersten Marktuebersicht, getrennt von der BTC-Gesamtanalyse.
+(() => {
+ const grid=document.getElementById('coinOverviewGrid');
+ const status=document.getElementById('coinOverviewStatus');
+ if(!grid||!status)return;
+ const coins=['BTC','ETH','XRP','SOL','DOGE'];
+ const krakenPairs={BTC:'XBTUSD',ETH:'ETHUSD',XRP:'XRPUSD',SOL:'SOLUSD',DOGE:'XDGUSD'};
+ const cards=new Map();
+ let inFlight=false,updateToken=0;
+ const clock=()=>new Date().toLocaleString('de-CH',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Europe/Zurich'});
+ const formatted=(number)=>Number(number).toLocaleString('de-CH',{minimumFractionDigits:2,maximumFractionDigits:number<1?6:number<10?4:2});
+ for(const coin of coins){
+  const button=document.createElement('button');button.type='button';button.className='coin-overview-card';button.setAttribute('aria-label',coin+' Kurs anzeigen und Einzelchart öffnen');
+  const name=document.createElement('span');name.className='coin-overview-symbol';name.textContent=coin+(coin==='BTC'?' · Fokus':'');
+  const price=document.createElement('span');price.className='coin-overview-price';price.textContent='—';
+  const move=document.createElement('span');move.className='coin-overview-move';move.textContent='Wird geladen';
+  const source=document.createElement('span');source.className='small';source.textContent='Noch kein Kursabruf';
+  button.append(name,price,move,source);
+  button.onclick=()=>{
+    const tab=document.querySelector('[data-coin="'+coin+'"]');
+    if(tab)tab.click();
+    const spot=document.getElementById('chart')?.closest('section.panel');
+    if(spot)spot.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  cards.set(coin,{price,move,source});grid.appendChild(button);
+ }
+ async function one(coin){
+   try{
+     const t=await fetchMarketShared('/api/v3/ticker/24hr?symbol='+coin+'USDT',12000);
+     const price=Number(t.lastPrice),change=Number(t.priceChangePercent);
+     if(!Number.isFinite(price)||price<=0||!Number.isFinite(change)||Math.abs(change)>10000)throw Error('Binance Kurswerte ungueltig');
+     return {price,change,currency:'USDT',source:'Binance Spot'};
+   }catch(binanceError){
+     const t=await fetchTimed('https://api.kraken.com/0/public/Ticker?pair='+krakenPairs[coin],6500);
+     if(t.error?.length)throw Error('Kraken: '+t.error.join('; '));
+     const item=Object.values(t.result||{})[0];
+     const price=Number(item?.c?.[0]);
+     if(!Number.isFinite(price)||price<=0)throw Error('Kraken-Kurs fehlt');
+     // Kraken liefert hier keinen vergleichbaren rollierenden 24h-%-Wert.
+     return {price,change:null,currency:'USD',source:'Kraken Spot'};
+   }
+ }
+ async function refresh(){
+   if(inFlight||document.visibilityState==='hidden')return;
+   inFlight=true;const token=++updateToken;
+   status.textContent='Kurse werden geladen …';
+   window.cmBtcTickerSnapshot=null;
+   for(const card of cards.values()){card.price.textContent='—';card.move.textContent='Wird geladen';card.move.style.color='';card.source.textContent='Aktualisierung läuft';}
+   const results=await Promise.allSettled(coins.map(one));
+   if(token!==updateToken){inFlight=false;return}
+   const stamp=clock();let valid=0;
+   results.forEach((r,i)=>{
+     const coin=coins[i],card=cards.get(coin);
+     if(r.status!=='fulfilled'){
+       card.price.textContent='Nicht verfügbar';card.move.textContent='Kein bestätigter Kurs';card.move.style.color='#ff8c94';card.source.textContent='Abruffehler · '+stamp;
+       return;
+     }
+     const v=r.value;valid++;
+     checkAlarmsFor(coin,v.price,v.currency);
+     if(coin==='BTC')window.cmBtcTickerSnapshot={
+       price:v.price,change:v.change,currency:v.currency,timestamp:Date.now(),source:v.source
+     };
+     card.price.textContent=formatted(v.price)+' '+v.currency;
+     if(v.change===null){card.move.textContent='24h nicht vergleichbar';card.move.style.color='#a9b8d0'}
+     else{card.move.textContent=(v.change>=0?'+':'')+v.change.toFixed(2).replace('.',',')+' % · 24h';card.move.style.color=v.change>=0?'#4dd3a6':'#ff737e'}
+     card.source.textContent=v.source+' · '+stamp+' MEZ/MESZ';
+   });
+   status.textContent=valid+'/5 Kurse geladen · '+stamp+' · Schweiz';
+   inFlight=false;
+ }
+ refresh();
+ document.getElementById('dashRun')?.addEventListener('click',()=>refresh());
+ document.getElementById('reload')?.addEventListener('click',()=>refresh());
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
+ setInterval(()=>{if(document.visibilityState==='visible')refresh()},90000);
+})();
+
+
+
+/* Whale Radar 1.3: confirmed block sample, free public APIs, bounded requests. */
+(() => {
+ const $=id=>document.getElementById(id);
+ const fmt=n=>Number(n).toLocaleString('de-CH',{maximumFractionDigits:2});
+ const validTx=id=>typeof id==='string'&&/^[a-f0-9]{64}$/i.test(id);
+ const sources=['https://mempool.space/api','https://blockstream.info/api'];
+ let busy=false,last=0,activeSource='',sample=[];
+ function install(){
+  if($('whaleRadar'))return true;
+  const dash=$('compactDashboard');if(!dash)return false;
+  const el=document.createElement('section');el.id='whaleRadar';el.className='whale-radar';
+  el.innerHTML=`<div class="whale-heading"><h3>🐋 Whales &amp; Institutionen</h3><span class="pill" id="whaleState">Noch nicht geladen</span></div>
+  <p class="dashboard-note">Bestätigte Bitcoin-Blöcke · kostenlose öffentliche Blockchain-Daten. Grosse Transaktionsausgänge sind <b>keine</b> nachgewiesenen Käufe oder Verkäufe.</p>
+  <div class="whale-grid">
+   <div class="whale-metric"><span>Grösster BTC-Ausgang in Stichprobe</span><strong id="whaleLargest">—</strong><small>Einzelner Transaktionsausgang, kein Nettofluss</small></div>
+   <div class="whale-metric"><span>Ausgänge ab 50 BTC</span><strong id="whaleCount">—</strong><small>Nur geprüfte Transaktionen; kein Marktgesamtwert</small></div>
+   <div class="whale-metric"><span>BTC-ETF-Nettofluss</span><strong>Nicht angebunden</strong><small>Keine verifizierte kostenlose Live-API</small></div>
+   <div class="whale-metric"><span>Börsen-Zu-/Abflüsse</span><strong>Nicht angebunden</strong><small>Keine verifizierten Wallet-Zuordnungen</small></div>
+  </div>
+  <button type="button" id="whaleRefresh" class="whale-toggle">Blockchain-Daten aktualisieren ↻</button>
+  <button type="button" id="whaleToggle" class="whale-toggle" aria-expanded="false" aria-controls="whaleDetails">Whale-Tiefenanalyse öffnen +</button>
+  <div id="whaleDetails" hidden><p class="dashboard-note">Auch Wechselgeld, Börsen-interne Transfers und Sammeltransaktionen können grosse Ausgänge erzeugen. Keine Zuordnung zu Walen ohne bestätigte Adressdaten.</p>
+   <div id="whaleTransactions" class="whale-txs">Nach dem Laden erscheinen überprüfbare Transaktionen.</div>
+   <div class="whale-sources"><a href="https://mempool.space/" target="_blank" rel="noopener noreferrer">mempool.space ↗</a><a href="https://farside.co.uk/btc/" target="_blank" rel="noopener noreferrer">ETF-Flüsse · Farside ↗</a><a href="https://intel.arkm.com/" target="_blank" rel="noopener noreferrer">Wallet-Recherche · Arkham ↗</a></div>
+   <p class="dashboard-note">Externe ETF- und Wallet-Links liefern keine automatisch geprüften Dashboard-Zahlen. Keine kostenpflichtigen APIs und keine Hintergrundüberwachung.</p>
+  </div><p class="dashboard-note" id="whaleStamp">Noch keine Blockchain-Abfrage.</p>`;
+  const anchor=dash.querySelector('#dashSourceTimes')||dash.querySelector('#dashRun');
+  if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(el,anchor);else dash.appendChild(el);
+  $('whaleToggle').addEventListener('click',()=>{const d=$('whaleDetails');d.hidden=!d.hidden;$('whaleToggle').setAttribute('aria-expanded',String(!d.hidden));$('whaleToggle').textContent=d.hidden?'Whale-Tiefenanalyse öffnen +':'Whale-Tiefenanalyse schliessen −'});
+  $('whaleRefresh').addEventListener('click',()=>refresh(true));
+  return true;
+ }
+ async function request(url){const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),10000);try{const res=await fetch(url,{signal:ctl.signal,cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const type=res.headers.get('content-type')||'';return type.includes('json')?res.json():res.text()}finally{clearTimeout(timer)}}
+ async function confirmed(base){
+  const hash=String(await request(base+'/blocks/tip/hash')).trim();if(!validTx(hash))throw Error('Ungültiger Blockhash');
+  const info=await request(base+'/block/'+hash);if(!info||!Number.isFinite(Number(info.height)))throw Error('Ungültige Blockdaten');
+  const txs=[];for(const offset of [0,25,50]){
+   const batch=await request(base+'/block/'+hash+'/txs/'+offset);
+   if(!Array.isArray(batch))throw Error('Ungültige Transaktionsdaten');
+   txs.push(...batch);if(batch.length<25)break;
+  }
+  return {txs,block:info.height,source:base};
+ }
+ async function recentFallback(base){
+  const recent=await request(base+'/mempool/recent');if(!Array.isArray(recent))throw Error('Keine Mempool-Daten');
+  const ids=[...new Set(recent.map(t=>t.txid).filter(validTx))].slice(0,8);
+  const results=await Promise.allSettled(ids.map(id=>request(base+'/tx/'+id)));
+  const txs=results.filter(x=>x.status==='fulfilled').map(x=>x.value);
+  if(!txs.length)throw Error('Keine Transaktionen');
+  return {txs,block:null,source:base};
+ }
+ function parse(txs){
+  return txs.filter(t=>validTx(t?.txid)&&Array.isArray(t.vout)).map(t=>{
+   const outs=t.vout.map(v=>Number(v.value)/1e8).filter(v=>Number.isFinite(v)&&v>=0);
+   return {id:t.txid,max:Math.max(0,...outs),large:outs.filter(v=>v>=50).length};
+  });
+ }
+ async function refresh(force=false){
+  if(!install()||busy||(!force&&Date.now()-last<300000))return;
+  busy=true;$('whaleRefresh').disabled=true;$('whaleState').textContent='Blockchain wird geprüft …';
+  try{
+   let data=null,errors=[];
+   for(const base of sources){try{data=await confirmed(base);break}catch(e){errors.push(base+': '+String(e.message||e))}}
+   if(!data){for(const base of sources){try{data=await recentFallback(base);break}catch(e){errors.push(base+': '+String(e.message||e))}}}
+   if(!data)throw Error(errors.join('; ').slice(0,160)||'Quellen nicht erreichbar');
+   const rows=parse(data.txs);if(!rows.length)throw Error('Keine gültigen Ausgänge');
+   sample=rows;activeSource=data.source;
+   $('whaleLargest').textContent=fmt(Math.max(...rows.map(t=>t.max)))+' BTC';
+   $('whaleCount').textContent=String(rows.reduce((n,t)=>n+t.large,0));
+   $('whaleTransactions').replaceChildren();
+   for(const t of [...rows].sort((a,b)=>b.max-a.max).slice(0,10)){
+    const item=document.createElement('div');item.className='whale-tx';
+    const label=document.createElement('span');label.textContent='Grösster Ausgang: '+fmt(t.max)+' BTC';
+    const link=document.createElement('a');link.href='https://mempool.space/tx/'+t.id;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Transaktion prüfen ↗';
+    item.append(label,link);$('whaleTransactions').appendChild(item);
+   }
+   const mode=data.block===null?'Mempool-Ersatzstichprobe':'Bestätigter Block '+data.block;
+   $('whaleState').textContent=data.block===null?'Mempool · eingeschränkt':'Blockdaten geladen';
+   $('whaleStamp').textContent='Abruf '+new Date().toLocaleString('de-CH',{timeZone:'Europe/Zurich'})+' · '+mode+' · '+rows.length+' von '+data.txs.length+' Transaktionen geprüft · Quelle: '+new URL(data.source).hostname+' · begrenzte Stichprobe, keine Marktgesamtzahl.';
+   last=Date.now();
+  }catch(e){$('whaleState').textContent='Quelle nicht erreichbar';$('whaleStamp').textContent='Abruf fehlgeschlagen: '+String(e.message||e).slice(0,180)+' · Erneut versuchen oder externe Quellen öffnen.';$('whaleLargest').textContent='—';$('whaleCount').textContent='—';$('whaleTransactions').textContent='Keine überprüfbaren Daten vorhanden.';}
+  finally{busy=false;$('whaleRefresh').disabled=false}
+ }
+ if(install())refresh();else setTimeout(()=>refresh(),100);
+ $('reload')?.addEventListener('click',()=>refresh(true));
+ $('dashRun')?.addEventListener('click',()=>refresh(true));
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
+})();
+
+</script></body></html>
