@@ -607,8 +607,8 @@ $('runProDesk').onclick=runProDesk;
     <div class="dashboard-note" id="dashSourceTimes" aria-live="polite">Spot-, Marktzentrale- und Fibonacci-Atlas-Abrufe können unterschiedliche Zeitpunkte haben.</div>
     <button type="button" id="dashRun" class="dashboard-mainbutton">Gesamtanalyse starten</button>
     <div class="dashboard-overview" id="dashInterpretation">Starte die Gesamtanalyse, um Spotmarkt, Trends, Fibonacci, Derivate und Altcoins zusammenzuführen.</div>
-    <h3 style="font-size:15px;margin:17px 0 7px">Fibonacci-Kurszonen · Priorität und Kursnähe</h3>
-    <div id="dashAtlasZones" class="deriv-mini-grid"><div class="deriv-mini-card deriv-mini-legend">Nach der Gesamtanalyse erscheinen Modellpriorität, Kursnähe und die tatsächliche Bandbreite der Zonen. Kein Prognosewert.</div></div>
+    <h3 style="font-size:15px;margin:17px 0 7px">Fibonacci-Kurszonen · nach Kursnähe</h3>
+    <div id="dashAtlasZones" class="deriv-mini-grid"><div class="deriv-mini-card deriv-mini-legend">Nach der Gesamtanalyse erscheinen die drei nächstgelegenen Zonen je Kursrichtung, mit Modellindex, Swing-Paaren und tatsächlicher Zonenbreite. Kein Prognosewert.</div></div>
     <h3 style="font-size:15px;margin:17px 0 7px">Derivate-Kompass · Open Interest &amp; Funding</h3>
     <div id="derivCompass" class="deriv-signal" aria-live="polite">Noch keine aktuellen Futures-Daten. Gesamtanalyse starten.</div>
     <div id="derivHistory" class="deriv-mini-grid" aria-live="polite"><div class="deriv-mini-card deriv-mini-legend">Historische Zeitreihen werden aus öffentlichen Binance-USDⓈ-M-Daten geladen, sofern die Schnittstellen erreichbar sind.</div></div>
@@ -891,12 +891,13 @@ async function runFibAtlas(){
   const price=validPrice[0];
   zones=zones.filter(z=>z.v>0&&Number.isFinite(z.v));
   const clusters=fibAtlasClusters(zones,price);
-  const below=fibAtlasSelect(clusters,price,'below');
-  const above=fibAtlasSelect(clusters,price,'above');
-  const nearest=(side)=>clusters.filter(g=>side==='below'?g.high<price:g.low>price).sort((a,b)=>a.distance-b.distance).slice(0,3);
-  const nearBelow=nearest('below'),nearAbove=nearest('above');
-  const card=(name,items)=>'<div class="tile"><b>'+name+'</b>'+(items.length?items.map(z=>fibAtlasZoneMarkup(z,price)).join(''):'<div class="small">Keine Zone aus bestätigten Daten verfügbar.</div>')+'</div>';
-  groups.innerHTML=card('Tiefere Zonen · Modellpriorität',below)+card('Höhere Zonen · Modellpriorität',above)+card('Tiefere Zonen · nächstgelegen',nearBelow)+card('Höhere Zonen · nächstgelegen',nearAbove);
+  // Eine einzige Zone-Liste pro Richtung: strikt nach Kursnaehe, nicht Modellprioritaet.
+  // Modellindex und Swing-Ursprung bleiben als Zusatzinformation sichtbar.
+  const nearest=(side,limit)=>clusters.filter(g=>side==='below'?g.high<price:g.low>price).sort((a,b)=>a.distance-b.distance).slice(0,limit);
+  const allBelow=nearest('below',8),allAbove=nearest('above',8);
+  const nearBelow=allBelow.slice(0,3),nearAbove=allAbove.slice(0,3);
+  const card=(name,items)=>'<div class="tile"><b>'+name+'</b>'+(items.length?items.map(z=>fibAtlasZoneMarkup(z,price)).join(''):'<div class="small">Keine Zone aus bestaetigten Daten verfuegbar.</div>')+'</div>';
+  groups.innerHTML=card('Tiefere Zonen · nach Kursnähe',allBelow)+card('Höhere Zonen · nach Kursnähe',allAbove);
   const fmtFirst=xs=>xs.length?fibAtlasFmt(xs[0].center)+' USDT':'Nicht verfügbar';
   document.getElementById('fibAtlasBelow').textContent=fmtFirst(nearBelow);
   document.getElementById('fibAtlasAbove').textContent=fmtFirst(nearAbove);
@@ -906,7 +907,7 @@ async function runFibAtlas(){
      const range=(g.high-g.low)>g.center*.00035?fibAtlasFmt(g.low)+'–'+fibAtlasFmt(g.high):fibAtlasFmt(g.center);
      return '<div style="padding:7px 0;border-bottom:1px solid #27314a"><b>'+(i+1)+'. '+range+' USDT</b><div class="small">Mitte '+fibAtlasFmt(g.center)+' · Index '+g.score+' (kein Prozentwert) · '+g.tfSet.join('/')+' · '+g.independent+' unabhängige Swing-Paare · '+g.distance.toFixed(1).replace('.',',')+' % Abstand</div></div>';
    }).join(''))+'</div>';
-   dash.innerHTML=make('Tiefere Zonen · Modellpriorität',below)+make('Höhere Zonen · Modellpriorität',above)+make('Tiefere Zonen · Kursnähe',nearBelow)+make('Höhere Zonen · Kursnähe',nearAbove);
+   dash.innerHTML=make('Tiefere Zonen · nach Kursnähe',nearBelow)+make('Höhere Zonen · nach Kursnähe',nearAbove);
   }
   window.cmAtlasCompletedAt=Date.now();
   document.getElementById('dashSourceTimes')?.replaceChildren(document.createTextNode('Fibonacci-Atlas: '+new Date(window.cmAtlasCompletedAt).toLocaleString('de-CH',{timeZone:'Europe/Zurich'})+' · BTC-Referenz '+fibAtlasFmt(price)+' USDT. Spot- und Futuresdaten werden unabhängig abgerufen.'));
