@@ -1,6 +1,29 @@
-<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro v12</title><style>
+<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro · Dashboard</title><style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#edf2ff;background:#0b1020;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;z-index:3;background:#0b1020ed;border-bottom:1px solid #27314a;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.2px}.small{font-size:12px;color:#a7b3cc}.container{max-width:780px;margin:auto;padding:15px 14px 90px}.panel{background:#141c30;border:1px solid #293550;border-radius:16px;padding:15px;margin-bottom:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 13px}button,select,input{font:inherit}button{cursor:pointer;color:#eef3ff;background:#1d2942;border:1px solid #344465;border-radius:11px;padding:10px 12px}button.active{background:#23659c;border-color:#428ecb}button:disabled{opacity:.5}.flex{display:flex;align-items:center;justify-content:space-between;gap:9px}.price{font-weight:800;font-size:32px;letter-spacing:-.7px}.green{color:#4dd3a6}.red{color:#ff737e}.muted{color:#a7b3cc}.pill{border-radius:999px;background:#24304c;padding:5px 9px;font-size:11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:#10192c;border-radius:12px;padding:12px}.tile b{font-size:19px;display:block;margin-top:5px}.chart{width:100%;height:auto;display:block}.levels{width:100%;border-collapse:collapse;font-size:13px}.levels td,.levels th{padding:9px 5px;text-align:right;border-bottom:1px solid #27314a}.levels th:first-child,.levels td:first-child{text-align:left}.notice{border-left:3px solid #f1bd61;padding:9px 11px;background:#322b24;border-radius:6px;font-size:12px}.bar{height:6px;background:#2a3650;border-radius:6px;margin-top:8px}.bar>div{height:6px;background:#54a6dd;border-radius:6px}.section{font-size:17px;font-weight:750;margin:0 0 12px}.linkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.linkgrid a{border:1px solid #344465;border-radius:10px;padding:11px;text-decoration:none;color:#d3e7ff;font-size:13px}.switch{display:flex;gap:6px;align-items:center}select,input{background:#0f1729;border:1px solid #344465;border-radius:8px;padding:9px;color:white;max-width:100%}.footer{text-align:center;font-size:11px;color:#8996b2;line-height:1.5}.chip{font-size:12px;border:1px solid #344465;border-radius:20px;padding:6px 10px}.loading{animation:pulse 1.2s infinite alternate}@keyframes pulse{from{opacity:.4}to{opacity:1}}@media(min-width:680px){.container{padding-top:24px}.price{font-size:39px}}
-</style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">v12 BETA</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
+
+/* Sammelupdate: kompaktes Dashboard und klappbare Detailbereiche */
+.dashboard-panel{background:linear-gradient(160deg,#182b48,#111b31 65%);border-color:#41658f}
+.dashboard-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.dashboard-heading{font-weight:800;font-size:20px;margin:0}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.dashboard-metric{background:#0e1b31;border:1px solid #273d5c;border-radius:12px;padding:12px;min-width:0}
+.dashboard-metric .value{font-size:20px;font-weight:800;line-height:1.25;overflow-wrap:anywhere;margin-top:7px}
+.dashboard-metric .label{font-size:12px;color:#a9b8d0}
+.dashboard-note{font-size:12px;color:#b4c5de;line-height:1.55}
+.dashboard-mainbutton{width:100%;margin:10px 0;background:#23659c;border-color:#428ecb;font-weight:750;font-size:15px}
+.dashboard-overview{padding:12px;background:#0e1b31;border-radius:11px;border-left:3px solid #73baf2;line-height:1.55;font-size:13px}
+.dashboard-quality{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}
+.dashboard-quality .dq{font-size:12px;background:#101b2e;padding:9px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:5px}
+.dashboard-quality .dq span{overflow-wrap:anywhere}
+.dashboard-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.dashboard-links button{font-size:12px;padding:8px 10px}
+.panel.detail-closed > :not(h2){display:none!important}
+h2.section.detail-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;margin-bottom:0}
+h2.section.detail-heading .detail-toggle{font-size:12px;font-weight:600;padding:6px 9px;white-space:nowrap}
+.panel.detail-closed{padding-bottom:15px}
+.panel.detail-open h2.section.detail-heading{margin-bottom:12px}
+@media(max-width:360px){.dashboard-grid{grid-template-columns:1fr}.dashboard-metric .value{font-size:19px}}
+</style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">DASHBOARD</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
 <section class="panel" id="prodesk">
 <h2 class="section">Marktzentrale · Bitcoin &amp; Frühwarnungen</h2>
 <p class="small">Kompakte Übersicht aus <b>neu abgerufenen</b> Binance-Spotdaten. Derivate werden <b>separat</b> über Binance USDⓈ-M Futures geladen. Jede Aktualisierung erfolgt auf Knopfdruck; <b>keine Hintergrundalarme und keine automatischen Trades</b>.</p>
@@ -51,7 +74,7 @@
 <div id="warningAlerts" class="tile small">Noch nicht berechnet.</div>
 <div class="notice" style="margin-top:12px">Quellen: Binance Spot BTCUSDT, historische abgeschlossene OHLCV-Kerzen (UTC) und aktueller Spot-Ticker. Intervall- und Abrufzeit werden angezeigt. Signalregeln sind heuristisch und nicht backgetestet. Bei fehlenden/ungültigen Daten keine Freigabe eines Gesamtsignals. Bei einer Unterbrechung der Datenverbindung bleibt der Monitor ausdrücklich unverfügbar.</div>
 </section>
-<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Version 12 · Kostenloser Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
+<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Dashboard-Sammelupdate · Kostenloser Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
 const symbols=['BTC','ETH','SOL','XRP','BNB'];let active='BTC',rows=[],lastPrice=null,report='',alarms=(()=>{try{return JSON.parse(localStorage.getItem('cmpro_alarms')||'[]')}catch(e){return []}})(),busy=false,requestCounter=0,loadedKey=null,loadedSource=null,loadedAt=null;
 const $=id=>document.getElementById(id);const fmt=(v,dec)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:dec??(v>=100?2:4),maximumFractionDigits:dec??(v>=100?2:4)});const status=(s,ok)=>{$('state').textContent=s;$('state').style.color=ok?'#4dd3a6':'#ffb66d'};
 function buildtabs(){$('coins').innerHTML=symbols.map(s=>`<button data-coin="${s}" class="${active===s?'active':''}">${s}</button>`).join('');document.querySelectorAll('[data-coin]').forEach(b=>b.onclick=()=>{active=b.dataset.coin;$('tfresults').innerHTML='<div class="tile small">Für diesen Coin noch nicht abgefragt</div>';$('tfstatus').textContent='Bitte Zeitfenster neu prüfen';buildtabs();load()});}buildtabs();
@@ -503,4 +526,117 @@ $('runProDesk').onclick=runProDesk;
   });
 })();
 
+
+/* Bündelupdate: dynamische Übersicht, keine neuen externen Datenquellen. */
+(() => {
+  const main=document.querySelector('main.container');
+  if(!main||document.getElementById('compactDashboard'))return;
+  const panel=document.createElement('section');
+  panel.className='panel dashboard-panel';panel.id='compactDashboard';
+  panel.innerHTML=`
+    <div class="dashboard-top"><h2 class="dashboard-heading">Marktübersicht</h2><span class="pill" id="dashState">Daten werden geprüft</span></div>
+    <div class="dashboard-note">Kompakte Auswertung aus bereits geladenen App-Daten · Spot und Futures getrennt · Zeitstempel beachten.</div>
+    <div class="dashboard-grid">
+      <div class="dashboard-metric"><div class="label">BTC-Spotkurs</div><div class="value" id="dashPrice">—</div></div>
+      <div class="dashboard-metric"><div class="label">24-Stunden-Veränderung</div><div class="value" id="dashChange">—</div></div>
+      <div class="dashboard-metric"><div class="label">Technischer Trend · 4h / 1D / 1W</div><div class="value" id="dashTrend">—</div></div>
+      <div class="dashboard-metric"><div class="label">Technischer Abwärtsdruck</div><div class="value" id="dashRisk">—</div></div>
+      <div class="dashboard-metric"><div class="label">Tiefere Fibonacci-Referenz</div><div class="value" id="dashLow">—</div></div>
+      <div class="dashboard-metric"><div class="label">Höhere Fibonacci-Referenz</div><div class="value" id="dashHigh">—</div></div>
+    </div>
+    <button type="button" id="dashRun" class="dashboard-mainbutton">Gesamtanalyse starten</button>
+    <div class="dashboard-overview" id="dashInterpretation">Starte die Gesamtanalyse, um Spotmarkt, Trends, Fibonacci, Derivate und Altcoins zusammenzuführen.</div>
+    <h3 style="font-size:14px;margin:14px 0 5px">Datenqualität nach Modul</h3>
+    <div class="dashboard-quality" id="dashQuality" aria-live="polite"></div>
+    <div class="dashboard-links"><button type="button" data-open-detail="prodesk">Marktzentrale ansehen</button><button type="button" data-open-detail="earlyWarning">Frühwarnung ansehen</button><button type="button" data-open-detail="correlations">Altcoins ansehen</button></div>
+    <div class="dashboard-note" id="dashLast">Noch keine vollständige Gesamtanalyse bestätigt. Die Übersicht aktualisiert sich bei neuen Ergebnissen, überwacht aber nicht im Hintergrund.</div>`;
+  const spot=main.querySelector('section.panel');
+  spot.before(panel);
+
+  const originalPanels=[...main.querySelectorAll(':scope > section.panel')].filter(p=>p!==panel&&p!==spot&&p.id!=='prodesk');
+  const collapse=(p,closed)=>{
+    p.classList.toggle('detail-closed',closed);p.classList.toggle('detail-open',!closed);
+    const b=p.querySelector('h2.section .detail-toggle');
+    if(b){b.textContent=closed?'Details anzeigen ＋':'Details schliessen −';b.setAttribute('aria-expanded',String(!closed));}
+  };
+  originalPanels.forEach((p,i)=>{
+    const h=p.querySelector(':scope > h2.section');if(!h)return;
+    h.classList.add('detail-heading');
+    const b=document.createElement('button');b.type='button';b.className='detail-toggle';b.setAttribute('aria-label','Details ein- oder ausblenden');
+    h.appendChild(b);b.onclick=()=>collapse(p,p.classList.contains('detail-open'));
+    collapse(p,true);
+  });
+  const show=(p)=>{if(!p)return;collapse(p,false);p.scrollIntoView({behavior:'smooth',block:'start'});};
+  panel.querySelectorAll('[data-open-detail]').forEach(b=>b.onclick=()=>{
+    const target=document.getElementById(b.dataset.openDetail);
+    if(target===document.getElementById('prodesk'))target.scrollIntoView({behavior:'smooth',block:'start'});
+    else show(target);
+  });
+  const textOf=(id)=>document.getElementById(id)?.textContent?.trim()||'';
+  const valid=t=>!!t&&!/^(?:—|nicht geladen|nicht verfügbar|warte|keine bewertung)/i.test(t);
+  const set=(id,text)=>{const el=document.getElementById(id);if(el&&el.textContent!==text)el.textContent=text};
+  const quality=(id,good,bad)=>{const t=textOf(id);return good(t)?'Geladen':bad(t)?'Nicht verfügbar':'Nicht geprüft'};
+  const futuresInfo=()=>{
+    const el=document.getElementById('proDerivatives');
+    if(!el)return null;
+    const tiles=[...el.querySelectorAll('.tile')];
+    const find=k=>tiles.find(x=>x.textContent.toLowerCase().includes(k));
+    const tile=find('open interest');
+    const oi=tile?.querySelector('b')?.textContent?.trim()||'';
+    const change=find('oi-veränderung')?.querySelector('b')?.textContent?.trim()||'';
+    const funding=find('funding')?.querySelector('b')?.textContent?.trim()||'';
+    const ratio=find('long/short')?.querySelector('b')?.textContent?.trim()||'';
+    return {oi,change,funding,ratio,available:/\d/.test(oi)&&!/nicht verfügbar/i.test(oi)};
+  };
+  const getProValue=(phrase)=>{
+    const tiles=[...document.querySelectorAll('#proKpis .tile')];
+    const t=tiles.find(x=>x.textContent.toLowerCase().includes(phrase));
+    return t?.querySelector('b')?.textContent?.trim()||'';
+  };
+  const render=()=>{
+    const spotPrice=textOf('price'),change=textOf('change'),risk=textOf('riskval');
+    const proStatus=textOf('proStatus'),oi=futuresInfo();
+    const trend=getProValue('kurs-/mittel-/langfrist')||getProValue('trend');
+    const lower=getProValue('tiefere fibonacci'),higher=getProValue('höhere fibonacci');
+    set('dashPrice',valid(spotPrice)?spotPrice:'—');
+    set('dashChange',change.replace(/^24h\s*:?\s*/i,'')||'—');
+    set('dashTrend',trend||'Noch nicht geprüft');
+    set('dashRisk',valid(risk)?risk:'—');
+    set('dashLow',lower||'Noch nicht geprüft');
+    set('dashHigh',higher||'Noch nicht geprüft');
+    const spotOK=valid(spotPrice)&&/\d/.test(spotPrice);
+    const deskOK=/spotdaten geprüft|spotdaten geladen/i.test(proStatus);
+    const corr=quality('corrstatus',t=>/berechnet|daten|renditen/i.test(t)&&!/noch keine|nicht verfügbar|fehler/i.test(t),t=>/fehler|nicht verfügbar/i.test(t));
+    const strength=quality('strengthStatus',t=>/berechnet|quelle binance/i.test(t)&&!/noch nicht|fehler/i.test(t),t=>/fehler|nicht verfügbar/i.test(t));
+    const early=quality('warningStatus',t=>/zeitfenster|berechnet/i.test(t)&&!/noch keine|nicht verfügbar|fehler/i.test(t),t=>/fehler|nicht verfügbar/i.test(t));
+    const futures=oi?.available?'Teilweise geladen':/fehler|nicht verfügbar/i.test(textOf('proDerivatives'))?'Nicht verfügbar':'Nicht geprüft';
+    const statuses=[['BTC Spot',spotOK?'Geladen':'Nicht geprüft'],['4h / 1D / 1W',deskOK?'Geladen':'Nicht geprüft'],['Futures',futures],['Fibonacci & Frühwarnung',early],['Korrelationen',corr],['Altcoins',strength]];
+    const qualityEl=document.getElementById('dashQuality');
+    if(qualityEl){const signature=statuses.map(x=>x.join(':')).join('|');if(qualityEl.dataset.status!==signature){qualityEl.dataset.status=signature;qualityEl.replaceChildren();for(const [name,status] of statuses){const div=document.createElement('div');div.className='dq';const a=document.createElement('span');a.textContent=name;const b=document.createElement('strong');b.textContent=status;b.style.color=status==='Geladen'?'#4dd3a6':status==='Nicht verfügbar'?'#ff8c94':'#b4c5de';div.append(a,b);qualityEl.appendChild(div)}}}
+    set('dashState',deskOK?'Spot-Analyse vorhanden':spotOK?'Spot geladen':'Analyse starten');
+    const bits=[];
+    if(/bärisch/i.test(trend))bits.push('Die geprüften Zeitfenster zeigen eine bärische Struktur.');
+    else if(/bullisch/i.test(trend))bits.push('Die geprüften Zeitfenster zeigen eine bullische Struktur.');
+    else bits.push('Für die gemeinsame Trendbewertung fehlen noch geprüfte Mehrzeitebenendaten.');
+    if(/\d/.test(lower)&&/\d/.test(higher))bits.push('Die nächste tiefere und höhere Fibonacci-Referenz steht oben; beides sind Rechenmarken, keine bestätigten Kursziele.');
+    if(oi?.available){
+      bits.push('Futures-Open-Interest: '+oi.oi+(oi.change?' · ungefährer 24h-Vergleich: '+oi.change:'')+'.');
+      if(oi.change)bits.push('Veränderungen des Open Interest verraten für sich allein nicht, ob Longs oder Shorts neu eröffnet wurden.');
+      if(oi.funding&&/\d/.test(oi.funding))bits.push('Funding-Snapshot: '+oi.funding+'.');
+      if(oi.ratio&&/\d/.test(oi.ratio))bits.push('Long/Short-Account-Ratio: '+oi.ratio+' (Accounts, keine Positionsgrössen).');
+    }else bits.push('Futures-Daten noch nicht vollständig geladen oder regional nicht verfügbar.');
+    set('dashInterpretation',bits.join(' '));
+    const stamp=proStatus.match(/Stand\s+[^·]+/)?.[0];
+    set('dashLast',(stamp?stamp+' · ':'')+'Die Übersicht verwendet nur bereits geladene Daten. Kein Hintergrundmonitoring und keine automatischen Trades.');
+  };
+  const watch=['price','change','riskval','proStatus','proKpis','proDerivatives','corrstatus','strengthStatus','warningStatus'];
+  let queued=false;
+  const observer=new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render()})});
+  for(const id of watch){const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})}
+  const runAll=document.getElementById('runAllAnalysis');
+  const dashRun=document.getElementById('dashRun');
+  if(dashRun)dashRun.onclick=()=>{if(!runAll||runAll.disabled)return;runAll.click()};
+  if(runAll)runAll.addEventListener('click',()=>{set('dashState','Gesamtanalyse läuft');panel.scrollIntoView({behavior:'smooth',block:'start'})});
+  render();
+})();
 </script></body></html>
