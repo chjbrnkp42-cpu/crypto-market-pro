@@ -460,4 +460,47 @@ async function runProDesk(){
 }
 $('runProDesk').onclick=runProDesk;
 
+
+/* Crypto Market Pro – Sammelupdate für bestehende Version 12.
+   Diesen Block unmittelbar VOR dem letzten Script-Endtag in index.html einfügen.
+   Bestehende Funktionen und Marktquellen bleiben unverändert. */
+(() => {
+  const start = document.getElementById('runProDesk');
+  if (!start || document.getElementById('runAllAnalysis')) return;
+  const all = document.createElement('button');
+  all.id = 'runAllAnalysis';
+  all.textContent = 'Gesamtanalyse starten';
+  all.style.cssText = 'background:#23659c;border-color:#428ecb;margin:0 8px 8px 0';
+  const status = document.createElement('div');
+  status.id = 'overallStatus';
+  status.className = 'small';
+  status.style.cssText = 'color:#72c7fb;margin:8px 0 14px';
+  status.textContent = 'Spot, Futures, Fibonacci, Zeitebenen und Altcoin-Radar in einem Durchlauf.';
+  start.parentNode.insertBefore(all, start);
+  start.parentNode.insertBefore(status, start);
+
+  all.addEventListener('click', async () => {
+    all.disabled = true;
+    const checks = [
+      ['Marktzentrale + Futures', () => runProDesk()],
+      ['4h / 1d / 1w', () => loadTimeframes()],
+      ['BTC-Frühwarnanalyse', () => runWarning()],
+      ['BTC / Altcoins Korrelationen', () => computeCorrelations()],
+      ['Altcoin-Radar', () => computeStrength()]
+    ];
+    const failed = [];
+    try {
+      for (let i = 0; i < checks.length; i++) {
+        const [label, job] = checks[i];
+        status.textContent = `Prüfe ${i + 1}/${checks.length}: ${label} …`;
+        try { await job(); }
+        catch (err) { failed.push(label); console.warn(label, err); }
+      }
+      status.textContent = failed.length
+        ? `Durchlauf abgeschlossen. Technisch fehlgeschlagen: ${failed.join(', ')}. Details und Datenqualität in den jeweiligen Modulen prüfen.`
+        : 'Alle Abfragen beendet. Bitte die Datenzeitstempel und eventuelle Teilquellenfehler in den Modulen kontrollieren.';
+    } finally { all.disabled = false; }
+  });
+})();
+
 </script></body></html>
