@@ -18,11 +18,37 @@
 .dashboard-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .dashboard-links button{font-size:12px;padding:8px 10px}
 .panel.detail-closed > :not(h2){display:none!important}
-h2.section.detail-heading{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;margin-bottom:0}
-h2.section.detail-heading .detail-toggle{font-size:12px;font-weight:600;padding:6px 9px;white-space:nowrap}
+h2.section.detail-heading{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:10px;flex-wrap:nowrap;margin-bottom:0}
+h2.section.detail-heading .detail-toggle{display:inline-flex;align-self:flex-start;font-size:12px;font-weight:600;padding:6px 9px;white-space:nowrap}
 .panel.detail-closed{padding-bottom:15px}
 .panel.detail-open h2.section.detail-heading{margin-bottom:12px}
 @media(max-width:360px){.dashboard-grid{grid-template-columns:1fr}.dashboard-metric .value{font-size:19px}}
+
+/* Finale iPhone-UI-Politur: konsistente Modultitel, Buttons und Abstaende */
+.panel.detail-closed,.panel.detail-open{padding:16px;margin-bottom:14px}
+.panel.detail-closed{padding-bottom:16px}
+h2.section.detail-heading{
+  display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:flex-start;flex-wrap:nowrap;
+  gap:12px;line-height:1.35;font-size:17px;
+  margin:0;min-width:0;overflow-wrap:anywhere;
+}
+h2.section.detail-heading .detail-toggle{
+  display:inline-flex;align-items:center;justify-content:center;
+  align-self:flex-start;min-height:44px;min-width:190px;max-width:100%;
+  padding:10px 14px;margin:0;
+  border-radius:11px;font-size:13px;font-weight:650;line-height:1.2;
+  white-space:normal;text-align:center;letter-spacing:0;
+}
+.panel.detail-open h2.section.detail-heading{margin-bottom:16px}
+.dashboard-links{gap:9px;margin:12px 0}
+.dashboard-links button{min-height:44px;padding:10px 12px;font-size:13px;line-height:1.25}
+.dashboard-mainbutton{min-height:48px;padding:12px 14px;font-size:15px}
+@media(max-width:420px){
+  .panel.detail-closed,.panel.detail-open{padding:15px;margin-bottom:13px}
+  h2.section.detail-heading{gap:11px;font-size:17px}
+  h2.section.detail-heading .detail-toggle{min-width:190px}
+}
 
 /* Dashboard Plus: compact derivatives charts and readability */
 .deriv-mini-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0}
