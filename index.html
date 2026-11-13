@@ -1,4 +1,4 @@
-<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro · Dashboard</title><style>
+<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro · Dashboard Plus</title><style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#edf2ff;background:#0b1020;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;z-index:3;background:#0b1020ed;border-bottom:1px solid #27314a;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.2px}.small{font-size:12px;color:#a7b3cc}.container{max-width:780px;margin:auto;padding:15px 14px 90px}.panel{background:#141c30;border:1px solid #293550;border-radius:16px;padding:15px;margin-bottom:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 13px}button,select,input{font:inherit}button{cursor:pointer;color:#eef3ff;background:#1d2942;border:1px solid #344465;border-radius:11px;padding:10px 12px}button.active{background:#23659c;border-color:#428ecb}button:disabled{opacity:.5}.flex{display:flex;align-items:center;justify-content:space-between;gap:9px}.price{font-weight:800;font-size:32px;letter-spacing:-.7px}.green{color:#4dd3a6}.red{color:#ff737e}.muted{color:#a7b3cc}.pill{border-radius:999px;background:#24304c;padding:5px 9px;font-size:11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:#10192c;border-radius:12px;padding:12px}.tile b{font-size:19px;display:block;margin-top:5px}.chart{width:100%;height:auto;display:block}.levels{width:100%;border-collapse:collapse;font-size:13px}.levels td,.levels th{padding:9px 5px;text-align:right;border-bottom:1px solid #27314a}.levels th:first-child,.levels td:first-child{text-align:left}.notice{border-left:3px solid #f1bd61;padding:9px 11px;background:#322b24;border-radius:6px;font-size:12px}.bar{height:6px;background:#2a3650;border-radius:6px;margin-top:8px}.bar>div{height:6px;background:#54a6dd;border-radius:6px}.section{font-size:17px;font-weight:750;margin:0 0 12px}.linkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.linkgrid a{border:1px solid #344465;border-radius:10px;padding:11px;text-decoration:none;color:#d3e7ff;font-size:13px}.switch{display:flex;gap:6px;align-items:center}select,input{background:#0f1729;border:1px solid #344465;border-radius:8px;padding:9px;color:white;max-width:100%}.footer{text-align:center;font-size:11px;color:#8996b2;line-height:1.5}.chip{font-size:12px;border:1px solid #344465;border-radius:20px;padding:6px 10px}.loading{animation:pulse 1.2s infinite alternate}@keyframes pulse{from{opacity:.4}to{opacity:1}}@media(min-width:680px){.container{padding-top:24px}.price{font-size:39px}}
 
 /* Sammelupdate: kompaktes Dashboard und klappbare Detailbereiche */
@@ -23,6 +23,16 @@ h2.section.detail-heading .detail-toggle{font-size:12px;font-weight:600;padding:
 .panel.detail-closed{padding-bottom:15px}
 .panel.detail-open h2.section.detail-heading{margin-bottom:12px}
 @media(max-width:360px){.dashboard-grid{grid-template-columns:1fr}.dashboard-metric .value{font-size:19px}}
+
+/* Dashboard Plus: compact derivatives charts and readability */
+.deriv-mini-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0}
+.deriv-mini-card{padding:11px;border:1px solid #2e4364;border-radius:11px;background:#0e1b31;min-width:0}
+.deriv-mini-title{font-size:13px;font-weight:750;margin-bottom:5px}
+.deriv-mini-card svg{width:100%;height:auto;display:block;overflow:visible}
+.deriv-mini-legend{font-size:11px;color:#b4c5de;line-height:1.55}
+.deriv-signal{border-left:3px solid #73baf2;padding:10px 12px;background:#0e1b31;border-radius:9px;font-size:13px;line-height:1.55}
+.deriv-signal b{display:block;margin-bottom:5px}
+@media(min-width:680px){.deriv-mini-grid{grid-template-columns:1fr 1fr}}
 </style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">DASHBOARD</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
 <section class="panel" id="prodesk">
 <h2 class="section">Marktzentrale · Bitcoin &amp; Frühwarnungen</h2>
@@ -74,7 +84,7 @@ h2.section.detail-heading .detail-toggle{font-size:12px;font-weight:600;padding:
 <div id="warningAlerts" class="tile small">Noch nicht berechnet.</div>
 <div class="notice" style="margin-top:12px">Quellen: Binance Spot BTCUSDT, historische abgeschlossene OHLCV-Kerzen (UTC) und aktueller Spot-Ticker. Intervall- und Abrufzeit werden angezeigt. Signalregeln sind heuristisch und nicht backgetestet. Bei fehlenden/ungültigen Daten keine Freigabe eines Gesamtsignals. Bei einer Unterbrechung der Datenverbindung bleibt der Monitor ausdrücklich unverfügbar.</div>
 </section>
-<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Dashboard-Sammelupdate · Kostenloser Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
+<section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Dashboard Plus · gebündeltes Update · Kostenloser Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
 const symbols=['BTC','ETH','SOL','XRP','BNB'];let active='BTC',rows=[],lastPrice=null,report='',alarms=(()=>{try{return JSON.parse(localStorage.getItem('cmpro_alarms')||'[]')}catch(e){return []}})(),busy=false,requestCounter=0,loadedKey=null,loadedSource=null,loadedAt=null;
 const $=id=>document.getElementById(id);const fmt=(v,dec)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:dec??(v>=100?2:4),maximumFractionDigits:dec??(v>=100?2:4)});const status=(s,ok)=>{$('state').textContent=s;$('state').style.color=ok?'#4dd3a6':'#ffb66d'};
 function buildtabs(){$('coins').innerHTML=symbols.map(s=>`<button data-coin="${s}" class="${active===s?'active':''}">${s}</button>`).join('');document.querySelectorAll('[data-coin]').forEach(b=>b.onclick=()=>{active=b.dataset.coin;$('tfresults').innerHTML='<div class="tile small">Für diesen Coin noch nicht abgefragt</div>';$('tfstatus').textContent='Bitte Zeitfenster neu prüfen';buildtabs();load()});}buildtabs();
@@ -396,12 +406,13 @@ async function proFutures(){
   proFetchJSON(root+'/fapi/v1/openInterest?symbol='+symbol),
   proFetchJSON(root+'/fapi/v1/premiumIndex?symbol='+symbol),
   proFetchJSON(root+'/futures/data/openInterestHist?symbol='+symbol+'&period=1h&limit=30'),
-  proFetchJSON(root+'/futures/data/globalLongShortAccountRatio?symbol='+symbol+'&period=1h&limit=2')
+  proFetchJSON(root+'/futures/data/globalLongShortAccountRatio?symbol='+symbol+'&period=1h&limit=2'),
+  proFetchJSON(root+'/fapi/v1/fundingRate?symbol='+symbol+'&limit=30')
  ];
  const all=await Promise.allSettled(tasks);
  const v=i=>all[i].status==='fulfilled'?all[i].value:null;
- const errs=all.map((x,i)=>x.status==='rejected'?['OI','Funding','OI-Historie','Long/Short'][i]+': '+proSafeError(x.reason):null).filter(Boolean);
- const oi=v(0),funding=v(1),history=v(2),longShort=v(3);
+ const errs=all.map((x,i)=>x.status==='rejected'?['OI','Funding','OI-Historie','Long/Short','Funding-Historie'][i]+': '+proSafeError(x.reason):null).filter(Boolean);
+ const oi=v(0),funding=v(1),history=v(2),longShort=v(3),fundingHistory=v(4);
  const currentOI=Number(oi?.openInterest),oiTime=Number(oi?.time);
  const validOI=Number.isFinite(currentOI)&&currentOI>0&&Number.isFinite(oiTime)&&oiTime>Date.now()-15*60000&&oiTime<Date.now()+60000;
  let historic='Nicht verfügbar',historyLabel='Keine zeitlich geeignete 24h-Referenz';
@@ -422,10 +433,17 @@ async function proFutures(){
   proTile('Tatsächliche 24h-Liquidationen','Nicht verfügbar','Kein bestätigter gesamter Liquidationsfeed vorhanden'),
   proTile('Liquidationscluster','Nicht verfügbar','Keine modellierten Heatmaps als Echtwerte ausgeben')
  ];
- return {tiles,errors:errs,any:validOI||frValid||ratioValid};
+ return {tiles,errors:errs,any:validOI||frValid||ratioValid,
+   series:{
+     oi:Array.isArray(history)?history.filter(x=>Number.isFinite(+x.timestamp)&&+x.sumOpenInterest>0).map(x=>({time:+x.timestamp,value:+x.sumOpenInterest})).sort((a,b)=>a.time-b.time):[],
+     fundingHistory:Array.isArray(fundingHistory)?fundingHistory.filter(x=>Number.isFinite(+x.fundingTime)&&Number.isFinite(+x.fundingRate)).map(x=>({time:+x.fundingTime,value:+x.fundingRate*100})).sort((a,b)=>a.time-b.time):[],
+     currentOI:validOI?currentOI:null,oiTime:validOI?oiTime:null,funding:frValid?fr*100:null,fundingTime:frValid?fundTime:null,
+     ratio:ratioValid?ratio:null,oi24:historic!=='Nicht verfügbar'?parseFloat(historic):null,
+     errors:errs
+   }};
 }
 async function runProDesk(){
- const token=++proToken,button=$('runProDesk');button.disabled=true;
+ const token=++proToken,button=$('runProDesk');button.disabled=true;window.cmDerivativeSeries=null;renderDerivativeIntelligence();
  $('proStatus').textContent='Lade frische Spot-, Chart- und Futuresdaten …';
  $('proKpis').innerHTML='<div class="tile small">Abruf läuft. Bisherige Momentaufnahme wird nicht als neu angezeigt.</div>';
  $('proAlerts').textContent='Prüfung läuft …';$('proComparison').textContent='Warte auf frische Daten.';
@@ -477,8 +495,11 @@ async function runProDesk(){
    if(spotError){$('proStatus').textContent='Spot-Analyse nicht verfügbar: '+spotError;$('proKpis').innerHTML='<div class="tile small">Keine freigegebenen aktuellen Spotkennzahlen.</div>';$('proAlerts').textContent='Warnanalyse wegen Datenfehlern nicht verfügbar.';$('proComparison').textContent='Kein Snapshot gespeichert.';}
    const derivative=await futuresRequest;
    if(token!==proToken)return;
+   window.cmDerivativeSeries=derivative.series||null;
+   window.cmDerivativeCheckedAt=Date.now();
+   renderDerivativeIntelligence();
    $('proDerivatives').innerHTML=(derivative.tiles.length?derivative.tiles.join(''):'<div class="tile small">Futuresdaten nicht verfügbar.</div>')+(derivative.errors.length?'<div class="tile small" style="grid-column:1/-1">Nicht verfügbare Teilquellen: '+proEsc(derivative.errors.join(' | '))+'</div>':'');
- }catch(e){if(token!==proToken)return;$('proStatus').textContent='Analysefehler: '+proSafeError(e);$('proKpis').innerHTML='<div class="tile small">Daten nicht verfügbar.</div>';$('proAlerts').textContent='Keine bestätigten Alarme.';$('proDerivatives').innerHTML='<div class="tile small">Keine aktuellen Futuresdaten.</div>'}
+ }catch(e){if(token!==proToken)return;$('proStatus').textContent='Analysefehler: '+proSafeError(e);$('proKpis').innerHTML='<div class="tile small">Daten nicht verfügbar.</div>';$('proAlerts').textContent='Keine bestätigten Alarme.';window.cmDerivativeSeries=null;renderDerivativeIntelligence();$('proDerivatives').innerHTML='<div class="tile small">Keine aktuellen Futuresdaten.</div>'}
  finally{if(token===proToken)button.disabled=false;}
 }
 $('runProDesk').onclick=runProDesk;
@@ -546,6 +567,10 @@ $('runProDesk').onclick=runProDesk;
     </div>
     <button type="button" id="dashRun" class="dashboard-mainbutton">Gesamtanalyse starten</button>
     <div class="dashboard-overview" id="dashInterpretation">Starte die Gesamtanalyse, um Spotmarkt, Trends, Fibonacci, Derivate und Altcoins zusammenzuführen.</div>
+    <h3 style="font-size:15px;margin:17px 0 7px">Derivate-Kompass · Open Interest &amp; Funding</h3>
+    <div id="derivCompass" class="deriv-signal" aria-live="polite">Noch keine aktuellen Futures-Daten. Gesamtanalyse starten.</div>
+    <div id="derivHistory" class="deriv-mini-grid" aria-live="polite"><div class="deriv-mini-card deriv-mini-legend">Historische Zeitreihen werden aus öffentlichen Binance-USDⓈ-M-Daten geladen, sofern die Schnittstellen erreichbar sind.</div></div>
+    <div class="dashboard-note">Keine Live-Überwachung im Hintergrund. Zeitreihen sind Stichproben; Open Interest ist keine Netto-Long/Short-Position. Funding-Historie zeigt vergangene Abrechnungen und ist nicht mit der aktuellen Funding-Schätzung gleichzusetzen.</div>
     <h3 style="font-size:14px;margin:14px 0 5px">Datenqualität nach Modul</h3>
     <div class="dashboard-quality" id="dashQuality" aria-live="polite"></div>
     <div class="dashboard-links"><button type="button" data-open-detail="prodesk">Marktzentrale ansehen</button><button type="button" data-open-detail="earlyWarning">Frühwarnung ansehen</button><button type="button" data-open-detail="correlations">Altcoins ansehen</button></div>
@@ -553,7 +578,7 @@ $('runProDesk').onclick=runProDesk;
   const spot=main.querySelector('section.panel');
   spot.before(panel);
 
-  const originalPanels=[...main.querySelectorAll(':scope > section.panel')].filter(p=>p!==panel&&p!==spot&&p.id!=='prodesk');
+  const originalPanels=[...main.querySelectorAll(':scope > section.panel')].filter(p=>p!==panel&&p!==spot);
   const collapse=(p,closed)=>{
     p.classList.toggle('detail-closed',closed);p.classList.toggle('detail-open',!closed);
     const b=p.querySelector('h2.section .detail-toggle');
@@ -569,8 +594,7 @@ $('runProDesk').onclick=runProDesk;
   const show=(p)=>{if(!p)return;collapse(p,false);p.scrollIntoView({behavior:'smooth',block:'start'});};
   panel.querySelectorAll('[data-open-detail]').forEach(b=>b.onclick=()=>{
     const target=document.getElementById(b.dataset.openDetail);
-    if(target===document.getElementById('prodesk'))target.scrollIntoView({behavior:'smooth',block:'start'});
-    else show(target);
+    show(target);
   });
   const textOf=(id)=>document.getElementById(id)?.textContent?.trim()||'';
   const valid=t=>!!t&&!/^(?:—|nicht geladen|nicht verfügbar|warte|keine bewertung)/i.test(t);
@@ -639,4 +663,46 @@ $('runProDesk').onclick=runProDesk;
   if(runAll)runAll.addEventListener('click',()=>{set('dashState','Gesamtanalyse läuft');panel.scrollIntoView({behavior:'smooth',block:'start'})});
   render();
 })();
+
+/* Dashboard Plus – robust spot/futures comparison with observed OI and funding history. */
+function renderDerivativeIntelligence(){
+ const box=document.getElementById('derivCompass'),charts=document.getElementById('derivHistory');
+ if(!box||!charts)return;
+ const d=window.cmDerivativeSeries;
+ const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const num=(v,digits=2)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+ const stamp=t=>new Date(t).toLocaleString('de-CH',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Zurich'});
+ const display=(value,unit='')=>Number.isFinite(value)?num(value,unit==='%'?4:2)+unit:'Nicht verfügbar';
+ const parseSwiss=t=>{if(!t||/nicht verfügbar/i.test(t))return null;const n=Number(t.replace(/[’'\s]/g,'').replace(',','.').replace(/[^0-9.+-]/g,''));return Number.isFinite(n)?n:null};
+ const spotTiles=[...document.querySelectorAll('#proKpis .tile')];
+ const chTile=spotTiles.find(x=>x.textContent.toLowerCase().includes('24h veränderung'));
+ const priceChange=parseSwiss(chTile?.querySelector('b')?.textContent||'');
+ if(!d){box.textContent='Keine geprüften Derivate-Zeitreihen verfügbar. Starte die Gesamtanalyse. Bei API-Ausfällen werden keine Signale berechnet.';charts.replaceChildren();return;}
+ const facts=[];
+ if(Number.isFinite(priceChange)&&Number.isFinite(d.oi24)){
+   if(priceChange<0&&d.oi24>0)facts.push('Spotkurs gefallen, Open Interest gestiegen: möglicherweise zusätzlicher Leverage im Rückgang; daraus lässt sich die Richtung neuer Positionen nicht bestimmen.');
+   else if(priceChange<0&&d.oi24<0)facts.push('Spotkurs und Open Interest gefallen: vereinbar mit Positionsabbau oder Deleveraging; Liquidationen sind damit nicht nachgewiesen.');
+   else if(priceChange>0&&d.oi24>0)facts.push('Spotkurs und Open Interest gestiegen: zunehmende Marktbeteiligung möglich, aber keine bestätigte Trendfortsetzung.');
+   else if(priceChange>0&&d.oi24<0)facts.push('Spotkurs gestiegen bei sinkendem Open Interest: Positionsabbau oder Short-Eindeckungen möglich, nicht bewiesen.');
+   else facts.push('Preis-/OI-Veränderung gemischt: keine eindeutige Marktphase.');
+ } else facts.push('Preis-/Open-Interest-24h-Vergleich nicht vollständig verfügbar; keine Marktphasen-Zuordnung.');
+ if(Number.isFinite(d.funding))facts.push('Funding-Snapshot '+(d.funding>0?'positiv: Longs zahlen in der Regel Shorts':d.funding<0?'negativ: Shorts zahlen in der Regel Longs':'nahe null')+' ('+num(d.funding,5)+' %).');
+ else facts.push('Aktuelle Funding-Schätzung nicht verfügbar.');
+ if(Number.isFinite(d.ratio))facts.push('Account-Ratio '+num(d.ratio,3)+': '+(d.ratio>1?'mehr Long- als Short-Accounts':'mehr Short- als Long-Accounts')+'; sagt nichts über Positionsgrössen.');
+ if(d.errors?.length)facts.push('Teilquellenfehler: '+d.errors.map(x=>String(x).slice(0,90)).join(' | '));
+ box.replaceChildren();const heading=document.createElement('b');heading.textContent='Regelbasierte Einordnung · keine Prognose';box.appendChild(heading);
+ const body=document.createElement('div');body.textContent=facts.join(' ');box.appendChild(body);
+ const chart=(title,raw,unit,minCount)=>{
+   const points=raw.filter(x=>Number.isFinite(x.value)&&Number.isFinite(x.time)).slice(-60);
+   const wrap=document.createElement('div');wrap.className='deriv-mini-card';
+   const h=document.createElement('div');h.className='deriv-mini-title';h.textContent=title;wrap.appendChild(h);
+   if(points.length<minCount){const p=document.createElement('div');p.className='deriv-mini-legend';p.textContent='Nicht genügend verifizierte historische Messpunkte. Keine Ersatzwerte.';wrap.appendChild(p);return wrap;}
+   const vals=points.map(x=>x.value),low=Math.min(...vals),high=Math.max(...vals),spread=Math.max(high-low,Math.abs(high)*0.001,1e-9);
+   const W=320,H=130,pad=12;const coords=points.map((p,i)=>[(pad+i*(W-2*pad)/Math.max(points.length-1,1)).toFixed(1),(H-pad-(p.value-low)/spread*(H-2*pad)).toFixed(1)]);
+   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('role','img');svg.setAttribute('aria-label',title+' Verlauf '+stamp(points[0].time)+' bis '+stamp(points.at(-1).time));
+   const line=document.createElementNS('http://www.w3.org/2000/svg','polyline');line.setAttribute('points',coords.map(x=>x.join(',')).join(' '));line.setAttribute('fill','none');line.setAttribute('stroke','#72c7fb');line.setAttribute('stroke-width','2.5');line.setAttribute('stroke-linejoin','round');svg.appendChild(line);wrap.appendChild(svg);
+   const info=document.createElement('div');info.className='deriv-mini-legend';info.textContent=stamp(points[0].time)+' bis '+stamp(points.at(-1).time)+' · '+points.length+' Messpunkte · letzter Wert '+display(points.at(-1).value,unit);wrap.appendChild(info);return wrap;
+ };
+ charts.replaceChildren(chart('Open Interest · stündliche Historie',d.oi||[],' BTC',3),chart('Funding · vergangene Abrechnungen',d.fundingHistory||[],'%',3));
+}
 </script></body></html>
