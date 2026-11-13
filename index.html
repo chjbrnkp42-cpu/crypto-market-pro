@@ -1168,7 +1168,7 @@ document.getElementById('runFibAtlas').onclick=runFibAtlas;
    return true;
  };
  async function json(url){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9000);try{const res=await fetch(url,{signal:controller.signal,cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);return await res.json()}finally{clearTimeout(timer)}}
- async function refresh(force=false){if(!install()||busy||(!force&&Date.now()-last<300000))return;busy=true;$('whaleState').textContent='Blockchain wird geprüft …';
+ async function refresh(force=false){if((!$('whaleRadar')&&!install())||busy||(!force&&Date.now()-last<300000))return;busy=true;$('whaleState').textContent='Blockchain wird geprüft …';
   try{
    const recent=await json(endpoint+'/mempool/recent');if(!Array.isArray(recent)||!recent.length)throw Error('Keine Transaktionen erhalten');
    const txids=[...new Set(recent.map(x=>x.txid).filter(x=>/^[a-f0-9]{64}$/i.test(x)))].slice(0,8);
