@@ -79,10 +79,24 @@ h2.section.detail-heading .detail-toggle{
 .deriv-signal{border-left:3px solid #73baf2;padding:10px 12px;background:#0e1b31;border-radius:9px;font-size:13px;line-height:1.55}
 .deriv-signal b{display:block;margin-bottom:5px}
 @media(min-width:680px){.deriv-mini-grid{grid-template-columns:1fr 1fr}}
+/* Audit: compact but complete desktop/mobile research interface. */
+.tech-subsection{border-top:1px solid #30415e;margin-top:17px;padding-top:15px}
+.tech-subsection h3{font-size:14px;font-weight:750;line-height:1.4;margin:0 0 12px;color:#d3e7ff}
+.sub-details{margin:10px 0 12px;border:1px solid #30415e;border-radius:11px;overflow:hidden;background:#10192c}
+.sub-details > summary{list-style:revert;cursor:pointer;padding:12px;font-size:13px;font-weight:700;line-height:1.4;touch-action:manipulation}
+.sub-details > summary:focus-visible{outline:2px solid #72c7fb;outline-offset:-3px}
+.sub-details > .deriv-mini-grid,.sub-details > .tile{margin:0 10px 10px}
+.dashboard-panel .dashboard-overview{margin-top:12px}
+.dashboard-panel .dashboard-mainbutton{min-height:46px}
+.dashboard-panel .dashboard-note{overflow-wrap:break-word}
+.dashboard-links button{min-height:42px}
+.panel.detail-closed h2.section.detail-heading{margin-bottom:0}
+.panel.detail-closed .detail-toggle{min-height:42px;min-width:165px}
+@media(max-width:380px){.dashboard-quality{grid-template-columns:1fr}.dashboard-grid{grid-template-columns:1fr 1fr}.dashboard-metric .value{font-size:16px}}
 </style></head><body><header><div><div class="brand">◈ Crypto Market Pro <span style="font-size:10px;color:#72c7fb">1.1</span></div><div class="small">Bitcoin · Altcoins · Fibonacci · Weltmärkte</div></div><button id="reload" aria-label="Daten aktualisieren">↻ Aktualisieren</button></header><main class="container"><div class="tabs" id="coins"></div><div class="coin-helper" id="coinHelper" aria-live="polite">BTC ausgewählt. Die Marktübersicht und die Gesamtanalyse bleiben immer Bitcoin-bezogen; die Auswahl wechselt ausschliesslich den Einzelchart und seine technischen Indikatoren.</div><section class="panel"><div class="flex"><span class="small" id="source">Spotmarkt · Binance oder Kraken</span><span class="pill" id="state">Verbinde …</span></div><div class="flex" style="margin-top:12px"><div><div class="price" id="price">—</div><div id="change" class="small">24h: —</div></div><div style="text-align:right"><div class="small">Letzter Datenabruf</div><div style="font-size:12px" id="updated">—</div></div></div><div class="flex" style="margin-top:17px;flex-wrap:wrap"><div class="switch"><span class="small">Chart</span><select id="interval"><option value="4h">4 Stunden</option><option value="1d" selected>1 Tag</option><option value="1w">1 Woche</option></select></div><div class="switch"><span class="small">Swing-Fenster</span><select id="window"><option value="40">40 Kerzen</option><option value="90" selected>90 Kerzen</option><option value="180">180 Kerzen</option><option value="365">365 Kerzen (falls verfügbar)</option></select></div></div><svg class="chart" id="chart" viewBox="0 0 680 310" role="img" aria-label="Kurschart der letzten Kerzen"><text x="20" y="150" fill="#9ca9c5">Warte auf Kursdaten …</text></svg><div class="small" id="viewstamp" style="padding:6px 0;color:#72c7fb">Zeitfenster: noch nicht geladen</div><div class="small" id="chartcaption">Live-Daten benötigen Browser-Netzwerkzugriff. In einer Datei-Vorschau können sie blockiert sein.</div></section>
 <section class="panel" id="prodesk">
 <h2 class="section">Marktzentrale · Bitcoin &amp; Frühwarnungen</h2>
-<p class="small">Kompakte Übersicht aus <b>neu abgerufenen</b> Binance-Spotdaten. Derivate werden <b>separat</b> über Binance USDⓈ-M Futures geladen. Jede Aktualisierung erfolgt auf Knopfdruck; <b>keine Hintergrundalarme und keine automatischen Trades</b>.</p>
+<p class="small">Interne Datenquelle für die BTC-Marktzentrale aus <b>neu abgerufenen</b> Binance-Spotdaten. Derivate werden <b>separat</b> über Binance USDⓈ-M Futures geladen. Jede Aktualisierung erfolgt auf Knopfdruck; <b>keine Hintergrundalarme und keine automatischen Trades</b>.</p>
 <button id="runProDesk">Marktzentrale jetzt aktualisieren</button>
 <div id="proStatus" class="small" style="margin:12px 0;color:#72c7fb">Noch kein geprüfter Abruf der Marktzentrale.</div>
 <div id="proKpis" class="grid"><div class="tile small">BTC-Kurs, Tagesveränderung, Volumen, Fibonacci-Zonen und Datenzeiten nach Datenabruf.</div></div>
@@ -94,7 +108,7 @@ h2.section.detail-heading .detail-toggle{
 <div id="proDerivatives" class="grid"><div class="tile small">Noch keine Futures-Daten geladen.</div></div>
 <div class="notice" style="margin-top:14px">Die Auswertung ist ein nicht backgetesteter Beobachtungsmonitor, kein Kauf-/Verkaufssignal. Die Angaben sind nur so frisch wie ihr sichtbarer Zeitstempel. Der Browser überwacht Märkte nicht bei geschlossener App. Keine API-Schlüssel erforderlich.</div>
 </section>
-<section class="panel"><h2 class="section">Technische Marktanalyse</h2><div class="small" id="indicatorstamp" style="margin:0 0 10px;color:#72c7fb">Indikatoren: noch nicht geladen</div><div class="grid"><div class="tile"><div class="small">RSI (14)</div><b id="rsi">—</b><div class="small" id="rsitext">—</div></div><div class="tile"><div class="small">EMA 20 / EMA 50</div><b id="ema">—</b><div class="small" id="ematext">—</div></div><div class="tile"><div class="small">Swing-Tief / -Hoch</div><b id="swing" style="font-size:14px">—</b><div class="small">Bestätigte Swing-Punkte, falls vorhanden</div></div><div class="tile"><div class="small">Technischer Zustand</div><b id="regime" style="font-size:16px">—</b><div class="small">Keine Handelsanweisung</div></div></div></section><section class="panel"><h2 class="section">Marktkompass · technische Risikobewertung</h2><div class="grid"><div class="tile"><div class="small">Technischer Abwärtsdruck-Index</div><b id="riskval">—</b><div class="small" id="risklabel">Warte auf Kurse</div></div><div class="tile"><div class="small">Nächstes Fibonacci-Level</div><b id="nearest" style="font-size:15px">—</b><div class="small" id="nearestdist">—</div></div><div class="tile"><div class="small">Nächste tiefere Referenzzone</div><b id="support" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div><div class="tile"><div class="small">Nächste höhere Referenzzone</div><b id="resistance" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div></div><p class="small" id="risksummary" style="line-height:1.6">Die Bewertung benötigt aktuelle Kursdaten.</p><div class="notice">Der Index misst technischen Abwärtsdruck, NICHT die Wahrscheinlichkeit eines Kursrückgangs. Er ist ein einfaches, nicht backgetestetes Technikmodell (RSI, EMA, Kursposition). Er ist weder eine Eintrittswahrscheinlichkeit noch ein Kauf-/Verkaufssignal. Fibonacci-Zonen und Extensions sind rechnerische Referenzen, keine bestätigten Unterstützungen oder Kursprognosen.</div></section><section class="panel"><h2 class="section">Marktampel &amp; Szenarien</h2><div class="flex" style="align-items:center;gap:10px"><span class="pill" id="traffic" style="font-size:17px;padding:12px">⚪ Keine Bewertung</span><span class="small" id="confidence">Daten werden geladen</span></div><div class="grid" style="margin-top:12px"><div class="tile"><div class="small">Bullisches Szenario</div><div id="bullcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div><div class="tile"><div class="small">Bärisches Szenario</div><div id="bearcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div></div><p id="neutralcase" class="small" style="line-height:1.6;margin-top:12px">—</p><div class="notice">Szenarien beruhen auf Spotkursen und historischen OHLCV-Kerzen, nicht auf Zukunftsprognosen. Signale nur nach Kerzenschluss prüfen. Die Volumenbeurteilung verwendet abgeschlossene Kerzen.</div></section><section class="panel" id="multitf"><h2 class="section">Trendvergleich · 4h / 1D / 1W</h2><p class="small">Zusätzliche Datenabfrage auf Knopfdruck. Jeder Zeitraum verwendet nur abgeschlossene Kerzen, EMA 20/50 und RSI 14. Fibonacci-Referenzmarken werden unabhängig je Zeitfenster aus bestätigten Pivots (sonst Fensterextremen) berechnet.</p><button id="checktf">Alle drei Zeitfenster prüfen</button><div id="tfstatus" class="small" style="margin:10px 0">Noch nicht abgefragt</div><div id="tfresults" class="grid"><div class="tile small">Keine Cross-Timeframe-Daten</div></div><p class="small">Trendvergleich ist keine Handelsanweisung. Wenn einzelne Datenquellen ausfallen, wird das separat angezeigt.</p></section><section class="panel" id="fibAtlasPanel">
+<section class="panel"><h2 class="section">Technische Marktanalyse</h2><div class="small" id="indicatorstamp" style="margin:0 0 10px;color:#72c7fb">Indikatoren: noch nicht geladen</div><div class="grid"><div class="tile"><div class="small">RSI (14)</div><b id="rsi">—</b><div class="small" id="rsitext">—</div></div><div class="tile"><div class="small">EMA 20 / EMA 50</div><b id="ema">—</b><div class="small" id="ematext">—</div></div><div class="tile"><div class="small">Swing-Tief / -Hoch</div><b id="swing" style="font-size:14px">—</b><div class="small">Bestätigte Swing-Punkte, falls vorhanden</div></div><div class="tile"><div class="small">Technischer Zustand</div><b id="regime" style="font-size:16px">—</b><div class="small">Keine Handelsanweisung</div></div></div></section><section class="panel"><h2 class="section">Marktkompass · technische Risikobewertung</h2><div class="grid"><div class="tile"><div class="small">Technischer Abwärtsdruck-Index</div><b id="riskval">—</b><div class="small" id="risklabel">Warte auf Kurse</div></div><div class="tile"><div class="small">Nächstes Fibonacci-Level</div><b id="nearest" style="font-size:15px">—</b><div class="small" id="nearestdist">—</div></div><div class="tile"><div class="small">Nächste tiefere Referenzzone</div><b id="support" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div><div class="tile"><div class="small">Nächste höhere Referenzzone</div><b id="resistance" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div></div><p class="small" id="risksummary" style="line-height:1.6">Die Bewertung benötigt aktuelle Kursdaten.</p><div class="notice">Der Index misst technischen Abwärtsdruck, NICHT die Wahrscheinlichkeit eines Kursrückgangs. Er ist ein einfaches, nicht backgetestetes Technikmodell (RSI, EMA, Kursposition). Er ist weder eine Eintrittswahrscheinlichkeit noch ein Kauf-/Verkaufssignal. Fibonacci-Zonen und Extensions sind rechnerische Referenzen, keine bestätigten Unterstützungen oder Kursprognosen.</div></section><section class="panel"><h2 class="section">Marktampel &amp; Szenarien</h2><div class="flex" style="align-items:center;gap:10px"><span class="pill" id="traffic" style="font-size:17px;padding:12px">⚪ Keine Bewertung</span><span class="small" id="confidence">Daten werden geladen</span></div><div class="grid" style="margin-top:12px"><div class="tile"><div class="small">Bullisches Szenario</div><div id="bullcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div><div class="tile"><div class="small">Bärisches Szenario</div><div id="bearcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div></div><p id="neutralcase" class="small" style="line-height:1.6;margin-top:12px">—</p><div class="notice">Szenarien beruhen auf Spotkursen und historischen OHLCV-Kerzen, nicht auf Zukunftsprognosen. Signale nur nach Kerzenschluss prüfen. Die Volumenbeurteilung verwendet abgeschlossene Kerzen.</div></section><section class="panel" id="multitf"><h2 class="section">Einzelcoin · Trendvergleich 4h / 1D / 1W</h2><p class="small">Zusätzliche Datenabfrage auf Knopfdruck. Jeder Zeitraum verwendet nur abgeschlossene Kerzen, EMA 20/50 und RSI 14. Fibonacci-Referenzmarken werden unabhängig je Zeitfenster aus bestätigten Pivots (sonst Fensterextremen) berechnet.</p><button id="checktf">Alle drei Zeitfenster prüfen</button><div id="tfstatus" class="small" style="margin:10px 0">Noch nicht abgefragt</div><div id="tfresults" class="grid"><div class="tile small">Keine Cross-Timeframe-Daten</div></div><p class="small">Trendvergleich ist keine Handelsanweisung. Wenn einzelne Datenquellen ausfallen, wird das separat angezeigt.</p></section><section class="panel" id="fibAtlasPanel">
 <h2 class="section">Fibonacci-Atlas · gewichtete Kurszonen</h2>
 <p class="small">BTCUSDT · Binance Spot. Verbindet bestätigte Swings über 4h, Tag und Woche; zusätzlich langfristige Wochenfenster bis ca. 19 Jahre, soweit Daten vorhanden. Je nach Datenlage können historische Zonen fehlen. Jede Marke ist eine <b>rechnerische Referenz</b>, keine bestätigte Unterstützung oder Prognose.</p>
 <button id="runFibAtlas">Fibonacci-Atlas berechnen</button>
@@ -106,12 +120,12 @@ h2.section.detail-heading .detail-toggle{
 <div class="small" style="margin:10px 0">Zonenbildung: maximal ±0,5 % um die Zonenmitte; die Bewertung beruht auf Zeitebene, bestätigten Pivots und unabhängigen Swing-Paaren. <b>Kein backgetesteter Prognose-Score.</b></div>
 <div id="fibAtlasGroups" class="grid"><div class="tile small">4h, 1 Tag und 1 Woche werden beim Start neu geladen.</div></div>
 <div class="notice" style="margin-top:12px">Die Zonen entstehen aus unterschiedlichen historischen Swing-Paaren, inklusive 1,272- und 1,618-Extensions. Swing-Paare können widersprüchliche Niveaus liefern. Duplikate werden nur für die Anzeige zusammengefasst; Zeitebene und Berechnung bleiben sichtbar. Es gibt weder garantierte Kursziele noch automatische Push-Alarme.</div>
-</section><section class="panel"><h2 class="section">Fibonacci-Retracement &amp; Extensions</h2><div class="notice">Bestätigte lokale Pivot-Punkte (je drei abgeschlossene Kerzen links und rechts) werden paarweise auf mindestens 3 % Kursbewegung geprüft. Wenn kein geeignetes Paar vorliegt, verwendet die App transparent gekennzeichnete Fensterextreme. Extensions bei 1,272 und 1,618 werden jenseits beider Swing-Grenzen berechnet; das sind keine Prognoseziele. Kein Indikator garantiert eine Trendwende.</div><table class="levels"><thead><tr><th>Level</th><th>Kurs (USDT)</th><th>Distanz</th></tr></thead><tbody id="fibbody"><tr><td colspan="3">Lade Daten …</td></tr></tbody></table><div class="small" id="fibdirection" style="margin-top:10px"></div></section><section class="panel"><h2 class="section">Preisalarme (solange die App offen ist)</h2><div class="flex" style="flex-wrap:wrap"><select id="alarmtype"><option value="above">Kurs steigt über</option><option value="below">Kurs fällt unter</option></select><input type="number" id="alarmprice" min="0" step="any" placeholder="Kurs in USD/USDT" inputmode="decimal"><button id="addalarm">+ Alarm</button></div><div id="alarms" class="small" style="margin-top:12px">Noch keine Alarme.</div><p class="small">Für Benachrichtigungen während die Seite geöffnet ist, erlaube Browser-Mitteilungen, sofern unterstützt. Auf dem iPhone sind Hintergrundalarme in dieser Version nicht zuverlässig möglich. Alle 60 Sekunden erfolgt bei geöffneter App ein neuer Abruf.</p></section><section class="panel"><h2 class="section">Weltmarkt-Radar</h2><p class="small">Marktübersicht als kostenlos eingebettetes TradingView-Widget (externer Anbieter). Kurse können je nach Börse verzögert sein und zeigen andere Datenquellen als unsere Binance-Spotkurse. Die Werte fliessen noch nicht in die technische Risikoampel ein; Korrelationen werden nicht behauptet.</p><div class="notice" style="margin:12px 0">Die Marktübersicht wird separat von TradingView geladen und ist kein eigenständiger API-Datenfeed unserer App. Falls das Widget im iPhone-Webmodus nicht erscheint, nutze die Links darunter. Keine automatischen Korrelationen oder Echtzeitgarantie.</div>
+</section><section class="panel"><h2 class="section">Einzelchart · Fibonacci-Retracement &amp; Extensions</h2><div class="notice">Bestätigte lokale Pivot-Punkte (je drei abgeschlossene Kerzen links und rechts) werden paarweise auf mindestens 3 % Kursbewegung geprüft. Wenn kein geeignetes Paar vorliegt, verwendet die App transparent gekennzeichnete Fensterextreme. Extensions bei 1,272 und 1,618 werden jenseits beider Swing-Grenzen berechnet; das sind keine Prognoseziele. Kein Indikator garantiert eine Trendwende.</div><table class="levels"><thead><tr><th>Level</th><th>Kurs (USDT)</th><th>Distanz</th></tr></thead><tbody id="fibbody"><tr><td colspan="3">Lade Daten …</td></tr></tbody></table><div class="small" id="fibdirection" style="margin-top:10px"></div></section><section class="panel"><h2 class="section">Preisalarme (solange die App offen ist)</h2><div class="flex" style="flex-wrap:wrap"><select id="alarmtype"><option value="above">Kurs steigt über</option><option value="below">Kurs fällt unter</option></select><input type="number" id="alarmprice" min="0" step="any" placeholder="Kurs in USD/USDT" inputmode="decimal"><button id="addalarm">+ Alarm</button></div><div id="alarms" class="small" style="margin-top:12px">Noch keine Alarme.</div><p class="small">Für Benachrichtigungen während die Seite geöffnet ist, erlaube Browser-Mitteilungen, sofern unterstützt. Auf dem iPhone sind Hintergrundalarme in dieser Version nicht zuverlässig möglich. Bei geöffneter App werden der aktive Einzelchart ungefähr alle 60 Sekunden und die Kurskacheln ungefähr alle 90 Sekunden aktualisiert; die Prüfung ist nicht garantiert.</p></section><section class="panel"><h2 class="section">Weltmarkt-Radar</h2><p class="small">Marktübersicht als kostenlos eingebettetes TradingView-Widget (externer Anbieter). Kurse können je nach Börse verzögert sein und zeigen andere Datenquellen als unsere Binance-Spotkurse. Die Werte fliessen noch nicht in die technische Risikoampel ein; Korrelationen werden nicht behauptet.</p><div class="notice" style="margin:12px 0">Die Marktübersicht wird separat von TradingView geladen und ist kein eigenständiger API-Datenfeed unserer App. Falls das Widget im iPhone-Webmodus nicht erscheint, nutze die Links darunter. Keine automatischen Korrelationen oder Echtzeitgarantie.</div>
 <div class="tradingview-widget-container" style="width:100%;min-height:440px;overflow:hidden;border-radius:12px"><div class="tradingview-widget-container__widget" style="width:100%;min-height:440px"></div>
 <div class="small" style="padding:5px 0"><a href="https://www.tradingview.com/markets/" target="_blank" rel="noopener" style="color:#a7b3cc">Marktdaten von TradingView</a></div>
 <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
 {"colorTheme": "dark", "dateRange": "1M", "locale": "de_DE", "isTransparent": true, "showFloatingTooltip": false, "showSymbolLogo": false, "showChart": false, "width": "100%", "height": "440", "tabs": [{"title": "Aktien & Dollar", "symbols": [{"s": "FOREXCOM:NSXUSD", "d": "Nasdaq 100 (CFD)"}, {"s": "FOREXCOM:SPXUSD", "d": "S&P 500 (CFD)"}, {"s": "TVC:DXY", "d": "US-Dollar-Index"}, {"s": "FX:USDCHF", "d": "USD/CHF"}]}, {"title": "Rohstoffe", "symbols": [{"s": "OANDA:XAUUSD", "d": "Gold Spot"}, {"s": "OANDA:XAGUSD", "d": "Silber Spot"}, {"s": "TVC:USOIL", "d": "WTI Rohöl"}, {"s": "TVC:UKOIL", "d": "Brent Rohöl"}]}]} 
-</script></div><div class="linkgrid"><a href="https://www.tradingview.com/symbols/NASDAQ-NDX/" target="_blank" rel="noopener">Nasdaq 100 ↗</a><a href="https://www.tradingview.com/symbols/SPX/" target="_blank" rel="noopener">S&P 500 ↗</a><a href="https://www.tradingview.com/symbols/XAUUSD/" target="_blank" rel="noopener">Gold ↗</a><a href="https://www.tradingview.com/symbols/TVC-USOIL/" target="_blank" rel="noopener">WTI Öl ↗</a><a href="https://www.tradingview.com/symbols/TVC-DXY/" target="_blank" rel="noopener">US-Dollar DXY ↗</a><a href="https://fred.stlouisfed.org/series/DGS10" target="_blank" rel="noopener">US-Zins 10J ↗</a><a href="https://www.coinglass.com/" target="_blank" rel="noopener">CoinGlass ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">Fed-Termine ↗</a></div></section><section class="panel" id="correlations"><h2 class="section">Korrelationslabor · BTC gegen andere Märkte</h2>
+</script></div><div class="linkgrid"><a href="https://www.tradingview.com/symbols/NASDAQ-NDX/" target="_blank" rel="noopener">Nasdaq 100 ↗</a><a href="https://www.tradingview.com/symbols/SPX/" target="_blank" rel="noopener">S&P 500 ↗</a><a href="https://www.tradingview.com/symbols/XAUUSD/" target="_blank" rel="noopener">Gold ↗</a><a href="https://www.tradingview.com/symbols/TVC-USOIL/" target="_blank" rel="noopener">WTI Öl ↗</a><a href="https://www.tradingview.com/symbols/TVC-DXY/" target="_blank" rel="noopener">US-Dollar DXY ↗</a><a href="https://fred.stlouisfed.org/series/DGS10" target="_blank" rel="noopener">US-Zins 10J ↗</a><a href="https://www.coinglass.com/" target="_blank" rel="noopener">CoinGlass ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">Fed-Termine ↗</a></div></section><section class="panel" id="correlations"><h2 class="section">Altcoin-Labor · Korrelationen und relative Stärke</h2>
 <p class="small">Echte Pearson-Korrelationen auf <b>täglichen logarithmischen Renditen</b>, nur zeitlich paarweise abgeglichene Tageskerzen. +1 = gleichläufig, −1 = gegenläufig. Kein Prognoseinstrument.</p>
 <div class="flex" style="flex-wrap:wrap;gap:8px"><button id="runCorr">BTC / Altcoins: 30 &amp; 90 Tage berechnen</button></div>
 <div id="corrstatus" class="small" style="margin:12px 0">Noch keine Korrelationsberechnung.</div>
@@ -136,14 +150,14 @@ h2.section.detail-heading .detail-toggle{
 <button id="runWarning">Bitcoin-Frühwarnanalyse starten</button>
 <div id="warningStatus" class="small" style="margin:12px 0">Noch keine aktuelle Mehrzeitebenen-Prüfung.</div>
 <div id="warningKpis" class="grid"><div class="tile small">Starte die Analyse für aktuelle BTC-Daten, Zeitstempel und Alarmbedingungen.</div></div>
-<h3 style="margin:16px 0 8px">Kurszonen und Referenzen</h3>
-<div id="warningZones" class="tile small">Noch nicht berechnet.</div>
+<details class="sub-details"><summary>Alternative Fibonacci-Referenzen des Frühwarnmodells</summary>
+<div id="warningZones" class="tile small">Noch nicht berechnet.</div></details>
 <h3 style="margin:16px 0 8px">Frühwarnsignale</h3>
 <div id="warningAlerts" class="tile small">Noch nicht berechnet.</div>
 <div class="notice" style="margin-top:12px">Quellen: Binance Spot BTCUSDT, historische abgeschlossene OHLCV-Kerzen (UTC) und aktueller Spot-Ticker. Intervall- und Abrufzeit werden angezeigt. Signalregeln sind heuristisch und nicht backgetestet. Bei fehlenden/ungültigen Daten keine Freigabe eines Gesamtsignals. Bei einer Unterbrechung der Datenverbindung bleibt der Monitor ausdrücklich unverfügbar.</div>
 </section>
 <section class="panel"><h2 class="section">Dein KI-Analyst</h2><p class="small">Die bereits geplanten ChatGPT-Berichte sind ein separater Dienst. Eine automatische Synchronisierung zwischen dieser Web-App und ChatGPT besteht derzeit nicht.</p><button id="copy">Aktuelle technische Daten kopieren</button><div class="small" id="copyresult" style="margin-top:8px"></div></section><div class="notice" style="margin-bottom:14px">Aktualisierung auf dem iPhone: Nach dem Hochladen der neuen index.html auf GitHub die Home-Bildschirm-App vollständig schliessen und erneut öffnen. Falls noch eine ältere Version angezeigt wird, Seite neu laden.</div><div class="footer">Privates Research-Tool · Version 1.1 · Fibonacci-Zonen · Qualitätsgeprüfter Prototyp · Kein Trading-Bot · Keine Anlageberatung<br>Quellen: Binance Spot (USDT) oder Kraken Spot (USD). Keine Demo-Kurse. Keine Darstellung bei Datenfehlern.</div></main><script>
-const symbols=['BTC','ETH','XRP','SOL','DOGE'];let active='BTC',rows=[],lastPrice=null,report='',alarms=(()=>{try{return JSON.parse(localStorage.getItem('cmpro_alarms')||'[]')}catch(e){return []}})(),busy=false,requestCounter=0,loadedKey=null,loadedSource=null,loadedAt=null;
+const symbols=['BTC','ETH','XRP','SOL','DOGE'];let active='BTC',rows=[],lastPrice=null,report='',alarms=(()=>{try{const saved=JSON.parse(localStorage.getItem('cmpro_alarms')||'[]');return Array.isArray(saved)?saved.filter(a=>a&&symbols.includes(a.coin)&&['above','below'].includes(a.type)&&Number.isFinite(Number(a.price))&&Number(a.price)>0):[]}catch(e){return []}})(),busy=false,requestCounter=0,loadedKey=null,loadedSource=null,loadedAt=null;
 const $=id=>document.getElementById(id);const fmt=(v,dec)=>Number(v).toLocaleString('de-CH',{minimumFractionDigits:dec??(v>=100?2:4),maximumFractionDigits:dec??(v>=100?2:4)});const status=(s,ok)=>{$('state').textContent=s;$('state').style.color=ok?'#4dd3a6':'#ffb66d'};
 function buildtabs(){
  $('coins').innerHTML=symbols.map(s=>`<button type="button" data-coin="${s}" class="${active===s?'active':''}" aria-pressed="${active===s}">${s}</button>`).join('');
@@ -157,6 +171,19 @@ function buildtabs(){
  });
 }buildtabs();
 async function fetchTimed(url,ms=6500){const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),ms);try{const r=await fetch(url,{cache:'no-store',signal:ctl.signal});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}finally{clearTimeout(timer)}}
+// Shared short-lived market cache; coalesces identical in-flight requests.
+// OHLC data are completed candles; cache expiry is checked on each new request.
+const marketCache=new Map();
+function fetchMarketShared(path,ttl=20000){
+ const now=Date.now(),existing=marketCache.get(path);
+ if(existing?.data!==undefined&&existing.expires>now)return Promise.resolve(existing.data);
+ if(existing?.pending)return existing.pending;
+ const pending=fetchJSON(path).then(data=>{
+   marketCache.set(path,{data,expires:Date.now()+ttl});return data;
+ },err=>{marketCache.delete(path);throw err});
+ marketCache.set(path,{pending});
+ return pending;
+}
 async function fetchJSON(path){let lastErr;for(const host of ['https://data-api.binance.vision','https://api.binance.com']){try{return await fetchTimed(host+path,5500)}catch(e){lastErr=e}}throw lastErr||Error('Marktdaten nicht erreichbar')}
 function ema(arr,p){if(arr.length<p)return null;let v=arr.slice(0,p).reduce((a,b)=>a+b,0)/p;for(let i=p;i<arr.length;i++)v=arr[i]*(2/(p+1))+v*(1-2/(p+1));return v}function rsi(arr,p=14){if(arr.length<=p)return null;let gain=0,loss=0;for(let i=1;i<=p;i++){const d=arr[i]-arr[i-1];gain+=Math.max(d,0);loss+=Math.max(-d,0)}gain/=p;loss/=p;for(let i=p+1;i<arr.length;i++){const d=arr[i]-arr[i-1];gain=(gain*(p-1)+Math.max(d,0))/p;loss=(loss*(p-1)+Math.max(-d,0))/p}return loss===0?(gain===0?50:100):100-100/(1+gain/loss)}
 function draw(data,lo,hi,levels){const w=680,h=310,L=9,R=77,T=12,B=30;let min=Math.min(...data.map(x=>x.l),...levels),max=Math.max(...data.map(x=>x.h),...levels);const extra=(max-min)*.05||1;min-=extra;max+=extra;const y=p=>T+(max-p)/(max-min)*(h-T-B),x=i=>L+(i+.5)*(w-L-R)/data.length,bw=Math.max(1,(w-L-R)/data.length*.65);let out='';for(let j=0;j<=4;j++){let p=min+(max-min)*j/4,Y=y(p);out+=`<line x1="${L}" y1="${Y}" x2="${w-R}" y2="${Y}" stroke="#293750" stroke-dasharray="4,5"/><text x="${w-5}" y="${Y+4}" font-size="12" fill="#9ca9c5" text-anchor="end">${fmt(p,p<10?3:0)}</text>`}for(let i=0;i<data.length;i++){let d=data[i],col=d.c>=d.o?'#39c7a5':'#ff6e81',X=x(i),Y=y(Math.max(d.o,d.c)),bot=y(Math.min(d.o,d.c));out+=`<line x1="${X}" y1="${y(d.h)}" x2="${X}" y2="${y(d.l)}" stroke="${col}" stroke-width="1"/><rect x="${X-bw/2}" y="${Y}" width="${bw}" height="${Math.max(1,bot-Y)}" fill="${col}"/>`}for(const [i,p] of levels.entries()){let Y=y(p);out+=`<line x1="${L}" y1="${Y}" x2="${w-R}" y2="${Y}" stroke="#56a4ea" opacity="${i===3?0.8:.32}" stroke-dasharray="3,4"/>`}out+=`<text x="10" y="303" font-size="12" fill="#9ca9c5">${new Date(data[0].t).toLocaleDateString('de-CH')}</text><text x="${w-R}" y="303" font-size="12" fill="#9ca9c5" text-anchor="end">${new Date(data.at(-1).t).toLocaleDateString('de-CH')}</text>`;$('chart').innerHTML=out}
@@ -232,8 +259,27 @@ async function loadTimeframes(){
  btn.disabled=false;
 }
 $('checktf').onclick=loadTimeframes;
-function renderAlarms(){$('alarms').innerHTML=alarms.length?alarms.map((a,i)=>`<div class="flex" style="margin:8px 0;gap:4px"><span>${a.coin}: ${a.type==='above'?'über':'unter'} ${fmt(a.price)} ${a.hit?'✓ Ausgelöst':''}</span><button style="padding:5px 10px" data-del="${i}">✕</button></div>`).join(''):'Noch keine Alarme.';document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{alarms.splice(+b.dataset.del,1);save();renderAlarms()})}function save(){try{localStorage.setItem('cmpro_alarms',JSON.stringify(alarms))}catch(e){$('chartcaption').textContent='Lokales Speichern durch den Browser gesperrt; Alarm gilt nur für diese Sitzung.'}}renderAlarms();$('addalarm').onclick=()=>{const price=+$('alarmprice').value;if(!Number.isFinite(price)||price<=0){alert('Gültigen Kurs eingeben.');return}alarms.push({coin:active,type:$('alarmtype').value,price,hit:false});save();renderAlarms();$('alarmprice').value=''};
-function checkAlarms(){let changed=false;for(const a of alarms){if(a.coin!==active||a.hit)continue;if(a.type==='above'?lastPrice>=a.price:lastPrice<=a.price){a.hit=true;changed=true;const msg=`${a.coin} ${a.type==='above'?'über':'unter'} ${fmt(a.price)} ${$('source').textContent.includes('Kraken')?'USD':'USDT'}`;if('Notification' in window&&Notification.permission==='granted')new Notification('Crypto Market Pro',{body:msg});else alert('Preisalarm: '+msg)}}if(changed){save();renderAlarms()}}
+const safeAlarmText=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function renderAlarms(){$('alarms').innerHTML=alarms.length?alarms.map((a,i)=>`<div class="flex" style="margin:8px 0;gap:4px"><span>${safeAlarmText(a.coin)}: ${a.type==='above'?'über':'unter'} ${Number.isFinite(Number(a.price))?fmt(Number(a.price)):'ungültig'} ${a.hit?'✓ Ausgelöst':''}</span><button style="padding:5px 10px" data-del="${i}">✕</button></div>`).join(''):'Noch keine Alarme.';document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{alarms.splice(+b.dataset.del,1);save();renderAlarms()})}function save(){try{localStorage.setItem('cmpro_alarms',JSON.stringify(alarms))}catch(e){$('chartcaption').textContent='Lokales Speichern durch den Browser gesperrt; Alarm gilt nur für diese Sitzung.'}}renderAlarms();$('addalarm').onclick=()=>{const price=+$('alarmprice').value;if(!Number.isFinite(price)||price<=0){alert('Gültigen Kurs eingeben.');return}alarms.push({coin:active,currency:$('source').textContent.includes('Kraken')?'USD':'USDT',type:$('alarmtype').value,price,hit:false});save();renderAlarms();$('alarmprice').value=''};
+function checkAlarmsFor(coin,price,unit){
+ if(!Number.isFinite(price)||price<=0)return;
+ let changed=false;
+ for(const a of alarms){
+   if(a.coin!==coin||a.hit||(a.currency||'USDT')!==unit)continue;
+   const threshold=Number(a.price);
+   if(!Number.isFinite(threshold)||threshold<=0)continue;
+   if(a.type==='above'?price>=threshold:price<=threshold){
+     a.hit=true;changed=true;
+     const msg=`${a.coin} ${a.type==='above'?'über':'unter'} ${fmt(threshold,threshold<1?6:threshold<10?4:2)} ${unit}`;
+     if('Notification' in window&&Notification.permission==='granted'){
+       try{new Notification('Crypto Market Pro',{body:msg})}catch(e){alert('Preisalarm: '+msg)}
+     }else alert('Preisalarm: '+msg);
+   }
+ }
+ if(changed){save();renderAlarms()}
+}
+function checkAlarms(){checkAlarmsFor(active,lastPrice,$('source').textContent.includes('Kraken')?'USD':'USDT')}
+
 async function fetchKraken(symbol, interval){
   const pair=({BTC:'XBTUSD',ETH:'ETHUSD',SOL:'SOLUSD',XRP:'XRPUSD',DOGE:'XDGUSD'})[symbol];
   const minutes=({'4h':240,'1d':1440,'1w':10080})[interval];
@@ -252,7 +298,7 @@ async function fetchKraken(symbol, interval){
 }
 async function fetchBinance(symbol,interval){
   const sym=symbol+'USDT';
-  const [candle,ticker]=await Promise.all([fetchJSON('/api/v3/klines?symbol='+sym+'&interval='+interval+'&limit=420'),fetchJSON('/api/v3/ticker/24hr?symbol='+sym)]);
+  const [candle,ticker]=await Promise.all([fetchMarketShared('/api/v3/klines?symbol='+sym+'&interval='+interval+'&limit=420',60000),fetchMarketShared('/api/v3/ticker/24hr?symbol='+sym,12000)]);
   if(!Array.isArray(candle)||candle.length<55||!ticker.lastPrice)throw Error('Binance: unvollständige Kurse');
   const parsed=candle.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]}));
   const duration=({'4h':14400000,'1d':86400000,'1w':604800000})[interval];
@@ -319,8 +365,8 @@ function corrForWindow(btc,other,windowDays){const pair=pairedDailyReturns(btc,o
 function nEnough(a,days){return a.length>=Math.ceil(days*0.65)}
 function corrText(result,days){return result.r===null?'Nicht verfügbar ('+result.n+' gemeinsame Tagesrenditen)':'r = '+result.r.toFixed(3).replace('.',',')+' ('+result.n+' Tage)'}
 let corrToken=0,cachedBTC=null;
-async function fetchDailyMap(symbol){const raw=await fetchJSON('/api/v3/klines?symbol='+symbol+'USDT&interval=1d&limit=220');if(!Array.isArray(raw)||raw.length<95)throw Error('Zu wenige Tageskerzen für '+symbol);const complete=raw.filter(x=>Number(x[6])<Date.now()).map(x=>({t:+x[0],c:+x[4]}));if(complete.length<95)throw Error('Unvollständige Tagesdaten');return dailyCloseMap(complete)}
-async function computeCorrelations(){const my=++corrToken,btn=$('runCorr');btn.disabled=true;$('corrstatus').textContent='Lade BTC und Altcoins, bitte Datenabruf abschliessen lassen …';$('corrresults').innerHTML='';try{const btc=await fetchDailyMap('BTC');if(my!==corrToken)return;cachedBTC=btc;const coins=['ETH','XRP','SOL','DOGE'];const res=await Promise.all(coins.map(async sym=>{try{const other=await fetchDailyMap(sym);return {sym,a:corrForWindow(btc,other,30),b:corrForWindow(btc,other,90)}}catch(e){return {sym,error:e.message}}}));if(my!==corrToken)return;$('corrresults').innerHTML=res.map(x=>x.error?`<div class="tile"><b>${x.sym}/BTC</b><div class="small">Nicht verfügbar: ${x.error}</div></div>`:`<div class="tile"><b>BTC ↔ ${x.sym}</b><div class="small">30 Kalendertage: ${corrText(x.a,30)}<br>90 Kalendertage: ${corrText(x.b,90)}</div></div>`).join('');$('corrstatus').textContent='Binance Spot, tägliche abgeschlossene UTC-Kerzen; berechnet '+new Date().toLocaleString('de-CH')+'. Beobachtungszahlen statt erfundener Kurse.';}catch(e){$('corrstatus').textContent='Korrelation derzeit nicht verfügbar: '+e.message}finally{if(my===corrToken)btn.disabled=false;}}
+async function fetchDailyMap(symbol){const raw=await fetchMarketShared('/api/v3/klines?symbol='+symbol+'USDT&interval=1d&limit=220',120000);if(!Array.isArray(raw)||raw.length<95)throw Error('Zu wenige Tageskerzen für '+symbol);const complete=raw.filter(x=>Number(x[6])<Date.now()).map(x=>({t:+x[0],c:+x[4]}));if(complete.length<95)throw Error('Unvollständige Tagesdaten');return dailyCloseMap(complete)}
+async function computeCorrelations(){const my=++corrToken,btn=$('runCorr');btn.disabled=true;$('corrstatus').textContent='Lade BTC und Altcoins, bitte Datenabruf abschliessen lassen …';$('corrresults').innerHTML='';try{const btc=await fetchDailyMap('BTC');if(my!==corrToken)return;cachedBTC=btc;const coins=['ETH','XRP','SOL','DOGE'];const res=await Promise.all(coins.map(async sym=>{try{const other=await fetchDailyMap(sym);return {sym,a:corrForWindow(btc,other,30),b:corrForWindow(btc,other,90)}}catch(e){return {sym,error:e.message}}}));if(my!==corrToken)return;$('corrresults').innerHTML=res.map(x=>x.error?`<div class="tile"><b>${x.sym}/BTC</b><div class="small">Nicht verfügbar: ${proEsc(x.error)}</div></div>`:`<div class="tile"><b>BTC ↔ ${x.sym}</b><div class="small">30 Kalendertage: ${corrText(x.a,30)}<br>90 Kalendertage: ${corrText(x.b,90)}</div></div>`).join('');$('corrstatus').textContent='Binance Spot, tägliche abgeschlossene UTC-Kerzen; berechnet '+new Date().toLocaleString('de-CH')+'. Beobachtungszahlen statt erfundener Kurse.';}catch(e){$('corrstatus').textContent='Korrelation derzeit nicht verfügbar: '+e.message}finally{if(my===corrToken)btn.disabled=false;}}
 $('runCorr').onclick=computeCorrelations;
 
 // Version 11: All relative-strength and risk statistics use equal-dated, completed Binance UTC daily closes.
@@ -363,7 +409,7 @@ async function computeStrength(){
     out.innerHTML=records.map((a,i)=>{
       const v=a.stat,rs=v.relative,flag=rs>=0?'green':'red';
       return `<div class="tile"><div class="small">Rang ${i+1} · ${v.first} bis ${v.last} UTC</div><b>${a.sym} <span class="${flag}">${rs>=0?'+':''}${rsRound(rs)} pp</span></b><div class="small">Altcoin 30T: ${rsRound(v.assetReturn)} % · BTC 30T: ${rsRound(v.btcReturn)} %<br>Volatilität (ann.): ${rsRound(v.annualVol)} % · BTC: ${rsRound(v.btcVol)} %<br>Beta zu BTC: ${rsRound(v.beta)} · Max. Schlusskurs-Drawdown: ${rsRound(v.maxDD)} %<br>${v.n} tägliche Renditen · Quelle: Binance Spot</div></div>`;
-    }).join('')+missing.map(a=>`<div class="tile"><b>${a.sym}</b><div class="small">Nicht verfügbar: ${a.error||'keine 31 lückenlosen gemeinsamen Tages-Schlusskurse'}</div></div>`).join('');
+    }).join('')+missing.map(a=>`<div class="tile"><b>${a.sym}</b><div class="small">Nicht verfügbar: ${proEsc(a.error||'keine 31 lückenlosen gemeinsamen Tages-Schlusskurse')}</div></div>`).join('');
     if(!records.length)out.innerHTML='<div class="tile small">Keine vollständigen vergleichbaren Kursreihen verfügbar.</div>';
     statusNode.textContent='Berechnet '+new Date().toLocaleString('de-CH')+' · Quelle Binance Spot · 30 abgeschlossene UTC-Tagesrenditen · Ranking nach relativer 30-Tage-Rendite.';
   }catch(e){statusNode.textContent='Altcoin-Radar nicht verfügbar: '+e.message;out.innerHTML='<div class="tile small">Keine Schätzung bei Datenfehlern.</div>'}
@@ -531,7 +577,7 @@ async function runProDesk(){
      if(!spotError){
        const result=analyseWarnings(rowsByTf,spotVals[0]);
        const price=spotVals[0],now=Date.now();
-       const today=await proFetchJSON('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT').catch(()=>null);
+       const today=await fetchMarketShared('/api/v3/ticker/24hr?symbol=BTCUSDT',12000).catch(()=>null);
        if(token!==proToken)return;
        const ch=Number(today?.priceChangePercent),volume=Number(today?.quoteVolume),end=Number(today?.closeTime);
        const tickerOK=Number.isFinite(ch)&&Number.isFinite(volume)&&volume>=0&&Number.isFinite(end)&&end>now-10*60*1000&&end<now+60000;
@@ -611,6 +657,8 @@ $('runProDesk').onclick=runProDesk;
 
   all.addEventListener('click', async () => {
     all.disabled = true;
+    const dashButton=document.getElementById('dashRun'),progress=document.getElementById('dashProgress');
+    if(dashButton)dashButton.disabled=true;
     const checks = [
       ['Marktzentrale + Futures', () => runProDesk()],
       ['4h / 1d / 1w', () => loadTimeframes()],
@@ -624,13 +672,15 @@ $('runProDesk').onclick=runProDesk;
       for (let i = 0; i < checks.length; i++) {
         const [label, job] = checks[i];
         status.textContent = `Prüfe ${i + 1}/${checks.length}: ${label} …`;
+        if(progress)progress.textContent=status.textContent;
         try { await job(); }
         catch (err) { failed.push(label); console.warn(label, err); }
       }
       status.textContent = failed.length
-        ? `Durchlauf abgeschlossen. Technisch fehlgeschlagen: ${failed.join(', ')}. Details und Datenqualität in den jeweiligen Modulen prüfen.`
-        : 'Alle Abfragen beendet. Bitte die Datenzeitstempel und eventuelle Teilquellenfehler in den Modulen kontrollieren.';
-    } finally { all.disabled = false; }
+        ? `Durchlauf abgeschlossen. Technisch fehlgeschlagen: ${failed.join(', ')}. Einzelne Datenquellen bitte prüfen.`
+        : 'Alle sechs Analysen wurden aufgerufen. Ob alle Quellen antworteten, zeigt die Datenqualität oben.';
+      if(progress)progress.textContent=status.textContent;
+    } finally { all.disabled = false;if(dashButton)dashButton.disabled=false; }
   });
 })();
 
@@ -646,31 +696,46 @@ $('runProDesk').onclick=runProDesk;
     <div class="dashboard-note">Bitcoin-Hauptanalyse unabhängig vom gewählten Einzelchart · Spot und Futures getrennt · Zeitstempel beachten.</div>
     <div class="coin-overview-head"><h3 class="coin-overview-title">Spotkurse · BTC und ausgewählte Altcoins</h3><div class="coin-overview-meta" id="coinOverviewStatus" aria-live="polite">Lade aktuelle Kurse …</div></div>
     <div class="coin-overview-grid" id="coinOverviewGrid" aria-label="Kursübersicht BTC ETH XRP SOL DOGE"></div>
-    <div class="dashboard-note" style="margin-bottom:10px">Kurskacheln antippen, um den Einzelchart zu öffnen. Die Hauptanalyse bleibt auf BTC. Binance: Veränderung 24h; bei Kraken-Ausweichkursen wird kein 24h-Wert behauptet.</div>
+    <div class="dashboard-note" style="margin-bottom:10px">Coin antippen → Einzelchart oben. Die Marktanalyse darunter bleibt auf Bitcoin.</div>
     <div class="dashboard-grid">
-      <div class="dashboard-metric"><div class="label">BTC-Spotkurs</div><div class="value" id="dashPrice">—</div></div>
-      <div class="dashboard-metric"><div class="label">24-Stunden-Veränderung</div><div class="value" id="dashChange">—</div></div>
       <div class="dashboard-metric"><div class="label">Technischer Trend · 4h / 1D / 1W</div><div class="value" id="dashTrend">—</div></div>
       <div class="dashboard-metric"><div class="label">Technischer Abwärtsdruck</div><div class="value" id="dashRisk">—</div></div>
-      <div class="dashboard-metric"><div class="label">Tiefere Fibonacci-Referenz</div><div class="value" id="dashLow">—</div></div>
-      <div class="dashboard-metric"><div class="label">Höhere Fibonacci-Referenz</div><div class="value" id="dashHigh">—</div></div>
     </div>
     <div class="dashboard-note" id="dashSourceTimes" aria-live="polite">Spot-, Marktzentrale- und Fibonacci-Atlas-Abrufe können unterschiedliche Zeitpunkte haben.</div>
     <button type="button" id="dashRun" class="dashboard-mainbutton">Gesamtanalyse starten</button>
+    <div id="dashProgress" class="dashboard-note" role="status" aria-live="polite">Noch keine vollständige Analyse gestartet.</div>
     <div class="dashboard-overview" id="dashInterpretation">Starte die Gesamtanalyse, um Spotmarkt, Trends, Fibonacci, Derivate und Altcoins zusammenzuführen.</div>
     <h3 style="font-size:15px;margin:17px 0 7px">Fibonacci-Kurszonen · nach Kursnähe</h3>
     <div id="dashAtlasZones" class="deriv-mini-grid"><div class="deriv-mini-card deriv-mini-legend">Nach der Gesamtanalyse erscheinen die drei nächstgelegenen Zonen je Kursrichtung, mit Modellindex, Swing-Paaren und tatsächlicher Zonenbreite. Kein Prognosewert.</div></div>
     <h3 style="font-size:15px;margin:17px 0 7px">Derivate-Kompass · Open Interest &amp; Funding</h3>
     <div id="derivCompass" class="deriv-signal" aria-live="polite">Noch keine aktuellen Futures-Daten. Gesamtanalyse starten.</div>
-    <div id="derivHistory" class="deriv-mini-grid" aria-live="polite"><div class="deriv-mini-card deriv-mini-legend">Historische Zeitreihen werden aus öffentlichen Binance-USDⓈ-M-Daten geladen, sofern die Schnittstellen erreichbar sind.</div></div>
-    <div class="dashboard-note">Keine Live-Überwachung im Hintergrund. Zeitreihen sind Stichproben; Open Interest ist keine Netto-Long/Short-Position. Funding-Historie zeigt vergangene Abrechnungen und ist nicht mit der aktuellen Funding-Schätzung gleichzusetzen.</div>
+    <details class="sub-details"><summary>Open Interest und Funding: Zeitreihen anzeigen</summary><div id="derivHistory" class="deriv-mini-grid" aria-live="polite"><div class="deriv-mini-card deriv-mini-legend">Historische Daten nach Gesamtanalyse, sofern die API antwortet.</div></div></details>
+    <div class="dashboard-note">Futures bleiben gesonderte Stichproben; keine Hintergrundüberwachung und keine bestätigten Liquidationscluster.</div>
     <h3 style="font-size:14px;margin:14px 0 5px">Datenqualität nach Modul</h3>
     <div class="dashboard-quality" id="dashQuality" aria-live="polite"></div>
-    <div class="dashboard-links"><button type="button" data-open-detail="earlyWarning">Frühwarnung ansehen</button><button type="button" data-open-detail="correlations">Altcoins ansehen</button></div>
+    <div class="dashboard-links"><button type="button" data-open-detail="earlyWarning">Frühwarnsignale im Detail</button><button type="button" data-open-detail="fibAtlasPanel">Fibonacci-Atlas komplett</button><button type="button" data-open-detail="correlations">Altcoin-Analysen</button></div>
     <div class="dashboard-note" id="dashLast">Noch keine vollständige Gesamtanalyse bestätigt. Die Übersicht aktualisiert sich bei neuen Ergebnissen, überwacht aber nicht im Hintergrund.</div>`;
   const spot=main.querySelector('section.panel');
   spot.after(panel);
 
+  // Technical indicators, risk rules and scenarios belong to one deep-analysis panel.
+  const candidates=[...main.querySelectorAll(':scope > section.panel')];
+  const sectionNamed=name=>candidates.find(p=>p.querySelector(':scope > h2.section')?.textContent.trim()===name);
+  const tech=sectionNamed('Technische Marktanalyse');
+  if(tech){
+    tech.querySelector(':scope > h2.section').textContent='Einzelchart · Indikatoren, Risiko & Szenarien';
+    for(const [name,label] of [
+      ['Marktkompass · technische Risikobewertung','Technischer Marktkompass'],
+      ['Marktampel & Szenarien','Marktampel und Kurs-Szenarien']
+    ]){
+      const original=sectionNamed(name);
+      if(!original)continue;
+      const area=document.createElement('div');area.className='tech-subsection';
+      const heading=document.createElement('h3');heading.textContent=label;area.appendChild(heading);
+      for(const child of [...original.children])if(child.tagName!=='H2')area.appendChild(child);
+      tech.appendChild(area);original.remove();
+    }
+  }
   const originalPanels=[...main.querySelectorAll(':scope > section.panel')].filter(p=>p!==panel&&p!==spot);
   const collapse=(p,closed)=>{
     p.classList.toggle('detail-closed',closed);p.classList.toggle('detail-open',!closed);
@@ -720,21 +785,12 @@ $('runProDesk').onclick=runProDesk;
     const spotPrice=btcSpot&&Number.isFinite(btcSpot.price)
       ?fmt(btcSpot.price,2)+' '+(btcSpot.currency||'USDT')
       :(onBTC?textOf('price'):'');
-    const change=btcSpot&&Number.isFinite(btcSpot.change)
-      ?(btcSpot.change>=0?'+':'')+fmt(btcSpot.change,2)+' %'
-      :(onBTC?textOf('change'):'');
-    const risk=btcPro&&Number.isFinite(btcPro.risk)
-      ?btcPro.risk+' / 100'
-      :(onBTC?textOf('riskval'):'');
+    const risk=btcPro&&Number.isFinite(btcPro.risk) ? btcPro.risk+' / 100' : ''; // BTC only
     const proStatus=textOf('proStatus'),oi=futuresInfo();
     const trend=getProValue('kurs-/mittel-/langfrist')||getProValue('trend');
-    const lower=getProValue('tiefere fibonacci'),higher=getProValue('höhere fibonacci');
-    set('dashPrice',valid(spotPrice)?spotPrice:'—');
-    set('dashChange',change.replace(/^24h\s*:?\s*/i,'')||'—');
+
     set('dashTrend',trend||'Noch nicht geprüft');
-    set('dashRisk',valid(risk)?risk:'BTC-Tagesanalyse laden');
-    set('dashLow',lower||'Noch nicht geprüft');
-    set('dashHigh',higher||'Noch nicht geprüft');
+    set('dashRisk',valid(risk)?risk:'BTC-Analyse starten');
     const sourceTimes=document.getElementById('dashSourceTimes');
     if(sourceTimes){
       const spotStamp=btcSpot?.timestamp?new Date(btcSpot.timestamp).toLocaleString('de-CH',{timeZone:'Europe/Zurich'}):onBTC?(textOf('updated')||'Noch nicht geladen'):'BTC-Kurs noch nicht geladen';
@@ -742,27 +798,41 @@ $('runProDesk').onclick=runProDesk;
       const deskStamp=proStatus.match(/Stand\s+([^·]+)/)?.[1]?.trim()||'Noch nicht geprüft';
       sourceTimes.textContent='Abrufzeiten – Spot: '+spotStamp+' · Marktzentrale: '+deskStamp+' · Fibonacci-Atlas: '+atlasStamp+'. Kursabweichungen zwischen Modulen entstehen durch getrennte Liveabfragen.';
     }
-    const spotOK=valid(spotPrice)&&/\d/.test(spotPrice);
-    const deskOK=/spotdaten geprüft|spotdaten geladen/i.test(proStatus)&&!!trend;
-    const corr=quality('corrstatus',t=>/berechnet|daten|renditen/i.test(t)&&!/noch keine|nicht verfügbar|fehler/i.test(t),t=>/fehler|nicht verfügbar/i.test(t));
-    const strength=quality('strengthStatus',t=>/berechnet|quelle binance/i.test(t)&&!/noch nicht|fehler/i.test(t),t=>/fehler|nicht verfügbar/i.test(t));
-    const early=quality('warningStatus',t=>/zeitfenster|berechnet/i.test(t)&&!/noch keine|nicht verfügbar|fehler/i.test(t),t=>/fehler|nicht verfügbar/i.test(t));
-    const futures=oi?.available?'Teilweise geladen':/fehler|nicht verfügbar/i.test(textOf('proDerivatives'))?'Nicht verfügbar':'Nicht geprüft';
-    const statuses=[['BTC Spot',spotOK?'Geladen':'Nicht geprüft'],['4h / 1D / 1W',deskOK?'Geladen':'Nicht geprüft'],['Futures',futures],['Fibonacci & Frühwarnung',early],['Korrelationen',corr],['Altcoins',strength]];
+    const spotOK=Boolean((btcSpot&&Number.isFinite(btcSpot.price)&&btcSpot.price>0)||(!btcSpot&&onBTC&&valid(spotPrice)&&/\d/.test(spotPrice)));
+    const deskOK=/spotdaten geprüft/i.test(proStatus)&&!!trend;
+    const moduleState=(statusId,resultId,completeMatch)=>{
+      const st=textOf(statusId).toLowerCase();
+      if(!completeMatch.test(st)){
+        if(/nicht verfügbar|fehler|keine zuverlässigen/i.test(st))return 'Nicht verfügbar';
+        return 'Nicht geprüft';
+      }
+      const result=document.getElementById(resultId);
+      if(!result)return 'Geladen';
+      const tiles=[...result.querySelectorAll('.tile')];
+      const bad=tiles.filter(e=>/nicht verfügbar|keine vollständigen|datenfehler|zu wenig/i.test(e.textContent));
+      if(!tiles.length)return 'Nicht verfügbar';
+      return bad.length===tiles.length?'Nicht verfügbar':bad.length?'Teilweise':'Geladen';
+    };
+    const corr=moduleState('corrstatus','corrresults',/berechnet/);
+    const strength=moduleState('strengthStatus','strengthResults',/berechnet/);
+    const warningStatus=textOf('warningStatus');
+    const early=/3\/3 zeitfenster/i.test(warningStatus)?'Geladen':/nicht verfügbar|fehler/i.test(warningStatus)?'Nicht verfügbar':'Nicht geprüft';
+    const atlasStatus=textOf('fibAtlasStatus');
+    const atlas=/rohreferenzen in/i.test(atlasStatus)?/teilquellen fehlen/i.test(atlasStatus)?'Teilweise':'Geladen':/nicht verfügbar|fehler/i.test(atlasStatus)?'Nicht verfügbar':'Nicht geprüft';
+    const series=window.cmDerivativeSeries;
+    // Liquidations and clusters are intentionally unavailable: never imply full derivatives coverage.
+    const futures=series?([Number.isFinite(series.currentOI),Number.isFinite(series.funding),Number.isFinite(series.ratio),Boolean(series.oi?.length),Boolean(series.fundingHistory?.length)].some(Boolean)?'Teilweise':'Nicht verfügbar'):/fehler|nicht verfügbar/i.test(textOf('proDerivatives'))?'Nicht verfügbar':'Nicht geprüft';
+    const statuses=[['BTC Spot',spotOK?'Geladen':'Nicht verfügbar'],['BTC · 4h/1D/1W',deskOK?'Geladen':/nicht verfügbar/i.test(proStatus)?'Nicht verfügbar':'Nicht geprüft'],['Futures',futures],['Fibonacci-Atlas',atlas],['Frühwarnung',early],['Korrelationen',corr],['Altcoin-Radar',strength]];
     const qualityEl=document.getElementById('dashQuality');
-    if(qualityEl){const signature=statuses.map(x=>x.join(':')).join('|');if(qualityEl.dataset.status!==signature){qualityEl.dataset.status=signature;qualityEl.replaceChildren();for(const [name,status] of statuses){const div=document.createElement('div');div.className='dq';const a=document.createElement('span');a.textContent=name;const b=document.createElement('strong');b.textContent=status;b.style.color=status==='Geladen'?'#4dd3a6':status==='Nicht verfügbar'?'#ff8c94':'#b4c5de';div.append(a,b);qualityEl.appendChild(div)}}}
-    set('dashState',deskOK?'Spot-Analyse vorhanden':spotOK?'Spot geladen':'Analyse starten');
+    if(qualityEl){const signature=statuses.map(x=>x.join(':')).join('|');if(qualityEl.dataset.status!==signature){qualityEl.dataset.status=signature;qualityEl.replaceChildren();for(const [name,status] of statuses){const div=document.createElement('div');div.className='dq';const a=document.createElement('span');a.textContent=name;const b=document.createElement('strong');b.textContent=status;b.style.color=status==='Geladen'?'#4dd3a6':status==='Nicht verfügbar'?'#ff8c94':status==='Teilweise'?'#f1bd61':'#b4c5de';div.append(a,b);qualityEl.appendChild(div)}}}
+    set('dashState',deskOK?'BTC-Analyse geladen':spotOK?'BTC-Spot geladen':'Analyse starten');
     const bits=[];
     if(/bärisch/i.test(trend))bits.push('Die geprüften Zeitfenster zeigen eine bärische Struktur.');
     else if(/bullisch/i.test(trend))bits.push('Die geprüften Zeitfenster zeigen eine bullische Struktur.');
     else bits.push('Für die gemeinsame Trendbewertung fehlen noch geprüfte Mehrzeitebenendaten.');
-    if(/\d/.test(lower)&&/\d/.test(higher))bits.push('Die nächste tiefere und höhere Fibonacci-Referenz steht oben; beides sind Rechenmarken, keine bestätigten Kursziele.');
-    if(oi?.available){
-      bits.push('Futures-Open-Interest: '+oi.oi+(oi.change?' · ungefährer 24h-Vergleich: '+oi.change:'')+'.');
-      if(oi.change)bits.push('Veränderungen des Open Interest verraten für sich allein nicht, ob Longs oder Shorts neu eröffnet wurden.');
-      if(oi.funding&&/\d/.test(oi.funding))bits.push('Funding-Snapshot: '+oi.funding+'.');
-      if(oi.ratio&&/\d/.test(oi.ratio))bits.push('Long/Short-Account-Ratio: '+oi.ratio+' (Accounts, keine Positionsgrössen).');
-    }else bits.push('Futures-Daten noch nicht vollständig geladen oder regional nicht verfügbar.');
+    if(window.cmAtlasCompletedAt)bits.push('Die naheliegenden Fibonacci-Zonen stehen unten; sie sind Rechenmarken, keine Kursziele.');
+    if(oi?.available)bits.push('Futuresdaten liegen vor; die Einordnung steht direkt im Derivate-Kompass.');
+    else bits.push('Futures-Daten noch nicht vollständig geladen oder regional nicht verfügbar.');
     set('dashInterpretation',bits.join(' '));
     const stamp=proStatus.match(/Stand\s+[^·]+/)?.[0];
     set('dashLast',(stamp?stamp+' · ':'')+'Die Übersicht verwendet nur bereits geladene Daten. Kein Hintergrundmonitoring und keine automatischen Trades.');
@@ -800,7 +870,7 @@ function renderDerivativeIntelligence(){
    else if(priceChange>0&&d.oi24<0)facts.push('Spotkurs gestiegen bei sinkendem Open Interest: Positionsabbau oder Short-Eindeckungen möglich, nicht bewiesen.');
    else facts.push('Preis-/OI-Veränderung gemischt: keine eindeutige Marktphase.');
  } else facts.push('Preis-/Open-Interest-24h-Vergleich nicht vollständig verfügbar; keine Marktphasen-Zuordnung.');
- if(Number.isFinite(d.funding))facts.push('Funding-Snapshot '+(d.funding>0?'positiv: Longs zahlen in der Regel Shorts':d.funding<0?'negativ: Shorts zahlen in der Regel Longs':'nahe null')+' ('+num(d.funding,5)+' %).');
+ if(Number.isFinite(d.funding))facts.push(Math.abs(d.funding)<0.000005?'Funding-Snapshot nahezu null (<0,00001 %).':'Funding-Snapshot '+(d.funding>0?'positiv: Longs zahlen in der Regel Shorts':'negativ: Shorts zahlen in der Regel Longs')+' ('+num(d.funding,5)+' %).');
  else facts.push('Aktuelle Funding-Schätzung nicht verfügbar.');
  if(Number.isFinite(d.ratio))facts.push('Account-Ratio '+num(d.ratio,3)+': '+(d.ratio>1?'mehr Long- als Short-Accounts':'mehr Short- als Long-Accounts')+'; sagt nichts über Positionsgrössen.');
  if(d.errors?.length)facts.push('Teilquellenfehler: '+d.errors.map(x=>String(x).slice(0,90)).join(' | '));
@@ -921,7 +991,7 @@ async function runFibAtlas(){
  st.textContent='Lade 4h-, Tages- und Wochenkerzen sowie langfristige Wochenhistorie …';groups.innerHTML='<div class="tile small">Historische Swings werden geprüft.</div>';
  try{
   const tf=['4h','1d','1w'];
-  const settled=await Promise.allSettled([...tf.map(x=>fetchBinance('BTC',x)),fetchJSON('/api/v3/klines?symbol=BTCUSDT&interval=1w&limit=1000')]);
+  const settled=await Promise.allSettled([...tf.map(x=>fetchBinance('BTC',x)),fetchMarketShared('/api/v3/klines?symbol=BTCUSDT&interval=1w&limit=1000',120000)]);
   if(token!==fibAtlasToken)return;
   const errors=[];const priceCandidates=[];let zones=[];
   for(let i=0;i<3;i++){
@@ -1008,7 +1078,7 @@ document.getElementById('runFibAtlas').onclick=runFibAtlas;
  }
  async function one(coin){
    try{
-     const t=await fetchJSON('/api/v3/ticker/24hr?symbol='+coin+'USDT');
+     const t=await fetchMarketShared('/api/v3/ticker/24hr?symbol='+coin+'USDT',12000);
      const price=Number(t.lastPrice),change=Number(t.priceChangePercent);
      if(!Number.isFinite(price)||price<=0||!Number.isFinite(change)||Math.abs(change)>10000)throw Error('Binance Kurswerte ungueltig');
      return {price,change,currency:'USDT',source:'Binance Spot'};
@@ -1038,6 +1108,7 @@ document.getElementById('runFibAtlas').onclick=runFibAtlas;
        return;
      }
      const v=r.value;valid++;
+     checkAlarmsFor(coin,v.price,v.currency);
      if(coin==='BTC')window.cmBtcTickerSnapshot={
        price:v.price,change:v.change,currency:v.currency,timestamp:Date.now(),source:v.source
      };
