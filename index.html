@@ -1,4 +1,4 @@
-<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro · Fibonacci Atlas</title><style>
+<!doctype html><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Crypto Market Pro · Gewichtete Kurszonen</title><style>
 :root{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#edf2ff;background:#0b1020;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;z-index:3;background:#0b1020ed;border-bottom:1px solid #27314a;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;letter-spacing:.2px}.small{font-size:12px;color:#a7b3cc}.container{max-width:780px;margin:auto;padding:15px 14px 90px}.panel{background:#141c30;border:1px solid #293550;border-radius:16px;padding:15px;margin-bottom:13px}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 13px}button,select,input{font:inherit}button{cursor:pointer;color:#eef3ff;background:#1d2942;border:1px solid #344465;border-radius:11px;padding:10px 12px}button.active{background:#23659c;border-color:#428ecb}button:disabled{opacity:.5}.flex{display:flex;align-items:center;justify-content:space-between;gap:9px}.price{font-weight:800;font-size:32px;letter-spacing:-.7px}.green{color:#4dd3a6}.red{color:#ff737e}.muted{color:#a7b3cc}.pill{border-radius:999px;background:#24304c;padding:5px 9px;font-size:11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:#10192c;border-radius:12px;padding:12px}.tile b{font-size:19px;display:block;margin-top:5px}.chart{width:100%;height:auto;display:block}.levels{width:100%;border-collapse:collapse;font-size:13px}.levels td,.levels th{padding:9px 5px;text-align:right;border-bottom:1px solid #27314a}.levels th:first-child,.levels td:first-child{text-align:left}.notice{border-left:3px solid #f1bd61;padding:9px 11px;background:#322b24;border-radius:6px;font-size:12px}.bar{height:6px;background:#2a3650;border-radius:6px;margin-top:8px}.bar>div{height:6px;background:#54a6dd;border-radius:6px}.section{font-size:17px;font-weight:750;margin:0 0 12px}.linkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.linkgrid a{border:1px solid #344465;border-radius:10px;padding:11px;text-decoration:none;color:#d3e7ff;font-size:13px}.switch{display:flex;gap:6px;align-items:center}select,input{background:#0f1729;border:1px solid #344465;border-radius:8px;padding:9px;color:white;max-width:100%}.footer{text-align:center;font-size:11px;color:#8996b2;line-height:1.5}.chip{font-size:12px;border:1px solid #344465;border-radius:20px;padding:6px 10px}.loading{animation:pulse 1.2s infinite alternate}@keyframes pulse{from{opacity:.4}to{opacity:1}}@media(min-width:680px){.container{padding-top:24px}.price{font-size:39px}}
 
 /* Sammelupdate: kompaktes Dashboard und klappbare Detailbereiche */
@@ -49,7 +49,7 @@ h2.section.detail-heading .detail-toggle{font-size:12px;font-weight:600;padding:
 <div class="notice" style="margin-top:14px">Die Auswertung ist ein nicht backgetesteter Beobachtungsmonitor, kein Kauf-/Verkaufssignal. Die Angaben sind nur so frisch wie ihr sichtbarer Zeitstempel. Der Browser überwacht Märkte nicht bei geschlossener App. Keine API-Schlüssel erforderlich.</div>
 </section>
 <section class="panel"><h2 class="section">Technische Marktanalyse</h2><div class="small" id="indicatorstamp" style="margin:0 0 10px;color:#72c7fb">Indikatoren: noch nicht geladen</div><div class="grid"><div class="tile"><div class="small">RSI (14)</div><b id="rsi">—</b><div class="small" id="rsitext">—</div></div><div class="tile"><div class="small">EMA 20 / EMA 50</div><b id="ema">—</b><div class="small" id="ematext">—</div></div><div class="tile"><div class="small">Swing-Tief / -Hoch</div><b id="swing" style="font-size:14px">—</b><div class="small">Bestätigte Swing-Punkte, falls vorhanden</div></div><div class="tile"><div class="small">Technischer Zustand</div><b id="regime" style="font-size:16px">—</b><div class="small">Keine Handelsanweisung</div></div></div></section><section class="panel"><h2 class="section">Marktkompass · technische Risikobewertung</h2><div class="grid"><div class="tile"><div class="small">Technischer Abwärtsdruck-Index</div><b id="riskval">—</b><div class="small" id="risklabel">Warte auf Kurse</div></div><div class="tile"><div class="small">Nächstes Fibonacci-Level</div><b id="nearest" style="font-size:15px">—</b><div class="small" id="nearestdist">—</div></div><div class="tile"><div class="small">Nächste tiefere Referenzzone</div><b id="support" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div><div class="tile"><div class="small">Nächste höhere Referenzzone</div><b id="resistance" style="font-size:16px">—</b><div class="small">Automatisch aus Fibonacci</div></div></div><p class="small" id="risksummary" style="line-height:1.6">Die Bewertung benötigt aktuelle Kursdaten.</p><div class="notice">Der Index misst technischen Abwärtsdruck, NICHT die Wahrscheinlichkeit eines Kursrückgangs. Er ist ein einfaches, nicht backgetestetes Technikmodell (RSI, EMA, Kursposition). Er ist weder eine Eintrittswahrscheinlichkeit noch ein Kauf-/Verkaufssignal. Fibonacci-Zonen und Extensions sind rechnerische Referenzen, keine bestätigten Unterstützungen oder Kursprognosen.</div></section><section class="panel"><h2 class="section">Marktampel &amp; Szenarien</h2><div class="flex" style="align-items:center;gap:10px"><span class="pill" id="traffic" style="font-size:17px;padding:12px">⚪ Keine Bewertung</span><span class="small" id="confidence">Daten werden geladen</span></div><div class="grid" style="margin-top:12px"><div class="tile"><div class="small">Bullisches Szenario</div><div id="bullcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div><div class="tile"><div class="small">Bärisches Szenario</div><div id="bearcase" style="font-size:13px;line-height:1.6;margin-top:8px">—</div></div></div><p id="neutralcase" class="small" style="line-height:1.6;margin-top:12px">—</p><div class="notice">Szenarien beruhen auf Spotkursen und historischen OHLCV-Kerzen, nicht auf Zukunftsprognosen. Signale nur nach Kerzenschluss prüfen. Die Volumenbeurteilung verwendet abgeschlossene Kerzen.</div></section><section class="panel" id="multitf"><h2 class="section">Trendvergleich · 4h / 1D / 1W</h2><p class="small">Zusätzliche Datenabfrage auf Knopfdruck. Jeder Zeitraum verwendet nur abgeschlossene Kerzen, EMA 20/50 und RSI 14. Fibonacci-Referenzmarken werden unabhängig je Zeitfenster aus bestätigten Pivots (sonst Fensterextremen) berechnet.</p><button id="checktf">Alle drei Zeitfenster prüfen</button><div id="tfstatus" class="small" style="margin:10px 0">Noch nicht abgefragt</div><div id="tfresults" class="grid"><div class="tile small">Keine Cross-Timeframe-Daten</div></div><p class="small">Trendvergleich ist keine Handelsanweisung. Wenn einzelne Datenquellen ausfallen, wird das separat angezeigt.</p></section><section class="panel" id="fibAtlasPanel">
-<h2 class="section">Fibonacci-Atlas · Kurszonen ober- und unterhalb</h2>
+<h2 class="section">Fibonacci-Atlas · gewichtete Kurszonen</h2>
 <p class="small">BTCUSDT · Binance Spot. Verbindet bestätigte Swings über 4h, Tag und Woche; zusätzlich langfristige Wochenfenster bis ca. 19 Jahre, soweit Daten vorhanden. Je nach Datenlage können historische Zonen fehlen. Jede Marke ist eine <b>rechnerische Referenz</b>, keine bestätigte Unterstützung oder Prognose.</p>
 <button id="runFibAtlas">Fibonacci-Atlas berechnen</button>
 <div id="fibAtlasStatus" class="small" style="margin:11px 0;color:#72c7fb">Noch nicht berechnet. Der Gesamtanalyse-Knopf startet den Atlas ebenfalls.</div>
@@ -57,6 +57,7 @@ h2.section.detail-heading .detail-toggle{font-size:12px;font-weight:600;padding:
  <div class="tile"><div class="small">Nächste tiefere Referenz</div><b id="fibAtlasBelow">—</b></div>
  <div class="tile"><div class="small">Nächste höhere Referenz</div><b id="fibAtlasAbove">—</b></div>
 </div>
+<div class="small" style="margin:10px 0">Zonenbildung: maximal ±0,5 % um die Zonenmitte; die Bewertung beruht auf Zeitebene, bestätigten Pivots und unabhängigen Swing-Paaren. <b>Kein backgetesteter Prognose-Score.</b></div>
 <div id="fibAtlasGroups" class="grid"><div class="tile small">4h, 1 Tag und 1 Woche werden beim Start neu geladen.</div></div>
 <div class="notice" style="margin-top:12px">Die Zonen entstehen aus unterschiedlichen historischen Swing-Paaren, inklusive 1,272- und 1,618-Extensions. Swing-Paare können widersprüchliche Niveaus liefern. Duplikate werden nur für die Anzeige zusammengefasst; Zeitebene und Berechnung bleiben sichtbar. Es gibt weder garantierte Kursziele noch automatische Push-Alarme.</div>
 </section><section class="panel"><h2 class="section">Fibonacci-Retracement &amp; Extensions</h2><div class="notice">Bestätigte lokale Pivot-Punkte (je drei abgeschlossene Kerzen links und rechts) werden paarweise auf mindestens 3 % Kursbewegung geprüft. Wenn kein geeignetes Paar vorliegt, verwendet die App transparent gekennzeichnete Fensterextreme. Extensions bei 1,272 und 1,618 werden jenseits beider Swing-Grenzen berechnet; das sind keine Prognoseziele. Kein Indikator garantiert eine Trendwende.</div><table class="levels"><thead><tr><th>Level</th><th>Kurs (USDT)</th><th>Distanz</th></tr></thead><tbody id="fibbody"><tr><td colspan="3">Lade Daten …</td></tr></tbody></table><div class="small" id="fibdirection" style="margin-top:10px"></div></section><section class="panel"><h2 class="section">Preisalarme (solange die App offen ist)</h2><div class="flex" style="flex-wrap:wrap"><select id="alarmtype"><option value="above">Kurs steigt über</option><option value="below">Kurs fällt unter</option></select><input type="number" id="alarmprice" min="0" step="any" placeholder="Kurs in USD/USDT" inputmode="decimal"><button id="addalarm">+ Alarm</button></div><div id="alarms" class="small" style="margin-top:12px">Noch keine Alarme.</div><p class="small">Für Benachrichtigungen während die Seite geöffnet ist, erlaube Browser-Mitteilungen, sofern unterstützt. Auf dem iPhone sind Hintergrundalarme in dieser Version nicht zuverlässig möglich. Alle 60 Sekunden erfolgt bei geöffneter App ein neuer Abruf.</p></section><section class="panel"><h2 class="section">Weltmarkt-Radar</h2><p class="small">Marktübersicht als kostenlos eingebettetes TradingView-Widget (externer Anbieter). Kurse können je nach Börse verzögert sein und zeigen andere Datenquellen als unsere Binance-Spotkurse. Die Werte fliessen noch nicht in die technische Risikoampel ein; Korrelationen werden nicht behauptet.</p><div class="notice" style="margin:12px 0">Die Marktübersicht wird separat von TradingView geladen und ist kein eigenständiger API-Datenfeed unserer App. Falls das Widget im iPhone-Webmodus nicht erscheint, nutze die Links darunter. Keine automatischen Korrelationen oder Echtzeitgarantie.</div>
@@ -579,6 +580,8 @@ $('runProDesk').onclick=runProDesk;
     </div>
     <button type="button" id="dashRun" class="dashboard-mainbutton">Gesamtanalyse starten</button>
     <div class="dashboard-overview" id="dashInterpretation">Starte die Gesamtanalyse, um Spotmarkt, Trends, Fibonacci, Derivate und Altcoins zusammenzuführen.</div>
+    <h3 style="font-size:15px;margin:17px 0 7px">Priorisierte Fibonacci-Zonen · 3 je Seite</h3>
+    <div id="dashAtlasZones" class="deriv-mini-grid"><div class="deriv-mini-card deriv-mini-legend">Nach der Gesamtanalyse werden die gewichteten Zonen angezeigt. Datenbasis und Wertung im Fibonacci-Atlas.</div></div>
     <h3 style="font-size:15px;margin:17px 0 7px">Derivate-Kompass · Open Interest &amp; Funding</h3>
     <div id="derivCompass" class="deriv-signal" aria-live="polite">Noch keine aktuellen Futures-Daten. Gesamtanalyse starten.</div>
     <div id="derivHistory" class="deriv-mini-grid" aria-live="polite"><div class="deriv-mini-card deriv-mini-legend">Historische Zeitreihen werden aus öffentlichen Binance-USDⓈ-M-Daten geladen, sofern die Schnittstellen erreichbar sind.</div></div>
@@ -749,10 +752,53 @@ function fibAtlasMajorPairs(rows,pivotWidth=5,minimumMove=.08){
  }
  return selected;
 }
-function fibAtlasDedup(arr){
- const picked=[];
- for(const z of arr){if(picked.some(p=>Math.abs(p.v-z.v)/z.v<.0035))continue;picked.push(z)}
+// Transparent aggregation; identical swing origins within a zone count once.
+function fibAtlasClusters(raw, price){
+ const sorted=raw.filter(z=>Number.isFinite(z.v)&&z.v>0).sort((a,b)=>a.v-b.v);
+ const groups=[];
+ const root=z=>[z.tf,Math.round(z.low*100)/100,Math.round(z.high*100)/100].join('|');
+ for(const z of sorted){
+  // At most 0.5 % distance to cluster's current midpoint (no unlimited chaining).
+  let g=groups.find(g=>Math.abs(z.v-g.center)/g.center<=.005);
+  if(!g){g={center:z.v,members:[]};groups.push(g)}
+  g.members.push(z);
+  g.center=g.members.reduce((s,x)=>s+x.v,0)/g.members.length;
+ }
+ return groups.map(g=>{
+  const originMap=new Map();
+  for(const z of g.members){
+   const key=root(z), old=originMap.get(key);
+   // Multiple Fibonacci ratios from the same historical pivot pair are not independent.
+   if(!old||Math.abs(z.v-g.center)<Math.abs(old.v-g.center))originMap.set(key,z);
+  }
+  const independent=[...originMap.values()];
+  const tfSet=[...new Set(independent.map(z=>z.tf))];
+  const confirmed=independent.filter(z=>z.confirmed).length;
+  const tfWeight=Math.max(...tfSet.map(t=>t==='1w'?3:t==='1d'?2:1));
+  // Ordinal evidence index, NOT percentage or probability. Maximum roughly 14.
+  const score=tfWeight*2+Math.min(3,independent.length)*2+(confirmed?2:0)+(tfSet.length>1?2:0);
+  const low=Math.min(...g.members.map(z=>z.v)),high=Math.max(...g.members.map(z=>z.v));
+  const distance=Math.abs(g.center/price-1)*100;
+  return {center:g.center,low,high,distance,score,independent:independent.length,tfSet,confirmed,rawCount:g.members.length,sample:independent[0]};
+ });
+}
+function fibAtlasSelect(clusters,price,side,max=8){
+ const arr=clusters.filter(g=>side==='below'?g.high<price:g.low>price);
+ // Favor reliable and nearby zones, but do not imply predictive confidence.
+ const rank=g=>g.score-Math.min(g.distance,25)*.45;
+ const near=arr.filter(g=>g.distance<=15).sort((a,b)=>rank(b)-rank(a));
+ const picked=[...near.slice(0,max)];
+ if(picked.length<max){for(const g of arr.sort((a,b)=>a.distance-b.distance)){
+  if(!picked.includes(g)){picked.push(g);if(picked.length>=max)break}
+ }}
  return picked;
+}
+function fibAtlasZoneMarkup(g,price){
+ const pct=(g.center/price-1)*100;
+ const fmtRange=g.high-g.low>g.center*.00035?fibAtlasFmt(g.low)+'–'+fibAtlasFmt(g.high):fibAtlasFmt(g.center);
+ const proven=g.tfSet.join(' / ');
+ const rating=g.score>=12?'höhere Modell-Priorität':g.score>=9?'mittlere Modell-Priorität':'geringere Modell-Priorität';
+ return '<div style="padding:9px 0;border-bottom:1px solid #27314a"><b>'+fmtRange+' USDT</b> <span class="small">('+pct.toFixed(2).replace('.',',')+' %)</span><div class="small">'+rating+' · Index '+g.score+' · '+proven+' · '+g.independent+' unterschiedliche Swing-Paare · '+g.confirmed+' bestätigt · '+g.rawCount+' Rohmarken</div></div>';
 }
 async function runFibAtlas(){
  const token=++fibAtlasToken,btn=document.getElementById('runFibAtlas');btn.disabled=true;
@@ -792,16 +838,22 @@ async function runFibAtlas(){
   if(Math.max(...validPrice)/Math.min(...validPrice)>1.005)throw Error('BTC-Spotticker der Zeitfenster widersprechen sich; neu abrufen.');
   const price=validPrice[0];
   zones=zones.filter(z=>z.v>0&&Number.isFinite(z.v));
-  const below=fibAtlasDedup(zones.filter(z=>z.v<price).sort((a,b)=>b.v-a.v)).slice(0,8);
-  const above=fibAtlasDedup(zones.filter(z=>z.v>price).sort((a,b)=>a.v-b.v)).slice(0,8);
-  const detail=z=>'<div style="padding:9px 0;border-bottom:1px solid #27314a"><b>'+fibAtlasFmt(z.v)+' USDT</b> <span class="small">('+((z.v/price-1)*100).toFixed(2).replace('.',',')+' %)</span><div class="small">'+fibAtlasEsc(z.tf)+' · '+fibAtlasEsc(z.scope)+' · '+fibAtlasEsc(z.label)+' · '+(z.confirmed?'Pivot-Paar':'Fensterextreme')+'</div></div>';
-  const card=(name,items)=>'<div class="tile"><b>'+name+'</b>'+(items.length?items.map(detail).join(''):'<div class="small">Keine rechnerische Referenz unter den geprüften Daten.</div>')+'</div>';
-  groups.innerHTML=card('Tiefere Kurszonen',below)+card('Höhere Kurszonen',above);
-  document.getElementById('fibAtlasBelow').textContent=below.length?fibAtlasFmt(below[0].v)+' USDT':'Keine verfügbare Zone';
-  document.getElementById('fibAtlasAbove').textContent=above.length?fibAtlasFmt(above[0].v)+' USDT':'Keine verfügbare Zone';
+  const clusters=fibAtlasClusters(zones,price);
+  const below=fibAtlasSelect(clusters,price,'below');
+  const above=fibAtlasSelect(clusters,price,'above');
+  const card=(name,items)=>'<div class="tile"><b>'+name+'</b>'+(items.length?items.map(z=>fibAtlasZoneMarkup(z,price)).join(''):'<div class="small">Keine Zone aus bestätigten Daten verfügbar.</div>')+'</div>';
+  groups.innerHTML=card('Priorisierte tiefere Zonen',below)+card('Priorisierte höhere Zonen',above);
+  const fmtFirst=xs=>xs.length?fibAtlasFmt(xs[0].center)+' USDT':'Nicht verfügbar';
+  document.getElementById('fibAtlasBelow').textContent=fmtFirst(below);
+  document.getElementById('fibAtlasAbove').textContent=fmtFirst(above);
+  const dash=document.getElementById('dashAtlasZones');
+  if(dash){
+   const make=(name,items)=>'<div class="deriv-mini-card"><div class="deriv-mini-title">'+name+'</div>'+(!items.length?'<div class="small">Nicht verfügbar</div>':items.slice(0,3).map((g,i)=>'<div style="padding:7px 0;border-bottom:1px solid #27314a"><b>'+ (i+1)+'. '+fibAtlasFmt(g.center)+' USDT</b><div class="small">Index '+g.score+' · '+g.tfSet.join('/')+' · '+g.independent+' Swing-Paare · '+g.distance.toFixed(1).replace('.',',')+' % Abstand</div></div>').join(''))+'</div>';
+   dash.innerHTML=make('Tiefere Zonen · Modell-Priorität',below)+make('Höhere Zonen · Modell-Priorität',above);
+  }
   const stamp=new Date().toLocaleString('de-CH',{timeZone:'Europe/Zurich'});
-  st.textContent='BTC '+fibAtlasFmt(price)+' USDT · berechnet '+stamp+' Schweiz · '+zones.length+' Rohreferenzen · '+(errors.length?'Teilquellen fehlen: '+errors.join(' | '):'alle Datenquellen geladen')+'.';
- }catch(e){if(token!==fibAtlasToken)return;st.textContent='Fibonacci-Atlas nicht verfügbar: '+String(e.message||e);groups.innerHTML='<div class="tile small">Keine zuverlässigen Referenzen bei Datenfehlern.</div>';document.getElementById('fibAtlasBelow').textContent='Nicht verfügbar';document.getElementById('fibAtlasAbove').textContent='Nicht verfügbar';}
+  st.textContent='BTC '+fibAtlasFmt(price)+' USDT · berechnet '+stamp+' Schweiz · '+zones.length+' Rohreferenzen in '+clusters.length+' Zonen (±0,5 %) · Index ohne Backtest · '+(errors.length?'Teilquellen fehlen: '+errors.join(' | '):'alle Datenquellen geladen')+'.';
+ }catch(e){if(token!==fibAtlasToken)return;st.textContent='Fibonacci-Atlas nicht verfügbar: '+String(e.message||e);groups.innerHTML='<div class="tile small">Keine zuverlässigen Referenzen bei Datenfehlern.</div>';const dash=document.getElementById('dashAtlasZones');if(dash)dash.textContent='Atlas-Daten nicht verfügbar; keine Zonenbewertung.';document.getElementById('fibAtlasBelow').textContent='Nicht verfügbar';document.getElementById('fibAtlasAbove').textContent='Nicht verfügbar';}
  finally{if(token===fibAtlasToken)btn.disabled=false}
 }
 document.getElementById('runFibAtlas').onclick=runFibAtlas;
